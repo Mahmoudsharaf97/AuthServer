@@ -1,0 +1,14 @@
+C:\Users\Mahmoud\source\repos\AuthServer\Auth_Core\bin\Debug\net9.0\Auth_Core.deps.json
+C:\Users\Mahmoud\source\repos\AuthServer\Auth_Core\bin\Debug\net9.0\Auth_Core.runtimeconfig.json
+C:\Users\Mahmoud\source\repos\AuthServer\Auth_Core\bin\Debug\net9.0\Auth_Core.dll
+C:\Users\Mahmoud\source\repos\AuthServer\Auth_Core\bin\Debug\net9.0\Auth_Core.pdb
+C:\Users\Mahmoud\source\repos\AuthServer\Auth_Core\obj\Debug\net9.0\Auth_Core.csproj.AssemblyReference.cache
+C:\Users\Mahmoud\source\repos\AuthServer\Auth_Core\obj\Debug\net9.0\Auth_Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Mahmoud\source\repos\AuthServer\Auth_Core\obj\Debug\net9.0\Auth_Core.AssemblyInfoInputs.cache
+C:\Users\Mahmoud\source\repos\AuthServer\Auth_Core\obj\Debug\net9.0\Auth_Core.AssemblyInfo.cs
+C:\Users\Mahmoud\source\repos\AuthServer\Auth_Core\obj\Debug\net9.0\Auth_Core.csproj.CoreCompileInputs.cache
+C:\Users\Mahmoud\source\repos\AuthServer\Auth_Core\obj\Debug\net9.0\Auth_Core.dll
+C:\Users\Mahmoud\source\repos\AuthServer\Auth_Core\obj\Debug\net9.0\refint\Auth_Core.dll
+C:\Users\Mahmoud\source\repos\AuthServer\Auth_Core\obj\Debug\net9.0\Auth_Core.pdb
+C:\Users\Mahmoud\source\repos\AuthServer\Auth_Core\obj\Debug\net9.0\Auth_Core.genruntimeconfig.cache
+C:\Users\Mahmoud\source\repos\AuthServer\Auth_Core\obj\Debug\net9.0\ref\Auth_Core.dll
