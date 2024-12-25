@@ -2,6 +2,7 @@ using Auth_Application.Interface;
 using Auth_Application.Services;
 using Auth_Core;
 using Auth_Core.Global;
+using Auth_Core.MiddleWare;
 using Auth_Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
