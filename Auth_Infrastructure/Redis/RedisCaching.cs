@@ -1,10 +1,7 @@
-﻿
-
-using Auth_Core;
+﻿using Auth_Core;
 using Auth_Core.UseCase.Redis;
 using Newtonsoft.Json;
 using StackExchange.Redis;
-
 namespace Auth_Infrastructure.Redis
 {
     public class RedisCaching : IRedisCaching
@@ -46,95 +43,22 @@ namespace Auth_Infrastructure.Redis
                   return default;             
              return JsonConvert.DeserializeObject<T>(rv);
         }
-		public async Task<T> GetAsync<T>(string key)
+		public async Task<string> GetRefreshTokenAsync(string userId)
 		{
-			RedisValue rv = await Database.StringGetAsync(key);
-			if (!rv.HasValue)
-				return default;
-			return JsonConvert.DeserializeObject<T>(rv);
+            string key = $"RefreshToken_{userId}";
+
+            string rv = await Database.StringGetAsync(key);
+			if (rv is null)
+				return null;
+			return rv;
 		}
-		public IDictionary<string, T> GetAll<T>(IEnumerable<string> keys)
-        {
-            throw new NotImplementedException();
-        }
-
-        public long Increment(string key, uint amount)
-        {
-            throw new NotImplementedException();
-        }
-
-        public T JsonGet<T>(RedisKey key, CommandFlags flags = CommandFlags.None)
-        {
-                RedisValue rv = Database.StringGet(key, flags);
-                if (!rv.HasValue)
-                    return default;
-                T rgv = JsonConvert.DeserializeObject<T>(rv);
-                return rgv;
-         }
-		public async Task<T> JsonGetAsync<T>(RedisKey key, CommandFlags flags = CommandFlags.None)
+		public async Task<bool> SetRefreshTokenAsync(string userId, string tokenValue)
 		{
-			RedisValue rv = await Database.StringGetAsync(key, flags);
-			if (!rv.HasValue)
-				return default;
-			T rgv = JsonConvert.DeserializeObject<T>(rv);
-			return rgv;
-		}
-		public bool JsonSet(RedisKey key, object value, TimeSpan? expiry = null, When when = When.Always, CommandFlags flags = CommandFlags.None)
-        {
-                if (value == null) return false;
-                return Database.StringSet(key, JsonConvert.SerializeObject(value), expiry, when, flags);
-        }
-		public async Task<bool> JsonSetAsync(RedisKey key, object value, TimeSpan? expiry = null, When when = When.Always, CommandFlags flags = CommandFlags.None)
-		{
-			if (value == null) return false;
-			return await Database.StringSetAsync(key, JsonConvert.SerializeObject(value), expiry, when, flags);
-		}
-		public bool Remove(string key)
-        {
-            return Database.KeyDelete(key);
-        }
-		public async Task<bool> RemoveAsync(string key)
-		{
-			return await Database.KeyDeleteAsync(key);
-		}
-
-		public void RemoveAll(IEnumerable<string> keys)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Replace<T>(string key, T value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Replace<T>(string key, T value, DateTime expiresAt)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Replace<T>(string key, T value, TimeSpan expiresIn)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Set<T>(string key, T value)
-        {
-            if(!string.IsNullOrEmpty(key) && value!=null)
-            return Database.StringSet(key, JsonConvert.SerializeObject(value),TimeSpan.FromMinutes(10));
-            else return false;
-        }
-		public async Task<bool> SetAsync<T>(string key, T value)
-		{
-			if (!string.IsNullOrEmpty(key) && value != null)
-				return await Database.StringSetAsync(key, JsonConvert.SerializeObject(value), TimeSpan.FromMinutes(10));
+            string key = $"RefreshToken_{userId}";
+            if (tokenValue != null)
+				return await Database.StringSetAsync(key, tokenValue, TimeSpan.FromMinutes(_appSettings.JwtRefreshTokenExpiryMinutes));
 			else return false;
 		}
-		public bool Set<T>(string key, T value, DateTime expiresAt)
-        {
-            throw new NotImplementedException();
-        }
-
         public bool Set<T>(string key, T value, TimeSpan expiresIn)
         {
             if (!string.IsNullOrEmpty(key) && value != null)
@@ -147,42 +71,6 @@ namespace Auth_Infrastructure.Redis
 				return await Database.StringSetAsync(key, JsonConvert.SerializeObject(value), expiresIn);
 			else return false;
 		}
-
-		public void SetAll<T>(IDictionary<string, T> values)
-        {
-            throw new NotImplementedException();
-        }
-
-        private void _Connection_ErrorMessage(object sender, RedisErrorEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-        //add/set cache methods removed for the sake of brevity.
-        public bool Add<T>(string key, T value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Add<T>(string key, T value, DateTime expiresAt)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Add<T>(string key, T value, TimeSpan expiresIn)
-        {
-            throw new NotImplementedException();
-        }
-
-        public long Decrement(string key, uint amount)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void FlushAll()
-        {
-            throw new NotImplementedException();
-        }
         protected virtual void Dispose(bool disposing)
         {
             if (!disposedValue)
@@ -198,6 +86,55 @@ namespace Auth_Infrastructure.Redis
             }
         }
 
+        public async  Task<bool> SetSessionAsync(string email, SessionStatus session)
+        {
+            string key = $"Session_{email}";
+            if (!string.IsNullOrEmpty(key) && session != null)
+                return await Database.StringSetAsync(key, JsonConvert.SerializeObject(session), TimeSpan.FromMinutes(_appSettings.JwtSessionExpireInMinutes));
+            else return false;
+        }
+
+        public async Task<SessionStatus> GetSessionAsync(string email)
+        {
+            string key = $"Session_{email}";
+            string rv = await Database.StringGetAsync(key);
+            if (rv is null)
+                return null;
+
+                SessionStatus session= JsonConvert.DeserializeObject<SessionStatus>(rv)!;
+            if (session is null || string.IsNullOrEmpty(session.SessionId))
+                return null;
+
+            return session;
+        }
+
+        public async Task<bool> DeleteSessionAsync(string email)
+        {
+            string key = $"Session_{email}";
+            return await Database.KeyDeleteAsync(email);
+        }
+
+        public async  Task<bool> SetUserAsync(string email, ApplicationUser<string> user)
+        {
+            string key = $"User_{email}";
+            if ( user != null)
+             return    await Database.StringSetAsync(key, JsonConvert.SerializeObject(user));
+            else return false;
+        }
+
+        public async Task<ApplicationUser<string>> GetUserAsync(string email)
+        {
+            string key = $"User_{email}";
+            string rv = await Database.StringGetAsync(key);
+            if (rv is null)
+                return null;
+
+            var user = JsonConvert.DeserializeObject<ApplicationUser<string>>(rv)!;
+            if (user is null || string.IsNullOrEmpty(user.Email))
+                return null;
+
+            return user;
+        }
     }
 
 

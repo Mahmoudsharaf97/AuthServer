@@ -1,13 +1,17 @@
 ﻿using Auth_Core;
+using Auth_Core.UseCase;
 using Auth_Infrastructure.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Drawing;
 namespace Auth_Infrastructure.Identity
 {
-    public class ApplicationUserManager : UserManager<ApplicationUser<string>>
+    public class ApplicationUserManager : UserManager<ApplicationUser<string>>, IApplicationUserManager
     {
         private UserStore<ApplicationUser<string>, ApplicationRole<string>, AuthContext, string, IdentityUserClaim<string>
             , IdentityUserRole<string>, IdentityUserLogin<string>, IdentityUserToken<string>
@@ -69,6 +73,9 @@ namespace Auth_Infrastructure.Identity
             else
                 return false;
         }
+
+    
+
     }
     public class Fake_SME_DbContext
     {

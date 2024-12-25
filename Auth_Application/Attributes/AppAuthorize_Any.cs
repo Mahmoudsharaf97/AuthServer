@@ -28,8 +28,7 @@ namespace CommonServices.Attributes
             if (!string.IsNullOrEmpty(anynomous) && anynomous.ToLower()=="yes")
             {
 
-                globalInfo.SetValues(lang, channel, null, null, 0, "", "", null, null);
-
+                globalInfo.SetValues(userName, null, lang, channel, null, null, null, "", null, null);
                 return;
             }
 
@@ -44,7 +43,7 @@ namespace CommonServices.Attributes
                 var EmailConfirmed = jwt.Claims.Where(x => x.Type == "EmailConfirmed").FirstOrDefault()?.Value;
                 // set global info
 
-                globalInfo.SetValues(lang, channel, userid, null, 0, "", LockoutEnabled, LockoutEnd, EmailConfirmed);
+                globalInfo.SetValues(userName,userid,lang, channel, email, null, null, "", LockoutEnabled, EmailConfirmed);
                 return;
             }
            

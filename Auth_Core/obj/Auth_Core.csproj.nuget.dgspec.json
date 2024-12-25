@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Mahmoud\\source\\repos\\AuthServer\\Auth_Core\\Auth_Core.csproj": {}
+    "F:\\Identity_Application\\Auth_Core\\Auth_Core.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Mahmoud\\source\\repos\\AuthServer\\Auth_Core\\Auth_Core.csproj": {
+    "F:\\Identity_Application\\Auth_Core\\Auth_Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Mahmoud\\source\\repos\\AuthServer\\Auth_Core\\Auth_Core.csproj",
+        "projectUniqueName": "F:\\Identity_Application\\Auth_Core\\Auth_Core.csproj",
         "projectName": "Auth_Core",
-        "projectPath": "C:\\Users\\Mahmoud\\source\\repos\\AuthServer\\Auth_Core\\Auth_Core.csproj",
+        "projectPath": "F:\\Identity_Application\\Auth_Core\\Auth_Core.csproj",
         "packagesPath": "C:\\Users\\Mahmoud\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Mahmoud\\source\\repos\\AuthServer\\Auth_Core\\obj\\",
+        "outputPath": "F:\\Identity_Application\\Auth_Core\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -53,6 +53,10 @@
             "AutoMapper": {
               "target": "Package",
               "version": "[13.0.1, )"
+            },
+            "Microsoft.AspNetCore.Http.Abstractions": {
+              "target": "Package",
+              "version": "[2.2.0, )"
             },
             "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
               "target": "Package",
