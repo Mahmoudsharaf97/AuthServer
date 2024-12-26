@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "WSSaycIqAGM=",
+  "dgSpecHash": "32NgXhgLp3Y=",
   "success": true,
-  "projectFilePath": "F:\\Identity_Application\\Auth_Core\\Auth_Core.csproj",
+  "projectFilePath": "F:\\IdentityServer\\Auth_Core\\Auth_Core.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Mahmoud\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
     "C:\\Users\\Mahmoud\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",

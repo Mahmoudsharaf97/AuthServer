@@ -10,6 +10,7 @@ using Auth_Application.Models;
 using Auth_Core;
 using Auth_Core.UseCase;
 using Auth_Core.UseCase.Redis;
+using SME_Core;
 
 namespace IdentityApplication.Services
 {
@@ -24,8 +25,10 @@ namespace IdentityApplication.Services
         //public Utilities _utilities  { get; }
         public   IRedisCaching _cacheManager { get; }
         public AppSettingsConfiguration settings { get; }
+        public Utilities _utilities { get; }
+
         public IdentityServices(IApplicationUserManager applicationUserManager, UserManager<ApplicationUser<string>> userManager ,SignInManager<ApplicationUser<string>> signInManager,ISessionServices sessionServices ,  IRedisCaching cacheManager
-          ,AppSettingsConfiguration _settings,GlobalInfo globalInfo
+          ,AppSettingsConfiguration _settings,GlobalInfo globalInfo, Utilities utilities
             )
         {
             _applicationUserManager = applicationUserManager;
@@ -36,6 +39,7 @@ namespace IdentityApplication.Services
             _cacheManager = cacheManager;
             settings= _settings;
             this.globalInfo = globalInfo;
+            _utilities = utilities;
         }
         public async Task<RegisterOutPut> Register(RegisterInput model)
         {
@@ -46,8 +50,6 @@ namespace IdentityApplication.Services
 
                 if (emailExist)
                     throw new AppException(ExceptionEnum.EmailAlreadyExist);
-
-                // var user = MapperObject.Mapper.Map<ApplicationUser<string>>(model);
                 var user = new ApplicationUser<string>
                 {
                     Email = model.Email,
@@ -56,7 +58,6 @@ namespace IdentityApplication.Services
                     PhoneNumberConfirmed = false,
                     EmailConfirmed = false,
                 };
-
                 var createdUser = await _userManager.CreateAsync(user, model.Password);
                 if (!createdUser.Succeeded)
                 {
@@ -80,6 +81,7 @@ namespace IdentityApplication.Services
 
                     throw new AppException(ExceptionEnum.RecordUpdateFailed);
                 }
+                await _cacheManager.SetUserAsync(user.Id, user);
                 result.Succes = true;
                 return result;
             }
@@ -96,7 +98,8 @@ namespace IdentityApplication.Services
             try
             {
                 var output = new LogInOutput();
-                var user = await _applicationUserManager.GetUserByEmailAsync(model.Email.Trim());
+               // var user = await _applicationUserManager.GetUserByEmailAsync(model.Email.Trim());
+                var user = await _cacheManager.GetUserAsync(model.Email.Trim());
 
                 if (user == null)
                     throw new AppException(ExceptionEnum.UserNotFound);
@@ -127,7 +130,7 @@ namespace IdentityApplication.Services
                     };
                     await _cacheManager.SetSessionAsync(user.Email, userSession);
                     user.LastSuccessLogin = DateTime.Now;
-                  //  await _userManager.UpdateAsync();
+                  //  await _userManager.UpdateAsync(); need to add to rabbiteMQ for Update 
                     var tokenResult =await GetToken(user.Id, userSession.SessionId);
                     if (tokenResult.ErrorCode == IdentityOutput.ErrorCodes.Success)
                     output.AccessToken = tokenResult?.Result?.AccessToken;
@@ -145,64 +148,24 @@ namespace IdentityApplication.Services
 
         }
 
+        public async Task<bool> LogOut()
+        {
+
+            //var user = await _applicationUserManager.GetUserByIdAsync("globalInfo.CreatUser");
+            var user = await _cacheManager.GetUserAsync("globalInfo.UserEmail");
+            if (user == null)
+                throw new AppException(ExceptionEnum.RecordNotExist);
+             await _signInManager.SignOutAsync();
+             await _cacheManager.DeleteSessionAsync(user.Id);
+             return true;
+        }
 
 
-
-        //public async Task<bool> LogOut()
-        //{
-
-        //    var user = await _applicationUserManager.GetUserByIdAsync("globalInfo.CreatUser");
-        //    if (user == null)
-        //        throw new AppException(ExceptionEnum.RecordNotExist);
-        //    await _signInManager.SignOutAsync();
-        //    var userSessions = _sessionServices.GetUsrerAllSessions(globalInfo.CreatUser);
-        //    if (userSessions?.Count > 0)
-        //    {
-        //        foreach (var item in userSessions)
-        //        {
-        //            await _sessionServices.Removeasync(item);
-        //            await _cacheManager.RemoveAsync(item.SessionId);
-        //        }
-        //    }
-        //    return true;
-        //}
-
-        //private async Task<JwtSecurityToken> CreateJwtToken(ApplicationUser<string> user,string sessionId)
-        //{
-        //    var userClaims = await _userManager.GetClaimsAsync(user);
-        //    var roles = await _userManager.GetRolesAsync(user);
-        //    var roleClaims = new List<Claim>();
-
-        //    foreach (var role in roles)
-        //        roleClaims.Add(new Claim("roles", role));
-
-        //    var claims = new[]
-        //    {
-        //                new Claim("UserId",user.Id.ToString()),
-        //                new Claim("SessionId",sessionId),
-        //                new Claim("Email",user.Email.ToString()),
-        //                new Claim("UserName",user.UserName.ToString()),
-        //    }
-        //    .Union(userClaims)
-        //    .Union(roleClaims);
-
-        //    var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(settings.JwtSecretKey));
-        //    var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
-
-        //    var jwtSecurityToken = new JwtSecurityToken(
-        //        issuer: settings.JwtIssuer,
-        //        audience: settings.JwtAudience,
-        //        claims: claims,
-        //        expires: DateTime.Now.AddDays(settings.JwtTokenExpiryMinutes),
-        //        signingCredentials: signingCredentials);
-
-        //    return jwtSecurityToken;
-        //}
 
         //public async Task<bool> ResetPassword(string email)
         //{
         //    var user = await _userManager.FindByEmailAsync(email);
-        //    if (user == null) 
+        //    if (user == null)
         //        throw new AppException(ExceptionEnum.UserNotFound);
 
         //    var newSession = new SessionStatus
@@ -216,20 +179,20 @@ namespace IdentityApplication.Services
         //    };
         //    await _sessionServices.AddSessionAsync(newSession);
 
-        //    var token =await GetToken(user.Id, newSession.SessionId);
-        //    if(token == null || token.ErrorCode!=IdentityOutput.ErrorCodes.Success)
-        //        throw new AppException(SME_Core.ExceptionEnum.GenricError);              
+        //    var token = await GetToken(user.Id, newSession.SessionId);
+        //    if (token == null || token.ErrorCode != IdentityOutput.ErrorCodes.Success)
+        //        throw new AppException(SME_Core.ExceptionEnum.GenricError);
 
         //    var Url = settings.MailSettings.IdentityUrlResetPassword + "&Id=" + token.Result?.Token;
 
         //    MailBodyModel mailbody = new MailBodyModel()
         //    {
-        //     //   Lang= globalInfo.lang,
-        //        SMSMethod="",
+        //        //   Lang= globalInfo.lang,
+        //        SMSMethod = "",
         //    };
         //    string subject = "";//_mailService.CreateMailSubject(mailbody);
         //    string body = "";//await _mailService.CreateMailBody(mailbody);
-        //    body= body?.Replace("#link#", Url);
+        //    body = body?.Replace("#link#", Url);
         //    var res = true;//await _mailService.SendMailAsync("mahmoudsharaf97@gmail.com", body, subject);
         //    if (!res)
         //        throw new AppException(ExceptionEnum.SendMailFailed);
@@ -261,6 +224,11 @@ namespace IdentityApplication.Services
             }
            
             return true;
+        }
+
+        public Task<bool> ResetPassword(string email)
+        {
+            throw new NotImplementedException();
         }
     }
 }

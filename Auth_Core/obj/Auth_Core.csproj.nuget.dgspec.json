@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "F:\\Identity_Application\\Auth_Core\\Auth_Core.csproj": {}
+    "F:\\IdentityServer\\Auth_Core\\Auth_Core.csproj": {}
   },
   "projects": {
-    "F:\\Identity_Application\\Auth_Core\\Auth_Core.csproj": {
+    "F:\\IdentityServer\\Auth_Core\\Auth_Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\Identity_Application\\Auth_Core\\Auth_Core.csproj",
+        "projectUniqueName": "F:\\IdentityServer\\Auth_Core\\Auth_Core.csproj",
         "projectName": "Auth_Core",
-        "projectPath": "F:\\Identity_Application\\Auth_Core\\Auth_Core.csproj",
+        "projectPath": "F:\\IdentityServer\\Auth_Core\\Auth_Core.csproj",
         "packagesPath": "C:\\Users\\Mahmoud\\.nuget\\packages\\",
-        "outputPath": "F:\\Identity_Application\\Auth_Core\\obj\\",
+        "outputPath": "F:\\IdentityServer\\Auth_Core\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
