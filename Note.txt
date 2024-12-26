@@ -1,1 +1,2 @@
 1- need to implement globalInfo to Get user info 
+2- we need to reset on redis on all data if not existed (we need it if we have any problem with the cached data on redis or on our current situation to local test)
