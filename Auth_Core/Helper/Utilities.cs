@@ -8,6 +8,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.Net.NetworkInformation;
 using System.Net.Security;
+using Newtonsoft.Json.Linq;
 
 namespace SME_Core
 {
