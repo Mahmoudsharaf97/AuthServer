@@ -27,3 +27,12 @@ F:\Identity_Application\Auth_Core\obj\Debug\net9.0\refint\Auth_Core.dll
 F:\Identity_Application\Auth_Core\obj\Debug\net9.0\Auth_Core.pdb
 F:\Identity_Application\Auth_Core\obj\Debug\net9.0\Auth_Core.genruntimeconfig.cache
 F:\Identity_Application\Auth_Core\obj\Debug\net9.0\ref\Auth_Core.dll
+C:\src\AuthServer\main\Auth_Core\obj\Debug\net9.0\Auth_Core.csproj.AssemblyReference.cache
+C:\src\AuthServer\main\Auth_Core\obj\Debug\net9.0\Auth_Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\src\AuthServer\main\Auth_Core\obj\Debug\net9.0\Auth_Core.AssemblyInfoInputs.cache
+C:\src\AuthServer\main\Auth_Core\obj\Debug\net9.0\Auth_Core.AssemblyInfo.cs
+C:\src\AuthServer\main\Auth_Core\obj\Debug\net9.0\Auth_Core.csproj.CoreCompileInputs.cache
+C:\src\AuthServer\main\Auth_Core\obj\Debug\net9.0\Auth_Core.sourcelink.json
+C:\src\AuthServer\main\Auth_Core\obj\Debug\net9.0\Auth_Core.dll
+C:\src\AuthServer\main\Auth_Core\obj\Debug\net9.0\refint\Auth_Core.dll
+C:\src\AuthServer\main\Auth_Core\obj\Debug\net9.0\Auth_Core.pdb

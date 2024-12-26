@@ -32,7 +32,7 @@ namespace AuthServer.Controllers
         [AppAuthorize_Any]
         public async Task<ActionResult> Register(RegisterInput input)
         {
-            var request = MapperObject.Mapper.Map<RegisterCommand>(input); 
+			RegisterCommand request = MapperObject.Mapper.Map<RegisterCommand>(input); 
             return Ok(await _mediator.Send(request));
         }
 
