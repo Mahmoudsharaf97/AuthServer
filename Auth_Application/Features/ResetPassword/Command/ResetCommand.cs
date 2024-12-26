@@ -9,6 +9,15 @@ namespace Auth_Application.Features
 {
     public class ResetCommand : IRequest<bool>
     {
-        public string Email { get; set; }
-    }
+		public ResetCommand()
+		{
+			
+		}
+		public ResetCommand(string email)
+		{
+			Email = email;
+		}
+		public string Email { get; set; }
+
+	}
 }
