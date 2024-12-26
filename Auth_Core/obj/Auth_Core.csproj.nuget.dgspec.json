@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "F:\\IdentityServer\\Auth_Core\\Auth_Core.csproj": {}
+    "C:\\src\\AuthServer\\main\\Auth_Core\\Auth_Core.csproj": {}
   },
   "projects": {
-    "F:\\IdentityServer\\Auth_Core\\Auth_Core.csproj": {
+    "C:\\src\\AuthServer\\main\\Auth_Core\\Auth_Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\IdentityServer\\Auth_Core\\Auth_Core.csproj",
+        "projectUniqueName": "C:\\src\\AuthServer\\main\\Auth_Core\\Auth_Core.csproj",
         "projectName": "Auth_Core",
-        "projectPath": "F:\\IdentityServer\\Auth_Core\\Auth_Core.csproj",
-        "packagesPath": "C:\\Users\\Mahmoud\\.nuget\\packages\\",
-        "outputPath": "F:\\IdentityServer\\Auth_Core\\obj\\",
+        "projectPath": "C:\\src\\AuthServer\\main\\Auth_Core\\Auth_Core.csproj",
+        "packagesPath": "C:\\Users\\EMP.BCARE-RUH-628.000\\.nuget\\packages\\",
+        "outputPath": "C:\\src\\AuthServer\\main\\Auth_Core\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Mahmoud\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\EMP.BCARE-RUH-628.000\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],

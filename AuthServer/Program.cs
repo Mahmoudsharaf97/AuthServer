@@ -4,6 +4,8 @@ using Auth_Core;
 using Auth_Core.Global;
 using Auth_Core.MiddleWare;
 using Auth_Infrastructure;
+using AuthServer.Endpoints.IdentityEndpoint;
+using AuthServer.Endpoints.RouteGroup;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -16,6 +18,8 @@ var builder = WebApplication.CreateBuilder(args);
       builder.Services.AddSingleton(config);
  builder.Services.AddSingleton<GlobalInfo>();
 ContextInjection.AddAuthContextInjection(builder.Services, config);
+builder.Services.AddEndpointsApiExplorer();
+
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 app.UseHttpsRedirection();
@@ -52,7 +56,8 @@ app.MapControllers();
 //    return forecast;
 //});
 app.UseMiddleware<RequestMiddleWare>();
-
+app.MapGeneralGroup(nameof(IdentityEndpoint), "General")
+    .MapIdentityEndpoints();
 app.Run();
 
 
