@@ -40,10 +40,6 @@ namespace IdentityApplication.Services
         }
         public async Task<IdentityOutput> GetToken(string userId, string SessionId)
         {
-            var output = new IdentityOutput
-            {
-                Result = new LogInOutput()
-            };
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
                 throw new AppException(ExceptionEnum.RecordNotExist);
@@ -66,14 +62,7 @@ namespace IdentityApplication.Services
             var tokenHandler = new JwtSecurityTokenHandler();
             var securityToken = tokenHandler.CreateToken(tokenDescriptor);
             var token = tokenHandler.WriteToken(securityToken);
-            output.ErrorCode = IdentityOutput.ErrorCodes.Success;
-            output.Result = new LogInOutput();
-            output.Result.AccessToken = token;
-            output.Result.success = true;
-            output.TokenExpiryMinutes = settings.JwtTokenExpiryMinutes;
-            output.Email = user.Email;
-            output.TokenExpiryDate = DateTime.Now.AddMinutes(settings.JwtTokenExpiryMinutes);
-            output.UserName = user.Email.Split("@")[0];
+			IdentityOutput output = new(new LogInOutput(true, token), IdentityOutput.ErrorCodes.Success, settings.JwtTokenExpiryMinutes, user.Email, DateTime.Now.AddMinutes(settings.JwtTokenExpiryMinutes), user.Email.Split("@")[0]);
             return output;
         }
 

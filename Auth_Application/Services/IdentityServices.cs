@@ -119,15 +119,7 @@ namespace IdentityApplication.Services
                 var result = await _signInManager.PasswordSignInAsync(user.Email, model.Password, false, true); 
                 if (result.Succeeded)
                 {
-                    var userSession = new SessionStatus
-                    {
-                        SessionId = Guid.NewGuid().ToString(),
-                        UserId = user.Id,
-                        UserIP = _utilities.GetUserIP(),
-                        UserAgent = _utilities.GetUserAgent(),
-                        MacAddress = _utilities.GetMacAddress(),
-                        DeviceName = _utilities.GetUserIP()
-                    };
+                    var userSession = new SessionStatus(Guid.NewGuid().ToString(), user.Id, _utilities.GetUserIP(), _utilities.GetUserAgent(), _utilities.GetMacAddress(), _utilities.GetUserIP());
                     await _cacheManager.SetSessionAsync(user.Email, userSession);
                     user.LastSuccessLogin = DateTime.Now;
                   //  await _userManager.UpdateAsync(); need to add to rabbiteMQ for Update 
@@ -135,7 +127,7 @@ namespace IdentityApplication.Services
                     if (tokenResult.ErrorCode == IdentityOutput.ErrorCodes.Success)
                     output.AccessToken = tokenResult?.Result?.AccessToken;
                     output.AccessTokenExpiration = tokenResult?.Result?.AccessTokenExpiration;
-                    output.success = true;
+                    output.Success = true;
                     return output;
                 }
                 return null;
