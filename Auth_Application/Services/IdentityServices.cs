@@ -81,7 +81,7 @@ namespace IdentityApplication.Services
 
                     throw new AppException(ExceptionEnum.RecordUpdateFailed);
                 }
-                await _cacheManager.SetUserAsync(user.Id, user);
+                await _cacheManager.SetUserAsync(user.Email, user);
                 result.Succes = true;
                 return result;
             }
