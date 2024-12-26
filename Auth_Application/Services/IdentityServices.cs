@@ -125,7 +125,7 @@ namespace IdentityApplication.Services
                     var tokenResult =await GetToken(user.Id, userSession.SessionId);
                     if (tokenResult.ErrorCode == IdentityOutput.ErrorCodes.Success)
                     {
-						LogInOutput output = new(tokenResult.Result.Success,tokenResult.Result.AccessToken,tokenResult.Result.AccessTokenExpiration);
+						LogInOutput output = tokenResult.Result;
 						return output;
 					}
                 }
