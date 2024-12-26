@@ -97,7 +97,6 @@ namespace IdentityApplication.Services
         {
             try
             {
-                var output = new LogInOutput();
                // var user = await _applicationUserManager.GetUserByEmailAsync(model.Email.Trim());
                 var user = await _cacheManager.GetUserAsync(model.Email.Trim());
 
@@ -125,10 +124,10 @@ namespace IdentityApplication.Services
                   //  await _userManager.UpdateAsync(); need to add to rabbiteMQ for Update 
                     var tokenResult =await GetToken(user.Id, userSession.SessionId);
                     if (tokenResult.ErrorCode == IdentityOutput.ErrorCodes.Success)
-                    output.AccessToken = tokenResult?.Result?.AccessToken;
-                    output.AccessTokenExpiration = tokenResult?.Result?.AccessTokenExpiration;
-                    output.Success = true;
-                    return output;
+                    {
+						LogInOutput output = new(tokenResult.Result.Success,tokenResult.Result.AccessToken,tokenResult.Result.AccessTokenExpiration);
+						return output;
+					}
                 }
                 return null;
             }

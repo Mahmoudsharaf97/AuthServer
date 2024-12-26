@@ -63,6 +63,7 @@ namespace IdentityApplication.Services
             var securityToken = tokenHandler.CreateToken(tokenDescriptor);
             var token = tokenHandler.WriteToken(securityToken);
 			IdentityOutput output = new(new LogInOutput(true, token), IdentityOutput.ErrorCodes.Success, settings.JwtTokenExpiryMinutes, user.Email, DateTime.Now.AddMinutes(settings.JwtTokenExpiryMinutes), user.Email.Split("@")[0]);
+            output.Result.AccessTokenExpiration = output.TokenExpiryDate;
             return output;
         }
 
