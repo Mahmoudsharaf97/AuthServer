@@ -1,11 +1,11 @@
 ﻿using Auth_Application.Models;
+using IdentityApplication;
 using IdentityApplication.Interface;
-using IdentityApplication.Models;
 using MediatR;
 
 namespace Auth_Application.Features
 {
-    public class LoginHundler : IRequestHandler<LoginQuery, LogInOutput>
+	public class LoginHundler : IRequestHandler<LoginQuery, LogInOutput>
     {
         public IIdentityServices _identityServices { get; }
         public LoginHundler(IIdentityServices identityServices)
