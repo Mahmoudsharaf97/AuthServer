@@ -32,3 +32,6 @@ msbuild.wrn
 
 # Visual Studio 2015
 .vs/
+/Auth_Core/obj/Debug/net9.0/Auth_Core.AssemblyInfo.cs
+/Auth_Core/obj/Debug/net9.0/Auth_Core.AssemblyInfoInputs.cache
+/Auth_Core/obj/Debug/net9.0/Auth_Core.csproj.AssemblyReference.cache
