@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Auth_Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 namespace Auth_Infrastructure
 {
@@ -10,10 +11,14 @@ namespace Auth_Infrastructure
         public static IServiceCollection AddAuthContextInjection(this IServiceCollection services,
             AppSettingsConfiguration settings)
         {
-            // For  Identity
-            services.AddDbContext<AuthContext>(
+			// For  Identity
+			services.AddDbContext<AuthContext>(
                 m => m.UseSqlServer(settings.AuthConnectionStringDB), ServiceLifetime.Singleton);
-            return services;
+
+			services.AddIdentity<ApplicationUser<string>, ApplicationRole<string>>()
+		        .AddEntityFrameworkStores<AuthContext>()
+		        .AddDefaultTokenProviders();
+			return services;
 
         }
     }

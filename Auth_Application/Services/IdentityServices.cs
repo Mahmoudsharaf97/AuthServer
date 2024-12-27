@@ -81,7 +81,7 @@ namespace IdentityApplication.Services
 
                     throw new AppException(ExceptionEnum.RecordUpdateFailed);
                 }
-                await _cacheManager.SetUserAsync(user.Id, user);
+                await _cacheManager.SetUserAsync(user.Email, user);
                 result.Succes = true;
                 return result;
             }
@@ -97,7 +97,6 @@ namespace IdentityApplication.Services
         {
             try
             {
-                var output = new LogInOutput();
                // var user = await _applicationUserManager.GetUserByEmailAsync(model.Email.Trim());
                 var user = await _cacheManager.GetUserAsync(model.Email.Trim());
 
@@ -119,24 +118,16 @@ namespace IdentityApplication.Services
                 var result = await _signInManager.PasswordSignInAsync(user.Email, model.Password, false, true); 
                 if (result.Succeeded)
                 {
-                    var userSession = new SessionStatus
-                    {
-                        SessionId = Guid.NewGuid().ToString(),
-                        UserId = user.Id,
-                        UserIP = _utilities.GetUserIP(),
-                        UserAgent = _utilities.GetUserAgent(),
-                        MacAddress = _utilities.GetMacAddress(),
-                        DeviceName = _utilities.GetUserIP()
-                    };
+                    var userSession = new SessionStatus(Guid.NewGuid().ToString(), user.Id, _utilities.GetUserIP(), _utilities.GetUserAgent(), _utilities.GetMacAddress(), _utilities.GetUserIP());
                     await _cacheManager.SetSessionAsync(user.Email, userSession);
                     user.LastSuccessLogin = DateTime.Now;
                   //  await _userManager.UpdateAsync(); need to add to rabbiteMQ for Update 
                     var tokenResult =await GetToken(user.Id, userSession.SessionId);
                     if (tokenResult.ErrorCode == IdentityOutput.ErrorCodes.Success)
-                    output.AccessToken = tokenResult?.Result?.AccessToken;
-                    output.AccessTokenExpiration = tokenResult?.Result?.AccessTokenExpiration;
-                    output.success = true;
-                    return output;
+                    {
+						LogInOutput output = tokenResult.Result;
+						return output;
+					}
                 }
                 return null;
             }

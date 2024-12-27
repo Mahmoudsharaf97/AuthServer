@@ -103,7 +103,7 @@ namespace Auth_Application.Services.Token
             output.ErrorCode = IdentityOutput.ErrorCodes.Success;
             output.Result = new LogInOutput();
             output.Result.AccessToken = token;
-            output.Result.success = true;
+            output.Result.Success = true;
             output.TokenExpiryMinutes = settings.JwtTokenExpiryMinutes;
             output.Email = user.Email;
             output.TokenExpiryDate = DateTime.Now.AddMinutes(settings.JwtTokenExpiryMinutes);

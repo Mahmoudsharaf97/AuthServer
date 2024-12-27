@@ -8,7 +8,20 @@ namespace Auth_Application.Models
 {
     public class IdentityOutput
     {
-        public enum ErrorCodes
+		public IdentityOutput()
+		{
+			
+		}
+		public IdentityOutput(LogInOutput result,ErrorCodes errorCode, int? tokenExpiryMinutes, string email, DateTime? tokenExpiryDate, string userName)
+		{
+			Result = result;
+			ErrorCode = errorCode;
+			TokenExpiryMinutes = tokenExpiryMinutes;
+			Email = email;
+			TokenExpiryDate = tokenExpiryDate;
+			UserName = userName;
+		}
+		public enum ErrorCodes
         {
             Success = 1,
             EmptyInputParamter = 2,
@@ -40,10 +53,10 @@ namespace Auth_Application.Models
         /// </summary>
         public ErrorCodes ErrorCode { get; set; }
 
-        /// <summary>
-        /// Result
-        /// </summary>
-        public LogInOutput Result { get; set; }
+		/// <summary>
+		/// Result
+		/// </summary>
+		public LogInOutput Result { get; set; }
 
         public int ? TokenExpiryMinutes { get; set; }
         public string  Email { get; set; }

@@ -9,6 +9,11 @@ using AuthServer.Endpoints.RouteGroup;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Auth_Infrastructure.DependencyInjection;
+using Auth_Application.DependencyInjection;
+using System.Reflection;
+using MediatR;
+
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -16,29 +21,43 @@ var builder = WebApplication.CreateBuilder(args);
     var config = new AppSettingsConfiguration();
       builder.Configuration.Bind(config);
       builder.Services.AddSingleton(config);
- builder.Services.AddSingleton<GlobalInfo>();
+builder.Services.AddScoped<SME_Core.Utilities>();
+builder.Services.AddSingleton<GlobalInfo>();
+ builder.Services.AddInfrastructureServicesInjection();
+ builder.Services.AddApplicationServicesInjection();
 ContextInjection.AddAuthContextInjection(builder.Services, config);
-builder.Services.AddEndpointsApiExplorer();
 
-var app = builder.Build();
-// Configure the HTTP request pipeline.
-app.UseHttpsRedirection();
+builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
+builder.Services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 // Configure JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = false,
-            ValidateAudience = false,
-            ValidateLifetime = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your_secret_key_here"))
-        };
-    });
-builder.Services.AddSingleton<IRefreshTokenService, RefreshTokenService>();
+	.AddJwtBearer(options =>
+	{
+		options.TokenValidationParameters = new TokenValidationParameters
+		{
+			ValidateIssuer = false,
+			ValidateAudience = false,
+			ValidateLifetime = true,
+			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your_secret_key_here"))
+		};
+	});
+var app = builder.Build();
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+	//app.MapOpenApi();
+	app.UseSwagger();
+	app.UseSwaggerUI();
+}
+
+
+app.UseHttpsRedirection();
+
 app.UseAuthentication();
 app.UseAuthorization();
 

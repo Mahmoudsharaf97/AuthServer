@@ -20,7 +20,8 @@ namespace AuthServer.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+		[Route("[action]")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
         [AllowAnonymous]
         public async Task<ActionResult> GatToken()
         {
@@ -28,25 +29,28 @@ namespace AuthServer.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+		[Route("[action]")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
         [AppAuthorize_Any]
-        public async Task<ActionResult> Register(RegisterInput input)
+        public async Task<ActionResult> Register([FromBody] RegisterInput input)
         {
 			RegisterCommand request = MapperObject.Mapper.Map<RegisterCommand>(input); 
             return Ok(await _mediator.Send(request));
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+		[Route("[action]")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
         [AppAuthorize_Any]
-        public async Task<ActionResult> LogIn(LogInInput input)
+        public async Task<ActionResult> LogIn([FromBody] LogInInput input)
         {
            var request = MapperObject.Mapper.Map<LoginQuery>(input); 
             return Ok(await _mediator.Send(request));
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+		[Route("[action]")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
         [AppAuthorize]
         public async Task<ActionResult> LogOut()
         {
@@ -56,15 +60,17 @@ namespace AuthServer.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult> ResetPassword(string email)
+		[Route("[action]")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult> ResetPassword([FromQuery] string email)
         {
             var request = new ResetCommand() {Email=email};
             return Ok(await _mediator.Send(request));
         }
 
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+		[Route("[action]")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> ConfirmResetPassword()
         {
             var request = new LogOutCommand() ;

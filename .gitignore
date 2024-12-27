@@ -32,3 +32,23 @@ msbuild.wrn
 
 # Visual Studio 2015
 .vs/
+/Auth_Core/obj/Debug/net9.0/Auth_Core.AssemblyInfo.cs
+/Auth_Core/obj/Debug/net9.0/Auth_Core.AssemblyInfoInputs.cache
+/Auth_Core/obj/Debug/net9.0/Auth_Core.csproj.AssemblyReference.cache
+/Auth_Core/obj/Auth_Core.csproj.nuget.dgspec.json
+/Auth_Core/obj/Auth_Core.csproj.nuget.g.props
+/Auth_Core/obj/project.assets.json
+/Auth_Core/obj/project.nuget.cache
+/Auth_Core/bin/Debug/net9.0/Auth_Core.deps.json
+/Auth_Core/bin/Debug/net9.0/Auth_Core.dll
+/Auth_Core/bin/Debug/net9.0/Auth_Core.pdb
+/Auth_Core/obj/Debug/net9.0/Auth_Core.assets.cache
+/Auth_Core/obj/Debug/net9.0/Auth_Core.csproj.CoreCompileInputs.cache
+/Auth_Core/obj/Debug/net9.0/Auth_Core.csproj.FileListAbsolute.txt
+/Auth_Core/obj/Debug/net9.0/Auth_Core.dll
+/Auth_Core/obj/Debug/net9.0/Auth_Core.genruntimeconfig.cache
+/Auth_Core/obj/Debug/net9.0/Auth_Core.pdb
+/Auth_Core/obj/Debug/net9.0/ref/Auth_Core.dll
+/Auth_Core/obj/Debug/net9.0/refint/Auth_Core.dll
+/Auth_Core/obj/Debug/net9.0/ref/Auth_Core.dll
+/Auth_Core/obj/Debug/net9.0/refint/Auth_Core.dll
