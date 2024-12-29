@@ -5,19 +5,19 @@ using MediatR;
 
 namespace Auth_Application.Features
 {
-	public class LoginHundler : IRequestHandler<LoginQuery, LogInOutput>
+	public class BeginLoginHundler : IRequestHandler<BeginLoginQuery, LogInOutput>
     {
         public IIdentityServices _identityServices { get; }
-        public LoginHundler(IIdentityServices identityServices)
+        public BeginLoginHundler(IIdentityServices identityServices)
         {
             _identityServices = identityServices;
         }
 
 
-        public async Task<LogInOutput> Handle(LoginQuery request, CancellationToken cancellationToken)
+        public async Task<LogInOutput> Handle(BeginLoginQuery request, CancellationToken cancellationToken)
         {
           var input = MapperObject.Mapper.Map<LogInInput>(request); // test success
-            return await _identityServices.Login(input);
+            return await _identityServices.BeginLogin(input);
         }
     }
 }

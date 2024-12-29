@@ -10,7 +10,7 @@ namespace AuthServer.Endpoints.IdentityEndpoint.EndpointActions
 	{
 		public static async Task<LogInOutput> Action(IMediator _mediator, [FromBody] LogInInput input)
 		{
-			var request = MapperObject.Mapper.Map<LoginQuery>(input);
+			var request = MapperObject.Mapper.Map<BeginEndLoginQuery>(input);
 			return await _mediator.Send(request);
 		}
 	}

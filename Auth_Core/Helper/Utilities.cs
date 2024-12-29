@@ -9,7 +9,7 @@ using System.Xml.Serialization;
 using System.Net.NetworkInformation;
 using System.Net.Security;
 using Newtonsoft.Json.Linq;
-
+using System.Security.Cryptography;
 namespace SME_Core
 {
     public class Utilities
@@ -745,6 +745,16 @@ namespace SME_Core
             {
                 return false;
             }
+        }
+
+        public string GenerateRefreshToken()
+        {
+            var rnd = new byte[32];
+            using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(rnd);
+            }
+            return Convert.ToBase64String(rnd);
         }
 
     }
