@@ -15,6 +15,7 @@ namespace IdentityApplication.Services
     public partial class IdentityServices : IIdentityServices
     {
         private readonly IApplicationUserManager _applicationUserManager;
+        private readonly IUsersCachedManager _usersCachedManager;
         private readonly GlobalInfo globalInfo;
         public UserManager<ApplicationUser<string>> _userManager { get; }
         public SignInManager<ApplicationUser<string>> _signInManager { get; }
@@ -23,22 +24,23 @@ namespace IdentityApplication.Services
         public   IRedisCaching _cacheManager { get; }
         public AppSettingsConfiguration settings { get; }
         public Utilities _utilities { get; }
-        public IdentityServices(IApplicationUserManager applicationUserManager, UserManager<ApplicationUser<string>> userManager 
-            ,SignInManager<ApplicationUser<string>> signInManager,ISessionServices sessionServices ,  IRedisCaching cacheManager
-          ,AppSettingsConfiguration _settings,GlobalInfo globalInfo, Utilities utilities
-            )
-        {
-            _applicationUserManager = applicationUserManager;
-            _userManager = userManager;
-            _signInManager = signInManager;
-            _sessionServices = sessionServices;
-            //_utilities = utilities;
-            _cacheManager = cacheManager;
-            settings= _settings;
-            this.globalInfo = globalInfo;
-            _utilities = utilities;
-        }
-        public async Task<RegisterOutPut> Register(RegisterInput model)
+		public IdentityServices(IApplicationUserManager applicationUserManager, UserManager<ApplicationUser<string>> userManager
+			, SignInManager<ApplicationUser<string>> signInManager, ISessionServices sessionServices, IRedisCaching cacheManager
+		  , AppSettingsConfiguration _settings, GlobalInfo globalInfo, Utilities utilities
+, IUsersCachedManager usersCachedManager)
+		{
+			_applicationUserManager = applicationUserManager;
+			_userManager = userManager;
+			_signInManager = signInManager;
+			_sessionServices = sessionServices;
+			//_utilities = utilities;
+			_cacheManager = cacheManager;
+			settings = _settings;
+			this.globalInfo = globalInfo;
+			_utilities = utilities;
+			_usersCachedManager = usersCachedManager;
+		}
+		public async Task<RegisterOutPut> Register(RegisterInput model)
         {
             try
             {
@@ -78,7 +80,7 @@ namespace IdentityApplication.Services
 
                     throw new AppException(ExceptionEnum.RecordUpdateFailed);
                 }
-                await _cacheManager.SetUserAsync(user.Email, user);
+                _cacheManager.SetUser(user.Email,user.NationalId.ToString(), user);
                 result.Succes = true;
                 return result;
             }
@@ -94,7 +96,7 @@ namespace IdentityApplication.Services
         {
 
             //var user = await _applicationUserManager.GetUserByIdAsync("globalInfo.CreatUser");
-            var user = await _cacheManager.GetUserAsync("globalInfo.UserEmail");
+            var user = await _usersCachedManager.GetUserAsync(LoginType.Email, "globalInfo.UserEmail");
             if (user == null)
                 throw new AppException(ExceptionEnum.RecordNotExist);
              await _signInManager.SignOutAsync();

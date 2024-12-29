@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Auth_Core.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,6 @@ namespace Auth_Core.UseCase.Redis
 {
 	public interface IUsersCachedManager
 	{
-		Task<ApplicationUser<string>> GetUser(string emailOrNameKey);
+		Task<ApplicationUser<string>> GetUserAsync(LoginType LoginType, string emailOrNinKey);
 	}
 }

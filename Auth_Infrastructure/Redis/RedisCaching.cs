@@ -110,7 +110,7 @@ namespace Auth_Infrastructure.Redis
             return session;
         }
 
-        public async Task<bool> DeleteSessionAsync(string email,)
+        public async Task<bool> DeleteSessionAsync(string email)
         {
             string key = $"Session_{email}";
             return await Database.KeyDeleteAsync(email);

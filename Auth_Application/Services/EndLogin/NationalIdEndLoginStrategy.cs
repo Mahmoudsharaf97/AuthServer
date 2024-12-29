@@ -7,34 +7,35 @@ using Auth_Core;
 using IdentityApplication.Interface;
 using Microsoft.AspNetCore.Identity;
 using SME_Core;
+using Auth_Core.Enums;
 namespace Auth_Application.Services.Login
 {
     public class NationalIdEndLoginStrategy : BaseEndLogInServices, ILoginStrategy
     {
-        private readonly IApplicationUserManager _applicationUserManager;
+        private readonly IUsersCachedManager _usersCachedManager;
         private readonly GlobalInfo globalInfo;
-        public UserManager<ApplicationUser<string>> _userManager { get; }
         public ISessionServices _sessionServices { get; }
         public Utilities _utilities { get; }
         public AppSettingsConfiguration _settings;
-        public IRedisCaching _cacheManager { get; }
-        public NationalIdEndLoginStrategy(SignInManager<ApplicationUser<string>> signInManager
-            , IRedisCaching cacheManager, UserManager<ApplicationUser<string>> userManager
-            , AppSettingsConfiguration settings, Utilities utilities)
-            : base(signInManager, cacheManager, settings)
-        {
-            this._cacheManager = cacheManager;
-            this._userManager = userManager;
-            this._settings = settings;
-            this._utilities = utilities;
-        }
-        public async Task<LogInOutput> LoginByNAtionalId(long nationalId, string password)
+        //public UserManager<ApplicationUser<string>> _userManager { get; }
+        //public IRedisCaching _cacheManager { get; }
+        //private readonly IApplicationUserManager _applicationUserManager;
+		public NationalIdEndLoginStrategy(SignInManager<ApplicationUser<string>> signInManager
+			, IRedisCaching cacheManager, UserManager<ApplicationUser<string>> userManager
+			, AppSettingsConfiguration settings, Utilities utilities, IUsersCachedManager usersCachedManager)
+			: base(signInManager, cacheManager, settings,utilities)
+		{
+			//this._cacheManager = cacheManager;
+			//this._userManager = userManager;
+			this._settings = settings;
+			this._utilities = utilities;
+			_usersCachedManager = usersCachedManager;
+		}
+		public async Task<LogInOutput> LoginByNAtionalId(long nationalId, string password)
         {
             try
             {
-                var user = await _cacheManager.GetUserAsync(nationalId.ToString());
-                if (user is null)
-                    user = await _applicationUserManager.GetUserByNationalId(nationalId);
+                var user = await _usersCachedManager.GetUserAsync(LoginType.NationalId,nationalId.ToString());
 
                 ValidateUser(user);
                 var result = await SignInAsync(user.Email!, password);

@@ -12,35 +12,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Auth_Core.Enums;
 
 namespace Auth_Application.Services
 {
     public class EmailBeginLoginStrategy : BaseEndLogInServices, ILoginStrategy
     {
-        private readonly IApplicationUserManager _applicationUserManager;
+        private readonly IUsersCachedManager _usersCachedManager;
         private readonly GlobalInfo globalInfo;
-        public UserManager<ApplicationUser<string>> _userManager { get; }
         public ISessionServices _sessionServices { get; }
         public Utilities _utilities  { get; }
         public AppSettingsConfiguration _settings;
-        public IRedisCaching _cacheManager { get; }
-        public EmailBeginLoginStrategy(SignInManager<ApplicationUser<string>> signInManager
-            , IRedisCaching cacheManager , UserManager<ApplicationUser<string>> userManager
-            , AppSettingsConfiguration settings, Utilities utilities) 
-            :base(signInManager, cacheManager,settings)   
-        {
-            this._cacheManager = cacheManager;
-            this._userManager= userManager; 
-            this._settings = settings;
-            this._utilities = utilities;
-        }
-        public async Task<LogInOutput> LoginByEmail(string email,string password)
+        //private readonly IApplicationUserManager _applicationUserManager;
+        //public UserManager<ApplicationUser<string>> _userManager { get; }
+        //public IRedisCaching _cacheManager { get; }
+		public EmailBeginLoginStrategy(SignInManager<ApplicationUser<string>> signInManager
+			, IRedisCaching cacheManager, UserManager<ApplicationUser<string>> userManager
+			, AppSettingsConfiguration settings, Utilities utilities, IUsersCachedManager usersCachedManager)
+			: base(signInManager, cacheManager, settings,utilities)
+		{
+			//this._cacheManager = cacheManager;
+			//this._userManager = userManager;
+			this._settings = settings;
+			this._utilities = utilities;
+			_usersCachedManager = usersCachedManager;
+		}
+		public async Task<LogInOutput> LoginByEmail(string email,string password)
         {
             try
             {
-                var user = await _cacheManager.GetUserAsync(email.Trim());
-                if (user is null)
-                  user =await _userManager.FindByEmailAsync(email);
+                var user = await _usersCachedManager.GetUserAsync(LoginType.Email, email);
 
                 ValidateUser(user);
                 var result =await  SignInAsync(email, password);

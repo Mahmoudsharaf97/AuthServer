@@ -12,37 +12,42 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Auth_Core.Enums;
 
 namespace Auth_Application.Services.Login
 {
     public class NationalIdBeginLoginStrategy : BaseEndLogInServices, ILoginStrategy
     {
-        private readonly IApplicationUserManager _applicationUserManager;
+        //private readonly IApplicationUserManager _applicationUserManager;
+        private readonly IUsersCachedManager _usersCachedManager;
         private readonly GlobalInfo globalInfo;
         public UserManager<ApplicationUser<string>> _userManager { get; }
         public ISessionServices _sessionServices { get; }
         public Utilities _utilities { get; }
         public AppSettingsConfiguration _settings;
-        public IRedisCaching _cacheManager { get; }
-        public NationalIdBeginLoginStrategy(SignInManager<ApplicationUser<string>> signInManager
-            , IRedisCaching cacheManager, UserManager<ApplicationUser<string>> userManager
-            , AppSettingsConfiguration settings, Utilities utilities)
-            : base(signInManager, cacheManager, settings)
-        {
-            this._cacheManager = cacheManager;
-            this._userManager = userManager;
-            this._settings = settings;
-            this._utilities = utilities;
-        }
-        public async Task<LogInOutput> LoginByNAtionalId(long nationalId, string password)
+        //public IRedisCaching _cacheManager { get; }
+		public NationalIdBeginLoginStrategy(SignInManager<ApplicationUser<string>> signInManager
+			, IRedisCaching cacheManager, UserManager<ApplicationUser<string>> userManager
+			, AppSettingsConfiguration settings, Utilities utilities, IUsersCachedManager usersCachedManager)
+			: base(signInManager, cacheManager, settings,utilities)
+		{
+			//this._cacheManager = cacheManager;
+			this._userManager = userManager;
+			this._settings = settings;
+			this._utilities = utilities;
+			_usersCachedManager = usersCachedManager;
+		}
+		public async Task<LogInOutput> LoginByNAtionalId(long nationalId, string password)
         {
             try
             {
-                var user = await _cacheManager.GetUserAsync(nationalId.ToString());
-                if (user is null)
-                    user = await _applicationUserManager.GetUserByNationalId(nationalId);
+                //var user = await _cacheManager.GetUserAsync(nationalId.ToString());
+                //if (user is null)
+                //    user = await _applicationUserManager.GetUserByNationalId(nationalId);
 
-                ValidateUser(user);
+                var user = await _usersCachedManager.GetUserAsync(LoginType.NationalId, nationalId.ToString());
+
+				ValidateUser(user);
                 var result = await SignInAsync(user.Email!, password);
                 if (result.Succeeded)
                 {
