@@ -41,10 +41,6 @@ namespace Auth_Application.Services.Login
         {
             try
             {
-                //var user = await _cacheManager.GetUserAsync(nationalId.ToString());
-                //if (user is null)
-                //    user = await _applicationUserManager.GetUserByNationalId(nationalId);
-
                 var user = await _usersCachedManager.GetUserAsync(LoginType.NationalId, nationalId.ToString());
 
 				ValidateUser(user);
