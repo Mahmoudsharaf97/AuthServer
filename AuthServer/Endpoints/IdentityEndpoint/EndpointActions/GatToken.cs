@@ -1,5 +1,5 @@
 ﻿using Auth_Application.Features;
-using IdentityApplication.Features;
+using Auth_Application.Features.Token.AccessToken.Queries;
 using MediatR;
 
 namespace AuthServer.Endpoints.IdentityEndpoint.EndpointActions

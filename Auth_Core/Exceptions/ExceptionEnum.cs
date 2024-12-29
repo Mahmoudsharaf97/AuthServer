@@ -85,6 +85,8 @@
 		SendNotificationsFailed = 79,
 		InValidCheckoutOtpNotification = 80,
 		EmailNotValid = 81,
+		CachedRefreshTokenWithEmailNotFound = 82,
+		RefreshTokenIsWrong = 83
 	}
 
 }

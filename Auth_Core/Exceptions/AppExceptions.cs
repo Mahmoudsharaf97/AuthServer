@@ -32,6 +32,8 @@ namespace Auth_Core
              {70,new string[]{ "Request policy effective date is less than 16hr ", "خطأ في تاريخ تفعيل الوثيقة" }  },
              {71,new string[]{ "CrInfo Data Not Found ", "بيانات الشركة غير موجودة " }  },
              {72,new string[]{ "Wrong Capcha Input", "رقم التحقق خطأ"}  },
+             {82,new string[]{ "Cached Refresh Token With Email Not Found", "رمز التحديث المخزن مؤقتًا المربوط بالبريد الإلكتروني غير موجود" }  },
+             {83,new string[]{ "Refresh Token Is Wrong", "رمز التحديث خطأ" }  },
         };
     }
 }

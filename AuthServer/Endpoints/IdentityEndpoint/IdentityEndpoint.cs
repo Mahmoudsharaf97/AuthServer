@@ -14,6 +14,10 @@ namespace AuthServer.Endpoints.IdentityEndpoint
 				.WithName("GatToken")
 				.WithSummary("GatToken info");
 
+			group.MapPost($"/v1/{nameof(RefreshToken)}", RefreshToken.Action)
+				.WithName("RefreshToken")
+				.WithSummary("RefreshToken info");
+
 			group.MapPost($"/v1/{nameof(LogIn)}", LogIn.Action)
 				.WithName("LogIn")
 				.WithSummary("LogIn info");
