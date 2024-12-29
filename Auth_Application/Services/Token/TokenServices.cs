@@ -1,8 +1,10 @@
 ﻿using Auth_Application.Interface;
 using Auth_Application.Models;
 using Auth_Core;
+using Auth_Core.UseCase.Redis;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using SME_Core;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -13,14 +15,20 @@ namespace Auth_Application.Services.Token
     public  class TokenServices : ITokenServices
     {
         private readonly AppSettingsConfiguration settings;
-        public UserManager<ApplicationUser<string>> _userManager { get; }
+        private readonly IRedisCaching _cacheManager;
 
-        public TokenServices(AppSettingsConfiguration appSettingsConfiguration, UserManager<ApplicationUser<string>> userManager)
-        {
-            this.settings = appSettingsConfiguration;
-            _userManager = userManager;
-        }
-        public string GenerateTokenJWT(string ID, string Email, string userName, string sessionId)
+		public UserManager<ApplicationUser<string>> _userManager { get; }
+		public Utilities _utilities { get; }
+
+
+		public TokenServices(AppSettingsConfiguration appSettingsConfiguration, UserManager<ApplicationUser<string>> userManager, Utilities utilities, IRedisCaching cacheManager)
+		{
+			this.settings = appSettingsConfiguration;
+			_userManager = userManager;
+			_utilities = utilities;
+			_cacheManager = cacheManager;
+		}
+		public string GenerateTokenJWT(string ID, string Email, string userName, string sessionId)
 
         {
 
@@ -110,5 +118,32 @@ namespace Auth_Application.Services.Token
             output.UserName = user.Email.Split("@")[0];
             return output;
         }
-    }
+		public async Task<IdentityOutput> GetAccessToken(ApplicationUser<string>? user, string SessionId)
+		{
+			var tokenDescriptor = new SecurityTokenDescriptor
+			{
+				Subject = new ClaimsIdentity(new Claim[]
+						  {
+						new Claim("Any","No"),
+						new Claim("UserId",user.Id.ToString()),
+						new Claim("SessionId",SessionId),
+						new Claim("Email",user.Email.ToString()),
+						new Claim("LockoutEnabled",user.LockoutEnabled.ToString()),
+						new Claim("LockoutEnd",user.LockoutEnd.ToString()),
+						new Claim("UserName",user.Email.Split("@")[0].ToString()),
+						  }),
+				Expires = DateTime.UtcNow.AddMinutes(settings.JwtTokenExpiryMinutes),
+				SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(settings.JwtSecretKey)), SecurityAlgorithms.HmacSha256Signature)
+			};
+			string refreshToken = _utilities.GenerateRefreshToken();
+			await _cacheManager.SetRefreshTokenAsync(user.Email, refreshToken);
+			var tokenHandler = new JwtSecurityTokenHandler();
+			var securityToken = tokenHandler.CreateToken(tokenDescriptor);
+			var token = tokenHandler.WriteToken(securityToken);
+			IdentityOutput output = new(new LogInOutput(true, token), IdentityOutput.ErrorCodes.Success, settings.JwtTokenExpiryMinutes, user.Email, DateTime.Now.AddMinutes(settings.JwtTokenExpiryMinutes), user.Email.Split("@")[0]);
+			output.Result.AccessTokenExpiration = output.TokenExpiryDate;
+			output.Result.RefreshToken = refreshToken;
+			return output;
+		}
+	}
 }
