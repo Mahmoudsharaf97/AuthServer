@@ -185,13 +185,13 @@ namespace IdentityApplication.Services
                 if (model.LoginType == (byte)LoginType.Email)
                 {
                     EmailEndLoginStrategy emailLoginStrategy =
-                        new EmailEndLoginStrategy(_signInManager, _cacheManager, _userManager, settings, _utilities);
+                        new EmailEndLoginStrategy(_signInManager, _cacheManager, _userManager, settings, _utilities, _usersCachedManager);
                     return await emailLoginStrategy.LoginByEmail(model.Email!, model.Password);
                 }
                 else if (model.LoginType == (byte)LoginType.NationalId)
                 {
                     NationalIdEndLoginStrategy nationalIdLoginStrategy =
-                        new NationalIdEndLoginStrategy(_signInManager, _cacheManager, _userManager, settings, _utilities);
+                        new NationalIdEndLoginStrategy(_signInManager, _cacheManager, _userManager, settings, _utilities, _usersCachedManager);
                     return await nationalIdLoginStrategy.LoginByNAtionalId(model.NationalId!.Value, model.Password);
                 }
                 return null;
