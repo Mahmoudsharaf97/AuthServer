@@ -64,7 +64,11 @@ namespace Auth_Infrastructure.Identity
             var context = GetContext();
             return await context.Users.FirstOrDefaultAsync(x => x.Email == email);
         }
-
+        public async Task<ApplicationUser<string>> GetUserByNationalId(long nationalId)
+        {
+            var context = GetContext();
+            return await context.Users.FirstOrDefaultAsync(x => x.NationalId == nationalId);
+        }
         public async Task<bool> IsBloked(string userId)
         {
            var user = await GetUserByIdAsync(userId);

@@ -44,7 +44,7 @@ namespace AuthServer.Controllers
         [AppAuthorize_Any]
         public async Task<ActionResult> LogIn([FromBody] LogInInput input)
         {
-           var request = MapperObject.Mapper.Map<LoginQuery>(input); 
+           var request = MapperObject.Mapper.Map<BeginEndLoginQuery>(input); 
             return Ok(await _mediator.Send(request));
         }
 

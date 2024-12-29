@@ -9,6 +9,8 @@
         Task<ApplicationUser<string>> GetUserByEmailAsync(string email);
         Task<ApplicationUser<string>> GetUserByEmail(string email);
         Task<bool> IsBloked(string userId);
- 
+        Task<ApplicationUser<string>> GetUserByNationalId(long nationalId);
+
+
     }
 }

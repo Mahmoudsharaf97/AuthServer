@@ -43,22 +43,23 @@ namespace Auth_Infrastructure.Redis
                   return default;             
              return JsonConvert.DeserializeObject<T>(rv);
         }
-		public async Task<string> GetRefreshTokenAsync(string userId)
+		public async Task<string> GetRefreshTokenAsync(string email)
 		{
-            string key = $"RefreshToken_{userId}";
+            string key = $"RefreshToken_{email}";
 
             string rv = await Database.StringGetAsync(key);
 			if (rv is null)
 				return null;
 			return rv;
 		}
-		public async Task<bool> SetRefreshTokenAsync(string userId, string tokenValue)
+		public async Task<bool> SetRefreshTokenAsync(string email, string tokenValue)
 		{
-            string key = $"RefreshToken_{userId}";
+            string key = $"RefreshToken_{email}";
             if (tokenValue != null)
 				return await Database.StringSetAsync(key, tokenValue, TimeSpan.FromMinutes(_appSettings.JwtRefreshTokenExpiryMinutes));
 			else return false;
 		}
+
         public bool Set<T>(string key, T value, TimeSpan expiresIn)
         {
             if (!string.IsNullOrEmpty(key) && value != null)
@@ -88,6 +89,7 @@ namespace Auth_Infrastructure.Redis
 
         public async  Task<bool> SetSessionAsync(string email, SessionStatus session)
         {
+            // need to handle session by email and nationalId
             string key = $"Session_{email}";
             if (!string.IsNullOrEmpty(key) && session != null)
                 return await Database.StringSetAsync(key, JsonConvert.SerializeObject(session), TimeSpan.FromMinutes(_appSettings.JwtSessionExpireInMinutes));
@@ -108,7 +110,7 @@ namespace Auth_Infrastructure.Redis
             return session;
         }
 
-        public async Task<bool> DeleteSessionAsync(string email)
+        public async Task<bool> DeleteSessionAsync(string email,)
         {
             string key = $"Session_{email}";
             return await Database.KeyDeleteAsync(email);
@@ -135,6 +137,13 @@ namespace Auth_Infrastructure.Redis
 
             return user;
         }
+
+        public Task<bool> DeleteSessionAsync(string userId)
+        {
+            throw new NotImplementedException();
+        }
+
+     
     }
 
 

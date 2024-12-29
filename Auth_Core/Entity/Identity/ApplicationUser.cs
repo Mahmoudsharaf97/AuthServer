@@ -12,5 +12,6 @@ namespace Auth_Core
         public DateTime? UpdateDate { get; set; }
         public DateTime? LastSuccessLogin { set; get; }
         public bool IsDeleted { get; set; }
+        public long NationalId { get; set; }
     }
 }

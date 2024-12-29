@@ -1,24 +1,21 @@
 ﻿using IdentityApplication.Interface;
 using IdentityApplication.Models;
 using Microsoft.AspNetCore.Identity;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using Auth_Core.Global;
 using Auth_Application.Models;
 using Auth_Core;
 using Auth_Core.UseCase;
 using Auth_Core.UseCase.Redis;
 using SME_Core;
-
+using Auth_Core.Enums;
+using Auth_Application.Services;
+using Auth_Application.Services.Login;
 namespace IdentityApplication.Services
 {
     public partial class IdentityServices : IIdentityServices
     {
         private readonly IApplicationUserManager _applicationUserManager;
         private readonly GlobalInfo globalInfo;
-
         public UserManager<ApplicationUser<string>> _userManager { get; }
         public SignInManager<ApplicationUser<string>> _signInManager { get; }
         public ISessionServices _sessionServices { get; }
@@ -26,8 +23,8 @@ namespace IdentityApplication.Services
         public   IRedisCaching _cacheManager { get; }
         public AppSettingsConfiguration settings { get; }
         public Utilities _utilities { get; }
-
-        public IdentityServices(IApplicationUserManager applicationUserManager, UserManager<ApplicationUser<string>> userManager ,SignInManager<ApplicationUser<string>> signInManager,ISessionServices sessionServices ,  IRedisCaching cacheManager
+        public IdentityServices(IApplicationUserManager applicationUserManager, UserManager<ApplicationUser<string>> userManager 
+            ,SignInManager<ApplicationUser<string>> signInManager,ISessionServices sessionServices ,  IRedisCaching cacheManager
           ,AppSettingsConfiguration _settings,GlobalInfo globalInfo, Utilities utilities
             )
         {
@@ -91,52 +88,6 @@ namespace IdentityApplication.Services
                 throw;
             }
          
-        }
-
-        public async Task<LogInOutput> Login(LogInInput model)
-        {
-            try
-            {
-               // var user = await _applicationUserManager.GetUserByEmailAsync(model.Email.Trim());
-                var user = await _cacheManager.GetUserAsync(model.Email.Trim());
-
-                if (user == null)
-                    throw new AppException(ExceptionEnum.UserNotFound);
-
-                if (user.IsDeleted)
-                    throw new AppException(ExceptionEnum.UserDeleted);
-
-                if (!user.PhoneNumberConfirmed)
-                    throw new AppException(ExceptionEnum.UserPhoneNotActiveConfirmed);
-
-                if (!user.EmailConfirmed)
-                    throw new AppException(ExceptionEnum.UserEmailNotconfirmed);
-
-                if (user.LockoutEnd != null)
-                    throw new AppException(ExceptionEnum.UserIsLocked);
-                
-                var result = await _signInManager.PasswordSignInAsync(user.Email, model.Password, false, true); 
-                if (result.Succeeded)
-                {
-                    var userSession = new SessionStatus(Guid.NewGuid().ToString(), user.Id, _utilities.GetUserIP(), _utilities.GetUserAgent(), _utilities.GetMacAddress(), _utilities.GetUserIP());
-                    await _cacheManager.SetSessionAsync(user.Email, userSession);
-                    user.LastSuccessLogin = DateTime.Now;
-                  //  await _userManager.UpdateAsync(); need to add to rabbiteMQ for Update 
-                    var tokenResult =await GetToken(user.Id, userSession.SessionId);
-                    if (tokenResult.ErrorCode == IdentityOutput.ErrorCodes.Success)
-                    {
-						LogInOutput output = tokenResult.Result;
-						return output;
-					}
-                }
-                return null;
-            }
-            catch (Exception ex)
-            {
-                var x = ex;
-                throw new AppException(ExceptionEnum.UserLoginDataNotCorrect);
-            }
-
         }
 
         public async Task<bool> LogOut()
@@ -221,6 +172,61 @@ namespace IdentityApplication.Services
         {
             throw new NotImplementedException();
         }
+
+
+
+        #region Login Begin & End 
+        public async Task<LogInOutput> EndLogin(LogInInput model)
+        {
+            try
+            {
+                if (model.LoginType == (byte)LoginType.Email)
+                {
+                    EmailEndLoginStrategy emailLoginStrategy =
+                        new EmailEndLoginStrategy(_signInManager, _cacheManager, _userManager, settings, _utilities);
+                    return await emailLoginStrategy.LoginByEmail(model.Email!, model.Password);
+                }
+                else if (model.LoginType == (byte)LoginType.NationalId)
+                {
+                    NationalIdEndLoginStrategy nationalIdLoginStrategy =
+                        new NationalIdEndLoginStrategy(_signInManager, _cacheManager, _userManager, settings, _utilities);
+                    return await nationalIdLoginStrategy.LoginByNAtionalId(model.NationalId!.Value, model.Password);
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                var x = ex;
+                throw new AppException(ExceptionEnum.UserLoginDataNotCorrect);
+            }
+
+        }
+        public async Task<LogInOutput> BeginLogin(LogInInput model)
+        {
+            try
+            {
+                if (model.LoginType == (byte)LoginType.Email)
+                {
+                    EmailBeginLoginStrategy emailLoginStrategy =
+                        new EmailBeginLoginStrategy(_signInManager, _cacheManager, _userManager, settings, _utilities);
+                    return await emailLoginStrategy.LoginByEmail(model.Email!, model.Password);
+                }
+                else if (model.LoginType == (byte)LoginType.NationalId)
+                {
+                    NationalIdBeginLoginStrategy nationalIdLoginStrategy =
+                        new NationalIdBeginLoginStrategy(_signInManager, _cacheManager, _userManager, settings, _utilities);
+                    return await nationalIdLoginStrategy.LoginByNAtionalId(model.NationalId!.Value, model.Password);
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                var x = ex;
+                throw new AppException(ExceptionEnum.UserLoginDataNotCorrect);
+            }
+
+        }
+        #endregion
     }
 }
 
