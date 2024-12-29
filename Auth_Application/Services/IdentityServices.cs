@@ -210,13 +210,13 @@ namespace IdentityApplication.Services
                 if (model.LoginType == (byte)LoginType.Email)
                 {
                     EmailBeginLoginStrategy emailLoginStrategy =
-                        new EmailBeginLoginStrategy(_signInManager, _cacheManager, _userManager, settings, _utilities);
+                        new EmailBeginLoginStrategy(_signInManager, _cacheManager, _userManager, settings, _utilities,_usersCachedManager);
                     return await emailLoginStrategy.LoginByEmail(model.Email!, model.Password);
                 }
                 else if (model.LoginType == (byte)LoginType.NationalId)
                 {
                     NationalIdBeginLoginStrategy nationalIdLoginStrategy =
-                        new NationalIdBeginLoginStrategy(_signInManager, _cacheManager, _userManager, settings, _utilities);
+                        new NationalIdBeginLoginStrategy(_signInManager, _cacheManager, _userManager, settings, _utilities, _usersCachedManager);
                     return await nationalIdLoginStrategy.LoginByNAtionalId(model.NationalId!.Value, model.Password);
                 }
                 return null;
