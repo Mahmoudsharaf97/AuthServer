@@ -12,6 +12,7 @@ namespace Auth_Infrastructure.DependencyInjection
 		{
 			services.AddSingleton<IRedisCaching, RedisCaching>();
 			services.AddScoped<IApplicationUserManager, ApplicationUserManager>();
+			services.AddScoped<IUsersCachedManager, UsersCachedManager>();
 			return services;
 		}
 

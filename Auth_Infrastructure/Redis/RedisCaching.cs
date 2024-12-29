@@ -114,24 +114,30 @@ namespace Auth_Infrastructure.Redis
             return await Database.KeyDeleteAsync(email);
         }
 
-        public async  Task<bool> SetUserAsync(string email, ApplicationUser<string> user)
+        public bool SetUser(string email,string ninKey, ApplicationUser<string> user)
         {
-            string key = $"User_{email}";
             if ( user != null)
-             return    await Database.StringSetAsync(key, JsonConvert.SerializeObject(user));
+            {
+                var tasks = new List<Task> {
+                    Database.StringSetAsync( $"User_{email}", JsonConvert.SerializeObject(user)),
+                    Database.StringSetAsync($"User_{ninKey}", JsonConvert.SerializeObject(user))
+                };
+                Task.WaitAll(tasks);
+                return true;
+			}
             else return false;
         }
 
-        public async Task<ApplicationUser<string>> GetUserAsync(string email)
+        public async Task<ApplicationUser<string>> GetUserAsync(string emailOrNinKey)
         {
-            string key = $"User_{email}";
+            string key = $"User_{emailOrNinKey}";
             string rv = await Database.StringGetAsync(key);
             if (rv is null)
                 return null;
 
             var user = JsonConvert.DeserializeObject<ApplicationUser<string>>(rv)!;
-            if (user is null || string.IsNullOrEmpty(user.Email))
-                return null;
+            if (user is null || string.IsNullOrEmpty(user.Email))// add || string.IsNullOrEmpty(user.Nin)
+				return null;
 
             return user;
         }

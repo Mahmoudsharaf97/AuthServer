@@ -7,7 +7,7 @@
         Task<bool> SetSessionAsync(string userId, SessionStatus session);
         Task<SessionStatus> GetSessionAsync(string userId);
         Task<bool> DeleteSessionAsync(string userId);
-        Task<bool> SetUserAsync(string userId, ApplicationUser<string> user);
-        Task<ApplicationUser<string>> GetUserAsync(string email);
+        bool SetUser(string email, string ninKey, ApplicationUser<string> user);
+		Task<ApplicationUser<string>> GetUserAsync(string email);
     }
 }
