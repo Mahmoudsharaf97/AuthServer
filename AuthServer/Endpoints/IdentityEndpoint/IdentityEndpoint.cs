@@ -32,7 +32,15 @@ namespace AuthServer.Endpoints.IdentityEndpoint
 			
 			group.MapPost($"/v1/{nameof(ResetPassword)}", ResetPassword.Action)
 				.WithName("ResetPassword")
-				.WithSummary("ResetPassword info");
+				.WithSummary("ResetPassword info");		 
+			
+			group.MapGet($"/v1/{nameof(Captcha)}", Captcha.Action)
+				.WithName("Captcha")
+				.WithSummary("Captcha info");	
+
+			group.MapPost($"/v1/{nameof(ValidateCaptcha)}", ValidateCaptcha.Action)
+				.WithName("ValidateCaptcha")
+				.WithSummary("ValidateCaptcha info");
 
 
 			return group;
