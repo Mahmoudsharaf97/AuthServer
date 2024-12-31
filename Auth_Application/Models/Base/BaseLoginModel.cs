@@ -44,6 +44,8 @@ namespace Auth_Application.Models.Base
 					throw new AppException(ExceptionEnum.NationalIdEmpty);
 				if(!this.BirthYear.HasValue || this.BirthYear <= 0)
 					throw new AppException(ExceptionEnum.ErrorBirthYear);
+				if(!this.BirthMonth.HasValue || this.BirthMonth > 12)
+					throw new AppException(ExceptionEnum.ErrorBirthYear);
 			}
 			else
 			{
