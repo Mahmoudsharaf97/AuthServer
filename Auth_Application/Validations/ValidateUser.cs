@@ -14,6 +14,11 @@ namespace Auth_Application.Validations
 			user.IsFound().IsNotDeleted().IsPhoneNumberConfirmed().IsEmailConfirmed().IsLockout();
 			return user;
 		}
+		public static ApplicationUser<string> IsValidUserByNationalId( this ApplicationUser<string> user)
+		{
+			user.IsFound().IsNotDeleted().IsPhoneNumberConfirmed().IsEmailConfirmed().IsLockout();
+			return user;
+		}
 		public static ApplicationUser<string> IsFoundUserNotConfirmed(this ApplicationUser<string> user)
 		{
 			user.IsFound().IsNotDeleted().IsLockout();
@@ -33,6 +38,19 @@ namespace Auth_Application.Validations
 		{
 			if (user == null)
 				throw new AppException(ExceptionEnum.UserNotFound);
+			return user;
+		}
+		public static ApplicationUser<string> IsFoundUserByNationalId( this ApplicationUser<string> user)
+		{
+			if (user == null)
+				throw new AppException(ExceptionEnum.NoAcouuntToId);
+			return user;
+		}
+		public static ApplicationUser<string> IsFoundUserByEmail( this ApplicationUser<string> user)
+		{
+			if (user == null)
+				throw new AppException(ExceptionEnum.login_incorrect_email_message);
+			user.IsEmailConfirmed().IsLockout();
 			return user;
 		}
 		public static ApplicationUser<string> IsNotDeleted( this ApplicationUser<string> user)

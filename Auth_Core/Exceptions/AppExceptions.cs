@@ -13,6 +13,7 @@ namespace Auth_Core
             {4,new string[]{ "Property NotAccess ", "لا يمكن الوصول للعنصر"}  },
             {35,new string[]{ "user is Locked", "العميل موقوف "}  },
             {37,new string[]{ "user Phone not confirmed ", "لم يتم تأكيد رقم الجوال "}  },
+            {38,new string[]{ "Email is not confirmed ", "البريد الألكترونى غير مفعل لهذا الحساب " }  },
             {53,new string[]{ "Error Get Vehicle Data From Yakeen", "حدث خطأ اثناء جلب بيانات اللوحة من يقين"} },
             {54,new string[]{ "Error Get Vehicle Data From Yakeen", "حدث خطأ اثناء جلب بيانات المركبة من يقين"}  },
             {55,new string[]{ "Reqest Model Is Invalid ", "المدخلات غير صحيحة"}  },
@@ -42,6 +43,8 @@ namespace Auth_Core
              {89,new string[]{ "Something wrong with Mobile Number", "هناك خطأ في رقم الجوال" }  },
              {90,new string[]{ "Empty OTP", "OTP فارغ" }  },
              {91,new string[]{ "Empty input parameter", "برجاء استكمال البيانات" }  },
+             {92,new string[]{ "No Account is Linked With This Id Please Login With The Email", "لا يوجد حساب مربوط بالهوية ,الرجاء تسجيل الدخول بالبريد الألكتروني " }  },
+             {93,new string[]{ "Incorrect username or password", "اسم المستخدم أو كلمة المرور غير صحيحة " }  },
         };
     }
 }
