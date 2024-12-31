@@ -86,7 +86,16 @@
 		InValidCheckoutOtpNotification = 80,
 		EmailNotValid = 81,
 		CachedRefreshTokenWithEmailNotFound = 82,
-		RefreshTokenIsWrong = 83
+		RefreshTokenIsWrong = 83,
+		NationalIdEmpty = 84,
+		ErrorBirthYear = 85,
+		EmailIsEmpty = 86,
+		PasswordIsEmpty = 87,
+		MobileEmpty = 88,
+		ErrorPhone = 89,
+		EmptyOTP = 90,
+		EmptyInputParameter = 91,
+
 	}
 
 }

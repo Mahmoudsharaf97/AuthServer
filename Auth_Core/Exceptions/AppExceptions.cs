@@ -34,6 +34,14 @@ namespace Auth_Core
              {72,new string[]{ "Wrong Capcha Input", "رقم التحقق خطأ"}  },
              {82,new string[]{ "Cached Refresh Token With Email Not Found", "رمز التحديث المخزن مؤقتًا المربوط بالبريد الإلكتروني غير موجود" }  },
              {83,new string[]{ "Refresh Token Is Wrong", "رمز التحديث خطأ" }  },
+             {84,new string[]{ "NationalId  is Empty", "من فضلك ادخل رقم الهويه" }  },
+             {85,new string[]{ "Birth year is empty or invalid value", "سنة الميلاد فارغة أو قيمة غير صحيحة" }  },
+             {86,new string[]{ "Please enter email", "البريد الإلكتروني مطلوب" }  },
+             {87,new string[]{ "Please enter password", "كلمة المرور مطلوبة" }  },
+             {88,new string[]{ "Mobile is empty", "من فضلك ادخل رقم الجوال" }  },
+             {89,new string[]{ "Something wrong with Mobile Number", "هناك خطأ في رقم الجوال" }  },
+             {90,new string[]{ "Empty OTP", "OTP فارغ" }  },
+             {91,new string[]{ "Empty input parameter", "برجاء استكمال البيانات" }  },
         };
     }
 }
