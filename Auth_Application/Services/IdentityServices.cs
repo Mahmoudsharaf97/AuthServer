@@ -96,7 +96,7 @@ namespace IdentityApplication.Services
         {
 
             //var user = await _applicationUserManager.GetUserByIdAsync("globalInfo.CreatUser");
-            var user = await _usersCachedManager.GetUserAsync(LoginType.Email, "globalInfo.UserEmail");
+            var user = await _usersCachedManager.GetUserByEmailOrNationalIdAsync(LoginType.Email, "globalInfo.UserEmail");
             if (user == null)
                 throw new AppException(ExceptionEnum.RecordNotExist);
              await _signInManager.SignOutAsync();

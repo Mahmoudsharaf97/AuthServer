@@ -35,7 +35,7 @@ namespace Auth_Application.Services
         {
             try
             {
-                var user = await _usersCachedManager.GetUserAsync(LoginType.Email, email);
+                var user = await _usersCachedManager.GetUserByEmailOrNationalIdAsync(LoginType.Email, email);
 
                 ValidateUser(user);
                 var result =await  SignInAsync(email, password);

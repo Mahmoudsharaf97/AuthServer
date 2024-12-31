@@ -22,7 +22,7 @@ namespace Auth_Infrastructure.Redis
 			_applicationUserManager = applicationUserManager;
 		}
 
-		public async Task<ApplicationUser<string>> GetUserAsync(LoginType LoginType, string emailOrNinKey)
+		public async Task<ApplicationUser<string>> GetUserByEmailOrNationalIdAsync(LoginType LoginType, string emailOrNinKey)
 		{
 			if (string.IsNullOrEmpty(emailOrNinKey))
 				return null;
@@ -38,7 +38,7 @@ namespace Auth_Infrastructure.Redis
 				else
 					return null;
 
-				if (user is null || string.IsNullOrEmpty(user.Email))
+				if (user is null)
 					return null;
 
 				_redisCaching.SetUser(user.Email,user.NationalId.ToString(), user);

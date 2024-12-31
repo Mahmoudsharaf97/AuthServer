@@ -9,6 +9,6 @@ namespace Auth_Core.UseCase.Redis
 {
 	public interface IUsersCachedManager
 	{
-		Task<ApplicationUser<string>> GetUserAsync(LoginType LoginType, string emailOrNinKey);
+		Task<ApplicationUser<string>> GetUserByEmailOrNationalIdAsync(LoginType LoginType, string emailOrNinKey);
 	}
 }

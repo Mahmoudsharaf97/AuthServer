@@ -28,7 +28,7 @@ namespace Auth_Application.Features.Token.RefreshToken.Command
 		public async Task<IdentityOutput> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
 		{
 			//validate inputs
-			ApplicationUser<string> user =  await _usersCachedManager.GetUserAsync(request.LoginType, LoginType.NationalId == request.LoginType ? request.NationalId : request.Email);
+			ApplicationUser<string> user =  await _usersCachedManager.GetUserByEmailOrNationalIdAsync(request.LoginType, LoginType.NationalId == request.LoginType ? request.NationalId : request.Email);
 			user.IsValidUser();
 
 			var cachedToken = await _redisCaching.GetRefreshTokenAsync(user.Email);
