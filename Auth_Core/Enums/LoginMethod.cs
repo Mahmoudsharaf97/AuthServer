@@ -11,5 +11,6 @@ namespace Auth_Core.Enums
 		Login = 1,
 		VerifyYakeenMobile,
 		VerifyLoginOTP,
+		LoginAccountConfirmation,
 	}
 }
