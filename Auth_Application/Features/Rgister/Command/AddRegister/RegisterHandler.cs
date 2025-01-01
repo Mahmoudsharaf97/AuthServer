@@ -15,8 +15,8 @@ namespace Auth_Application.Features
         }
         public async Task<RegisterOutPut> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
-            var input = MapperObject.Mapper.Map<RegisterInput>(request);
-            var result= await _identityServices.Register(input);
+            //var input = MapperObject.Mapper.Map<RegisterInput>(request);
+            var result= await _identityServices.Register(request);
             return result;
         }
     }

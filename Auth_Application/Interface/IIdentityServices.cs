@@ -1,11 +1,12 @@
-﻿using Auth_Application.Models;
+﻿using Auth_Application.Features;
+using Auth_Application.Models;
 using IdentityApplication.Models;
 
 namespace IdentityApplication.Interface
 {
     public interface IIdentityServices
     {
-          Task<RegisterOutPut> Register(RegisterInput model);
+          Task<RegisterOutPut> Register(RegisterCommand model);
           Task<LogInOutput> EndLogin(LogInInput model);
           Task<LogInOutput> BeginLogin(LogInInput model);
           Task<IdentityOutput> GetToken(string userId, string SessionId);

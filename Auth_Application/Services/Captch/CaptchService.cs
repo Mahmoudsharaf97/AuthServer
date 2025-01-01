@@ -1,6 +1,7 @@
 ﻿using Auth_Application.Interface;
 using Auth_Application.Models;
 using Auth_Core.Helper;
+using Auth_Core.UseCase.Captch;
 using Newtonsoft.Json;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -9,7 +10,7 @@ using System.Drawing.Text;
 
 namespace Auth_Application.Services.Captch
 {
-	internal class CaptchService : ICaptchService
+	public class CaptchService : ICaptchService
 	{
 		public async Task<string> GenerateBase64Captcha(string captchaValue)
 		{

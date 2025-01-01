@@ -1,7 +1,12 @@
-﻿namespace IdentityApplication.Models
+﻿using Auth_Application.Models;
+
+namespace IdentityApplication.Models
 {
-    public class RegisterOutPut
+    public class RegisterOutPut : Errors
     {
-        public bool Succes { set; get; }
+        public RegisterOutPut()
+        {
+            errors = new List<Error>();
+        }
     }
 }

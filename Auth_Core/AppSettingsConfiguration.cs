@@ -14,6 +14,7 @@ namespace Auth_Core
         public bool RedisEnabled { get; set; }
         public string RedisConnectionString { get; set; }
         public int RedisInstance { get; set; }
+        public string CaptchKey { get; set; }
 
     }
 

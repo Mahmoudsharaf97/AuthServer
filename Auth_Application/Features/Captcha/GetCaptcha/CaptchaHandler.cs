@@ -2,6 +2,7 @@
 using Auth_Application.Models;
 using Auth_Core;
 using Auth_Core.Helper;
+using Auth_Core.UseCase.Captch;
 using MediatR;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;

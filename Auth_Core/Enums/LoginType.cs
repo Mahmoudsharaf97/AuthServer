@@ -10,6 +10,10 @@ namespace Auth_Core.Enums
     {
         Email = 1,
         NationalId = 2
-
+    }   
+    public enum RegisterType : byte
+    {
+        Normal = 1,
+        VerifyYakeen = 2
     }
 }

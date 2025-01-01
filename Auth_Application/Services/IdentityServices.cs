@@ -10,12 +10,19 @@ using SME_Core;
 using Auth_Core.Enums;
 using Auth_Application.Services;
 using Auth_Application.Services.Login;
+using Auth_Application.Features;
+using Auth_Application.Services.Captch;
+using Auth_Core.UseCase.Captch;
+using Azure.Core;
+using static Auth_Application.Models.Errors;
+using Auth_Application.Services.Registration;
 namespace IdentityApplication.Services
 {
     public partial class IdentityServices : IIdentityServices
     {
         private readonly IApplicationUserManager _applicationUserManager;
         private readonly IUsersCachedManager _usersCachedManager;
+        private readonly AppSettingsConfiguration appSettingsConfiguration;
         private readonly GlobalInfo globalInfo;
         public UserManager<ApplicationUser<string>> _userManager { get; }
         public SignInManager<ApplicationUser<string>> _signInManager { get; }
@@ -24,10 +31,12 @@ namespace IdentityApplication.Services
         public   IRedisCaching _cacheManager { get; }
         public AppSettingsConfiguration settings { get; }
         public Utilities _utilities { get; }
-		public IdentityServices(IApplicationUserManager applicationUserManager, UserManager<ApplicationUser<string>> userManager
+        public ICaptchService _captchService { get; }
+
+        public IdentityServices(IApplicationUserManager applicationUserManager, UserManager<ApplicationUser<string>> userManager
 			, SignInManager<ApplicationUser<string>> signInManager, ISessionServices sessionServices, IRedisCaching cacheManager
-		  , AppSettingsConfiguration _settings, GlobalInfo globalInfo, Utilities utilities
-, IUsersCachedManager usersCachedManager)
+		    , AppSettingsConfiguration _settings, GlobalInfo globalInfo, Utilities utilities
+            , IUsersCachedManager usersCachedManager, ICaptchService captchService,AppSettingsConfiguration appSettingsConfiguration)
 		{
 			_applicationUserManager = applicationUserManager;
 			_userManager = userManager;
@@ -39,50 +48,38 @@ namespace IdentityApplication.Services
 			this.globalInfo = globalInfo;
 			_utilities = utilities;
 			_usersCachedManager = usersCachedManager;
-		}
-		public async Task<RegisterOutPut> Register(RegisterInput model)
+            _captchService = captchService;
+            this.appSettingsConfiguration = appSettingsConfiguration;
+        }
+		public async Task<RegisterOutPut> Register(RegisterCommand model)
         {
             try
             {
-                var result = new RegisterOutPut();
-                var emailExist = await _applicationUserManager.CheckEmailExistAsync(model.Email);
+                RegisterOutPut outPut = new RegisterOutPut();
+                bool _captchValidat = _captchService.ValidateCaptchaToken(model.CaptchaToken, model.CaptchaInput, 
+                    appSettingsConfiguration.CaptchKey);
 
-                if (emailExist)
-                    throw new AppException(ExceptionEnum.EmailAlreadyExist);
-                var user = new ApplicationUser<string>
+                if (!_captchValidat)
                 {
-                    Email = model.Email,
-                    PasswordHash = model.Password,
-                    UserName = model.Email,
-                    PhoneNumberConfirmed = false,
-                    EmailConfirmed = false,
-                };
-                var createdUser = await _userManager.CreateAsync(user, model.Password);
-                if (!createdUser.Succeeded)
-                {
-                    if (createdUser.Errors.ToList()[0].Code == "InvalidUserName")
-                        throw new AppException(ExceptionEnum.InvalidUserName);
-
-                    if (createdUser.Errors.ToList()[0].Code == "InvalidEmail")
-                        throw new AppException(ExceptionEnum.InvalidUserName);
-
-                    if (createdUser.Errors.ToList()[0].Code == "PasswordTooShort")
-                        throw new AppException(ExceptionEnum.PasswordFormatNotValid);
-
-                    if (createdUser.Errors.ToList()[0].Code == "PasswordRequiresUpper")
-                        throw new AppException(ExceptionEnum.PasswordRequiresUpper);
-
-                    if (createdUser.Errors.ToList()[0].Code == "PasswordRequiresNonAlphanumeric")
-                        throw new AppException(ExceptionEnum.PasswordRequiresNonAlphanumeric);
-
-                    if (createdUser.Errors.ToList()[0].Code == "PasswordRequiresDigit")
-                        throw new AppException(ExceptionEnum.PasswordRequiresDigit);
-
-                    throw new AppException(ExceptionEnum.RecordUpdateFailed);
+                    outPut.Succes =false;
+                    outPut.errors.Add(new Error
+                    {
+                        ErrorCode = (int)ErrorCode.CaptchaError,
+                        ErrorDescription = "Captch Invalid"
+                    });
+                    return outPut;
                 }
-                _cacheManager.SetUser(user.Email,user.NationalId.ToString(), user);
-                result.Succes = true;
-                return result;
+                if (model.RegisterType==(int)RegisterType.Normal)
+                {
+                    RegistraionNormalStrategy registraionNormalStrategy = 
+                        new RegistraionNormalStrategy(_cacheManager, _applicationUserManager,_userManager);
+
+                   return await  registraionNormalStrategy.NormalRegistration(model);
+                }
+                else if(model.RegisterType == (int)RegisterType.VerifyYakeen)
+                {
+
+                }
             }
             catch (Exception ex)
             {
@@ -228,6 +225,8 @@ namespace IdentityApplication.Services
             }
 
         }
+
+    
         #endregion
     }
 }
