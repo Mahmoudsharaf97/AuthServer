@@ -48,6 +48,7 @@ namespace Auth_Core
              {94,new string[]{ "Error In OTP", "خطأ في رمز التحقق " }  },
              {95,new string[]{ "OTP Expired", "انتهت صلاحيه رمز التحقق " }  },
              {96,new string[]{ "model is empty", "المدخلات ناقصه او فارغه" }  },
+             {97,new string[]{ "Wrong Login Method", "طريقة تسجيل دخول خاطئة" }  },
         };
     }
 }

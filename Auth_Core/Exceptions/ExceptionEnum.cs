@@ -100,6 +100,7 @@
 		ErrorOTPCompare = 94,
 		ErrorOTPExpire = 95,
 		ModelIsEmpty = 96,
+		WrongLoginMethod = 97,
 	}
 
 }

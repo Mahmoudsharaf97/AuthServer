@@ -69,6 +69,13 @@ namespace Auth_Infrastructure.Identity
             var context = GetContext();
             return await context.Users.FirstOrDefaultAsync(x => x.NationalId == nationalId);
         }
+        public async Task<bool> CheckNationalIdBelongsForDifferentEmail(long nationalId,string email)
+        {
+            var context = GetContext();
+            if (await context.Users.AsNoTracking().Where(x => x.NationalId == nationalId && x.Email != email && x.IsPhoneVerifiedByYakeen).FirstOrDefaultAsync() != null)
+                return true;
+            return false;
+        }
         public async Task<bool> IsBloked(string userId)
         {
            var user = await GetUserByIdAsync(userId);

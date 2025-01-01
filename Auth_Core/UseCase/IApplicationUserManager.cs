@@ -10,7 +10,8 @@
         Task<ApplicationUser<string>> GetUserByEmail(string email);
         Task<bool> IsBloked(string userId);
         Task<ApplicationUser<string>> GetUserByNationalId(long nationalId);
+        Task<bool> CheckNationalIdBelongsForDifferentEmail(long nationalId, string email);
 
 
-    }
+	}
 }
