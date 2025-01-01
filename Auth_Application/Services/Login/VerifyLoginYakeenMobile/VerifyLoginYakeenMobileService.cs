@@ -26,7 +26,7 @@ namespace Auth_Application.Services.Login
 
 		protected abstract void ValidateUser(ApplicationUser<string> user);
 
-		public async void VerifyLoginYakeenMobile(VerifyLoginYakeenMobile model)
+		public async void VerifyLoginYakeenMobile(VerifyLoginYakeenMobile model)// return base generic output
 		{
 			if (model is null)
 				throw new AppException(ExceptionEnum.ModelIsEmpty);
