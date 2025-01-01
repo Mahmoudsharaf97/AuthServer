@@ -10,6 +10,7 @@ using Auth_Application.Models;
 using Auth_Core;
 using Auth_Core.UseCase;
 using Auth_Core.UseCase.Redis;
+using Auth_Core.Enums;
 namespace Auth_Application.Services
 {
     public  class BaseBeginLogInServices
@@ -73,7 +74,7 @@ namespace Auth_Application.Services
             var tokenHandler = new JwtSecurityTokenHandler();
             var securityToken = tokenHandler.CreateToken(tokenDescriptor);
             var token = tokenHandler.WriteToken(securityToken);
-            IdentityOutput output = new(new LogInOutput(true, token), IdentityOutput.ErrorCodes.Success, _setting.JwtTokenExpiryMinutes, user.Email, DateTime.Now.AddMinutes(_setting.JwtTokenExpiryMinutes), user.Email.Split("@")[0]);
+            IdentityOutput output = new(new LogInOutput(true, token), ErrorCodes.Success, _setting.JwtTokenExpiryMinutes, user.Email, DateTime.Now.AddMinutes(_setting.JwtTokenExpiryMinutes), user.Email.Split("@")[0]);
             output.Result.AccessTokenExpiration = output.TokenExpiryDate;
             return output;
         }

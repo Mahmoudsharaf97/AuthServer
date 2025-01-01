@@ -44,6 +44,7 @@ namespace Auth_Application.Validations
 		{
 			if (user == null)
 				throw new AppException(ExceptionEnum.NoAcouuntToId);
+			user.IsLockout();
 			return user;
 		}
 		public static ApplicationUser<string> IsFoundUserByEmail( this ApplicationUser<string> user)
@@ -73,7 +74,7 @@ namespace Auth_Application.Validations
 		}
 		public static ApplicationUser<string> IsLockout( this ApplicationUser<string> user)
 		{
-			if (user.LockoutEnd != null) // user.LockoutEndDateUtc > DateTime.UtcNow 
+			if (user.LockoutEnd == null || user.LockoutEnd > DateTime.UtcNow || user.LockoutEnabled) // user.LockoutEndDateUtc > DateTime.UtcNow 
 				throw new AppException(ExceptionEnum.UserIsLocked);
 			return user;
 

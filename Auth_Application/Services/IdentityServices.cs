@@ -124,7 +124,7 @@ namespace IdentityApplication.Services
         //    await _sessionServices.AddSessionAsync(newSession);
 
         //    var token = await GetToken(user.Id, newSession.SessionId);
-        //    if (token == null || token.ErrorCode != IdentityOutput.ErrorCodes.Success)
+        //    if (token == null || token.ErrorCode != ErrorCodes.Success)
         //        throw new AppException(SME_Core.ExceptionEnum.GenricError);
 
         //    var Url = settings.MailSettings.IdentityUrlResetPassword + "&Id=" + token.Result?.Token;

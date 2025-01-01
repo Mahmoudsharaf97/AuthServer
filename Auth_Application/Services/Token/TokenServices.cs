@@ -1,6 +1,7 @@
 ﻿using Auth_Application.Interface;
 using Auth_Application.Models;
 using Auth_Core;
+using Auth_Core.Enums;
 using Auth_Core.UseCase.Redis;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
@@ -108,7 +109,7 @@ namespace Auth_Application.Services.Token
             var tokenHandler = new JwtSecurityTokenHandler();
             var securityToken = tokenHandler.CreateToken(tokenDescriptor);
             var token = tokenHandler.WriteToken(securityToken);
-            output.ErrorCode = IdentityOutput.ErrorCodes.Success;
+            output.ErrorCode = ErrorCodes.Success;
             output.Result = new LogInOutput();
             output.Result.AccessToken = token;
             output.Result.Success = true;
@@ -140,7 +141,7 @@ namespace Auth_Application.Services.Token
 			var tokenHandler = new JwtSecurityTokenHandler();
 			var securityToken = tokenHandler.CreateToken(tokenDescriptor);
 			var token = tokenHandler.WriteToken(securityToken);
-			IdentityOutput output = new(new LogInOutput(true, token), IdentityOutput.ErrorCodes.Success, settings.JwtTokenExpiryMinutes, user.Email, DateTime.Now.AddMinutes(settings.JwtTokenExpiryMinutes), user.Email.Split("@")[0]);
+			IdentityOutput output = new(new LogInOutput(true, token), ErrorCodes.Success, settings.JwtTokenExpiryMinutes, user.Email, DateTime.Now.AddMinutes(settings.JwtTokenExpiryMinutes), user.Email.Split("@")[0]);
 			output.Result.AccessTokenExpiration = output.TokenExpiryDate;
 			output.Result.RefreshToken = refreshToken;
 			return output;

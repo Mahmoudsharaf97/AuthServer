@@ -45,6 +45,9 @@ namespace Auth_Core
              {91,new string[]{ "Empty input parameter", "برجاء استكمال البيانات" }  },
              {92,new string[]{ "No Account is Linked With This Id Please Login With The Email", "لا يوجد حساب مربوط بالهوية ,الرجاء تسجيل الدخول بالبريد الألكتروني " }  },
              {93,new string[]{ "Incorrect username or password", "اسم المستخدم أو كلمة المرور غير صحيحة " }  },
+             {94,new string[]{ "Error In OTP", "خطأ في رمز التحقق " }  },
+             {95,new string[]{ "OTP Expired", "انتهت صلاحيه رمز التحقق " }  },
+             {96,new string[]{ "model is empty", "المدخلات ناقصه او فارغه" }  },
         };
     }
 }
