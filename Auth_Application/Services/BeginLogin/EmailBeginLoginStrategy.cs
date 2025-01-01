@@ -52,7 +52,7 @@ namespace Auth_Application.Services
                     user.LastSuccessLogin = DateTime.Now;
                     //  await _userManager.UpdateAsync(); need to add to rabbiteMQ for Update 
                     var tokenResult = await GetAccessToken(user, userSession.SessionId);
-                    if (tokenResult.ErrorCode == IdentityOutput.ErrorCodes.Success)
+                    if (tokenResult.ErrorCode == ErrorCodes.Success)
                     {
                         LogInOutput output = tokenResult.Result;
                         return output;

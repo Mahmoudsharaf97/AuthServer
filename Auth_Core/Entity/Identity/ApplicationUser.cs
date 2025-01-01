@@ -13,5 +13,6 @@ namespace Auth_Core
         public DateTime? LastSuccessLogin { set; get; }
         public bool IsDeleted { get; set; }
         public long NationalId { get; set; }
+        public bool IsPhoneVerifiedByYakeen { get; set; }
     }
 }

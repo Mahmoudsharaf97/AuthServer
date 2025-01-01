@@ -88,7 +88,7 @@ namespace Auth_Application.Services.Captch
 		public bool ValidateCaptchaToken(string captchToken, string captchInput, string Key)
 		{
 			var encryptedCaptcha = AESEncryptionUtilities.DecryptString(captchToken, Key);
-			var captchaToken = JsonConvert.DeserializeObject<CapchaResponse>(encryptedCaptcha);
+			var captchaToken = JsonConvert.DeserializeObject<CaptchaResponse>(encryptedCaptcha);
 			if ((captchaToken.ExpiredInSeconds.CompareTo(DateTime.Now.AddSeconds(-600)) < 0) ||
 				(!captchaToken.Token.Equals(captchInput, StringComparison.Ordinal)))
 				return false;

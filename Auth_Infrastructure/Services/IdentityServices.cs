@@ -138,7 +138,7 @@
 
 //                    var tokenResult =await GetToken(user.Id, newSession.SessionId);
 //                    //  var tokenResult =await CreateJwtToken(user , newSession.SessionId);
-//                    if (tokenResult.ErrorCode == IdentityOutput.ErrorCodes.Success)
+//                    if (tokenResult.ErrorCode == ErrorCodes.Success)
 //                    output.Token = tokenResult?.Result.Token;
 //                    output.success = true;
 //                    output.Token = tokenResult.Result.Token;
@@ -236,7 +236,7 @@
 //            var tokenHandler = new JwtSecurityTokenHandler();
 //            var securityToken = tokenHandler.CreateToken(tokenDescriptor);
 //            var token = tokenHandler.WriteToken(securityToken);
-//            output.ErrorCode = IdentityOutput.ErrorCodes.Success;
+//            output.ErrorCode = ErrorCodes.Success;
 //            output.Result = new LogInOutput();
 //            output.Result.Token = token;
 //            output.Result.success = true;
@@ -316,7 +316,7 @@
 //            await _sessionServices.AddSessionAsync(newSession);
 
 //            var token =await GetToken(user.Id, newSession.SessionId);
-//            if(token == null || token.ErrorCode!=IdentityOutput.ErrorCodes.Success)
+//            if(token == null || token.ErrorCode!=ErrorCodes.Success)
 //                throw new AppException(SME_Core.ExceptionEnum.GenricError);              
 
 //            var Url = settings.MailSettings.IdentityUrlResetPassword + "&Id=" + token.Result?.Token;

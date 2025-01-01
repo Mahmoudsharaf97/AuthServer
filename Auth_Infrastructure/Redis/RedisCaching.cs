@@ -36,7 +36,14 @@ namespace Auth_Infrastructure.Redis
             //for the default database
             public IDatabase Database => Connection.GetDatabase();
 
-          public T Get <T>(string key)
+		public async Task<T> GetAsync<T>(string key)
+		{
+			RedisValue rv = await Database.StringGetAsync(key);
+			if (!rv.HasValue)
+				return default;
+			return JsonConvert.DeserializeObject<T>(rv);
+		}
+		public T Get <T>(string key)
         {
             RedisValue rv =  Database.StringGet(key) ;
                if (!rv.HasValue)
@@ -149,8 +156,11 @@ namespace Auth_Infrastructure.Redis
             throw new NotImplementedException();
         }
 
-     
-    }
+		public async Task<bool> DeleteAsync(string key)
+		{
+			return await Database.KeyDeleteAsync(key);
+		}
+	}
 
 
 

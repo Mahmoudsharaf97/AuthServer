@@ -97,7 +97,9 @@
 		EmptyInputParameter = 91,
 		NoAcouuntToId = 92,
 		login_incorrect_email_message = 93,
-
+		ErrorOTPCompare = 94,
+		ErrorOTPExpire = 95,
+		ModelIsEmpty = 96,
 	}
 
 }

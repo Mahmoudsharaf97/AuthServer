@@ -2,7 +2,9 @@
 {
     public interface IRedisCaching
     {
-        Task<string> GetRefreshTokenAsync(string email);
+		Task<T> GetAsync<T>(string key);
+		Task<bool> DeleteAsync(string key);
+		Task<string> GetRefreshTokenAsync(string email);
         Task<bool> SetRefreshTokenAsync(string userId, string tokenValue);
         Task<bool> SetSessionAsync(string userId, SessionStatus session);
         Task<SessionStatus> GetSessionAsync(string email);

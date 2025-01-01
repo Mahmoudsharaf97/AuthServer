@@ -2,6 +2,7 @@
 using Auth_Application.Services;
 using Auth_Application.Services.Caching;
 using Auth_Application.Services.Captch;
+using Auth_Application.Services.Otp;
 using Auth_Application.Services.Token;
 using IdentityApplication.Interface;
 using IdentityApplication.Services;
@@ -20,6 +21,7 @@ namespace Auth_Application.DependencyInjection
 			services.AddScoped<ISessionServices, SessionServices>();
 			services.AddScoped<ITokenServices, TokenServices>();
 			services.AddScoped<ICaptchService, CaptchService>();
+			services.AddScoped<IOtpService, OtpService>();
 			return services;
 		}
 

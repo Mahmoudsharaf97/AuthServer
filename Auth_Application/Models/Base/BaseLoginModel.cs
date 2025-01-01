@@ -13,10 +13,12 @@ namespace Auth_Application.Models.Base
 {
 	public class BaseLoginModel
 	{
+		[Required]
 		[JsonPropertyName("loginType")]
 		public LoginType LoginType { get; set; }
-		[EmailAddress]
-		public string Email { get; set; }
+		[Required]
+		[JsonPropertyName("loginMethod")]
+		public LoginMethod LoginMethod { get; set; }
 		public string UserName { get; set; }
 		public string PWD { get; set; }
 		public string NationalId { get; set; }
