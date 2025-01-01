@@ -15,8 +15,6 @@ namespace Auth_Application.Models.Base
 	{
 		[JsonPropertyName("loginType")]
 		public LoginType LoginType { get; set; }
-		[EmailAddress]
-		public string Email { get; set; }
 		public string UserName { get; set; }
 		public string PWD { get; set; }
 		public string NationalId { get; set; }
