@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Auth_Application.Models.LoginModels
 {
-	public class BeginLoginModel : BaseLoginModel
+	public class LoginModel : BaseLoginModel
 	{
 
 
