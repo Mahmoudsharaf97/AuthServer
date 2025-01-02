@@ -10,8 +10,8 @@ namespace Auth_Infrastructure.Redis
            private readonly AppSettingsConfiguration _appSettings;
             private Lazy<IConnectionMultiplexer> _Connection = null;
         private bool disposedValue;
-
-        public RedisCaching(AppSettingsConfiguration appSettings)
+		JsonSerializerSettings SerializSettings = new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore };
+		public RedisCaching(AppSettingsConfiguration appSettings)
             {
             this._appSettings = appSettings;
                 configuration = new ConfigurationOptions()
@@ -159,6 +159,12 @@ namespace Auth_Infrastructure.Redis
 		public async Task<bool> DeleteAsync(string key)
 		{
 			return await Database.KeyDeleteAsync(key);
+		}
+		public async Task<bool> SetAsync<T>(string key, T value)
+		{
+			if (!string.IsNullOrEmpty(key) && value != null)
+				return await Database.StringSetAsync(key, JsonConvert.SerializeObject(value, SerializSettings));
+			else return false;
 		}
 	}
 

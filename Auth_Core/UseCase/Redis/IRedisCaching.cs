@@ -12,5 +12,6 @@
         bool SetUser(string email, string ninKey, ApplicationUser<string> user);
         //bool SetUserAsync(string email,ApplicationUser<string> user);
 		Task<ApplicationUser<string>> GetUserAsync(string email);
-    }
+		Task<bool> SetAsync<T>(string key, T value);
+	}
 }

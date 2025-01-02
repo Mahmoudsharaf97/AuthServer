@@ -101,6 +101,12 @@
 		ErrorOTPExpire = 95,
 		ModelIsEmpty = 96,
 		WrongLoginMethod = 97,
+		ErrorUserBirthYear = 98,
+		ErrorBirthMonth = 99,
+		login_incorrect_password_message =100,
+		login_incorrect_phonenumber_not_verifed = 101,
+		UserYakeenNationalIdNotVerified = 102,
+
 	}
 
 }

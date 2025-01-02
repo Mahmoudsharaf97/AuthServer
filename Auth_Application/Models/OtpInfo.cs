@@ -11,7 +11,6 @@ namespace Auth_Application.Models
 		public int Id { get; set; }
 
 		public Guid UserId { get; set; }
-
 		public string UserEmail { get; set; }
 
 		public int VerificationCode { get; set; }
@@ -40,5 +39,28 @@ namespace Auth_Application.Models
 		/// ForgotPasswordToken ForgotPasswordVerificationType
 		/// </summary>
 		public int ForgotPasswordVerificationType { get; set; }
+		public OtpInfo()
+		{
+			
+		}
+		public OtpInfo(string userEmail, string phoneNumber, string nin, int otp)
+		{
+			UserEmail = userEmail;
+			Nin = nin;
+			PhoneNumber = phoneNumber;
+			VerificationCode = otp;
+			CreatedDate = DateTime.Now;
+			ModifiedDate = DateTime.Now;
+		}
+		public OtpInfo(Guid userId, string userEmail, string phoneNumber, string nin, int otp)
+		{
+			UserId = userId;
+			UserEmail = userEmail;
+			Nin = nin;
+			PhoneNumber = phoneNumber;
+			VerificationCode = otp;
+			CreatedDate = DateTime.Now;
+			ModifiedDate = DateTime.Now;
+		}
 	}
 }
