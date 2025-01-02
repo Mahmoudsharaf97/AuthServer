@@ -4,10 +4,10 @@
 	{
 		public GenericOutput()
 		{
-			errorDetails = new();
+			ErrorDetails = new();
 		}
-		public TResult result { get; set; }
-		public ErrorDetails errorDetails { get; set; }
+		public TResult Result { get; set; }
+		public ErrorDetails ErrorDetails { get; set; }
 
 	}
 }
