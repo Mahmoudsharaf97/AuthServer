@@ -41,7 +41,6 @@ namespace Auth_Application.Services.Login.NormalLogin
 			if (model is null)
 				throw new AppException(ExceptionEnum.ModelIsEmpty);
 			model.ValidateModel();
-			// validate captcha
 			// check if user locked and count on login try 
 			ApplicationUser<string> user = await _usersCachedManager.GetUserByEmailOrNationalIdAsync(model.LoginType, LoginType.NationalId == model.LoginType ? model.NationalId : model.UserName);
 			await ValidateUser(user,model);

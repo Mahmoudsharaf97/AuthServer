@@ -11,7 +11,8 @@ namespace Auth_Application.Models.LoginModels
 		public override void ValidateModel()
 		{
 			base.ValidateModel();
-			if(LoginMethod.Login != this.LoginMethod)
+			// validate captcha
+			if (LoginMethod.Login != this.LoginMethod)
 				throw new AppException(ExceptionEnum.WrongLoginMethod);
 		}
 	}
