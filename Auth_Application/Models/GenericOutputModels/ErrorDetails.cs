@@ -1,4 +1,5 @@
-﻿using Auth_Core.Enums;
+﻿using Auth_Core;
+using Auth_Core.Enums;
 
 namespace Auth_Application.Models
 {
@@ -6,7 +7,7 @@ namespace Auth_Application.Models
 	{
 		public bool IsSuccess { get; set; }
 		public Guid ReferenceId { get; set; }
-		public ErrorCodes ErrorCode { get; set; }
+		public ExceptionEnum ErrorCode { get; set; }
 		public string ErrorTitle { get; set; }
 		public string ErrorDescription { get; set; }
 		public DateTime Timestamp { get; set; }
@@ -16,7 +17,7 @@ namespace Auth_Application.Models
 			Timestamp = DateTime.Now;
 		}
 
-		public ErrorDetails(bool IsSuccess, ErrorCodes ErrorCode, string ErrorDescription)
+		public ErrorDetails(bool IsSuccess, ExceptionEnum ErrorCode, string ErrorDescription)
 		{
 			this.IsSuccess = IsSuccess;
 			this.ReferenceId = Guid.NewGuid();
@@ -27,7 +28,7 @@ namespace Auth_Application.Models
 
 		}
 
-		public ErrorDetails(bool IsSuccess, Guid ReferenceId, ErrorCodes ErrorCode, string ErrorDescription)
+		public ErrorDetails(bool IsSuccess, Guid ReferenceId, ExceptionEnum ErrorCode, string ErrorDescription)
 		{
 			this.IsSuccess = IsSuccess;
 			this.ReferenceId = ReferenceId;
