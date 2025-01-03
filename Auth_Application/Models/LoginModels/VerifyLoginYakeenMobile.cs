@@ -1,13 +1,7 @@
 ﻿using Auth_Application.Models.Base;
 using Auth_Core;
-using Newtonsoft.Json;
+using Auth_Core.Enums;
 using SME_Core;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Auth_Application.Models.LoginModels
 {
@@ -22,6 +16,10 @@ namespace Auth_Application.Models.LoginModels
 		{
 			base.ValidateModel();
 
+			if(LoginMethod.VerifyYakeenMobile != this.LoginMethod)
+				throw new AppException(ExceptionEnum.WrongLoginMethod);
+			if (string.IsNullOrEmpty(this.NationalId))
+				throw new AppException(ExceptionEnum.NationalIdEmpty);
 			if (string.IsNullOrEmpty(Phone))
 				throw new AppException(ExceptionEnum.MobileEmpty);
 			if (!Utilities.IsValidPhoneNo(Phone))

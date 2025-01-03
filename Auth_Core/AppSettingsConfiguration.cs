@@ -4,6 +4,7 @@ namespace Auth_Core
 {
     public class AppSettingsConfiguration 
     {
+        public bool SendOtpInResponse { get; set; }
         public string AuthConnectionStringDB { get; set; }
         public int JwtTokenExpiryMinutes { get; set; }
         public int JwtRefreshTokenExpiryMinutes { get; set; }

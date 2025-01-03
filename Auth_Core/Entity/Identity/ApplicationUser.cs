@@ -5,6 +5,12 @@ namespace Auth_Core
     [Table("Users")]
     public class ApplicationUser<T> : IdentityUser  
     {
+        public override string UserName { get; set; }
+		public string FullNameAr { get; set; }
+		public string FullNameEn { get; set; }
+		public string DateOfBirthH { get; set; }
+		public DateTime DateOfBirthG { get; set; }
+		public string? ClientId { get; set; }       
         public DateTime CreateDate { get; set; }
         public DateTime? UpdateDate { get; set; }
         public DateTime? LastSuccessLogin { set; get; }

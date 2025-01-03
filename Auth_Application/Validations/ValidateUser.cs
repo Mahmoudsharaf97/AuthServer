@@ -44,7 +44,7 @@ namespace Auth_Application.Validations
 		{
 			if (user == null)
 				throw new AppException(ExceptionEnum.NoAcouuntToId);
-			user.IsLockout();
+			user.IsNotDeleted().IsLockout();
 			return user;
 		}
 		public static ApplicationUser<string> IsFoundUserByEmail( this ApplicationUser<string> user)
@@ -78,6 +78,18 @@ namespace Auth_Application.Validations
 				throw new AppException(ExceptionEnum.UserIsLocked);
 			return user;
 
+		}
+		public static bool IsPhoneVerifiedByYakeen(this ApplicationUser<string> user)
+		{
+			if (!user.IsPhoneVerifiedByYakeen || string.IsNullOrEmpty(user.PhoneNumber))
+				return false;
+			return true;
+		}
+		public static bool IsYakeenNationalIdVerified(this ApplicationUser<string> user)
+		{
+			if (!user.IsYakeenNationalIdVerified || string.IsNullOrEmpty(user.NationalId.ToString()))
+				return false;
+			return true;
 		}
 	}
 }

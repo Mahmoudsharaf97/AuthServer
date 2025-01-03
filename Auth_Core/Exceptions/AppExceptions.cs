@@ -48,6 +48,12 @@ namespace Auth_Core
              {94,new string[]{ "Error In OTP", "خطأ في رمز التحقق " }  },
              {95,new string[]{ "OTP Expired", "انتهت صلاحيه رمز التحقق " }  },
              {96,new string[]{ "model is empty", "المدخلات ناقصه او فارغه" }  },
+             {97,new string[]{ "Wrong Login Method", "طريقة تسجيل دخول خاطئة" }  },
+             {98,new string[]{ "InvalidData", "بيانات غير صالحة" }  },
+             {99,new string[]{ "Birth month is empty or invalid value", "شهر الميلاد فارغ أو قيمة غير صحيحة" }  },
+             {100,new string[]{ "Incorrect username or password", "اسم المستخدم أو كلمة المرور غير صحيحة" }  },
+             {101,new string[]{ "Phone number is not verified for this account", "رقم الهاتف غير مفعل لهذا الحساب" }  },
+             {102,new string[]{ "User NationalId is not verified ", "رقم الهويه غير مؤكد" }  },
         };
     }
 }

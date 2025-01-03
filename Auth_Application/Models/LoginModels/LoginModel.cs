@@ -1,9 +1,6 @@
 ﻿using Auth_Application.Models.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Auth_Core;
+using Auth_Core.Enums;
 
 namespace Auth_Application.Models.LoginModels
 {
@@ -14,6 +11,9 @@ namespace Auth_Application.Models.LoginModels
 		public override void ValidateModel()
 		{
 			base.ValidateModel();
+			// validate captcha
+			if (LoginMethod.Login != this.LoginMethod)
+				throw new AppException(ExceptionEnum.WrongLoginMethod);
 		}
 	}
 }

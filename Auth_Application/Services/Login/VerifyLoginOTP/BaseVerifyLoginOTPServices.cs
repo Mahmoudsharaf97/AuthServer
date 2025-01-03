@@ -47,7 +47,7 @@ namespace Auth_Application.Services.VerifyLoginOTP
 				throw new AppException(ExceptionEnum.ModelIsEmpty);
 			model.ValidateModel();
 
-			ApplicationUser<string> user = await _usersCachedManager.GetUserByEmailOrNationalIdAsync(model.LoginType, LoginType.NationalId == model.LoginType ? model.NationalId : model.Email);
+			ApplicationUser<string> user = await _usersCachedManager.GetUserByEmailOrNationalIdAsync(model.LoginType, LoginType.NationalId == model.LoginType ? model.NationalId : model.UserName);
 			ValidateUser(user);
 			// Add and validate user DOB 
 			OtpInfo otpInfo = await _otpService.GetCachedOtpInfoAsync(user.PhoneNumber);
