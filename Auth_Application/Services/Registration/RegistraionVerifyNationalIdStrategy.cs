@@ -8,23 +8,27 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Auth_Application.Services.Registration
 {
-    public class RegistraionYakeenStrategy : BaseRegistrationServices
+    public class RegistraionVerifyNationalIdStrategy : BaseRegistrationServices
     {
-        private readonly IRedisCaching redisCaching;
+        private readonly IRedisCaching _redisCaching;
         private readonly IApplicationUserManager applicationUserManager;
         private readonly UserManager<ApplicationUser<string>> userManager;
 
-        public RegistraionYakeenStrategy(IRedisCaching redisCaching, 
+        public RegistraionVerifyNationalIdStrategy(IRedisCaching redisCaching, 
 			IApplicationUserManager applicationUserManager, UserManager<ApplicationUser<string>> userManager) : base(redisCaching, applicationUserManager)
         {
-            this.redisCaching = redisCaching;
+            _redisCaching = redisCaching;
             this.applicationUserManager = applicationUserManager;
             this.userManager = userManager;
         }
-        public async Task<RegisterOutPut> YakeenRegistration(RegisterCommand model)
+        public async Task<RegisterOutPut> EndRegistration(RegisterCommand model)
         {
             try
             {
+                // Get Begin Register Request 
+                var _cahedRegisterUser = await _redisCaching.GetYakeenRegistUser(model.Email, model.NationalId.ToString());
+
+
                 RegisterOutPut outPut = await ValidateEmailExist(model.Email);
                 if (!outPut.Succes)
                     return outPut;
@@ -39,7 +43,7 @@ namespace Auth_Application.Services.Registration
                 };
                 var createdUser = await userManager.CreateAsync(user, model.Password);
                 ValidateCreateUser(createdUser);
-                redisCaching.SetUser(user.Email, user.NationalId.ToString(), user);
+                _redisCaching.SetUser(user.Email, user.NationalId.ToString(), user);
                 RegisterOutPut result = new RegisterOutPut
                 {
                     Succes = true,

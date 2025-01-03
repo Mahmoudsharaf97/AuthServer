@@ -8,5 +8,6 @@ namespace IdentityApplication.Models
         {
             errors = new List<Error>();
         }
+        public bool IsValidPhone { get; set; } = false;
     }
 }

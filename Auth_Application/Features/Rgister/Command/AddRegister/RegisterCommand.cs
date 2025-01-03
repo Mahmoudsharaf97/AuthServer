@@ -24,5 +24,7 @@ namespace Auth_Application.Features
         public string CaptchaToken { get; set; }
         [JsonProperty("nationalId")]
         public long NationalId { get; set; }
+        [JsonProperty("phone")]
+        public long Phone { get; set; }
     }
 }

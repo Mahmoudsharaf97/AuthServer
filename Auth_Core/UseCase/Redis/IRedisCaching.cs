@@ -12,5 +12,7 @@
         bool SetUser(string email, string ninKey, ApplicationUser<string> user);
         //bool SetUserAsync(string email,ApplicationUser<string> user);
 		Task<ApplicationUser<string>> GetUserAsync(string email);
+        Task<bool> SetYakeenRegisterUser(ApplicationUser<string> user);
+        Task<ApplicationUser<string>> GetYakeenRegistUser(string userEmail, string userNin);
     }
 }

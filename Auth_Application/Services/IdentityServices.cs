@@ -16,6 +16,7 @@ using Auth_Core.UseCase.Captch;
 using Azure.Core;
 using static Auth_Application.Models.Errors;
 using Auth_Application.Services.Registration;
+using Auth_Core.UseCase.Yakeen;
 namespace IdentityApplication.Services
 {
     public partial class IdentityServices : IIdentityServices
@@ -32,11 +33,12 @@ namespace IdentityApplication.Services
         public AppSettingsConfiguration settings { get; }
         public Utilities _utilities { get; }
         public ICaptchService _captchService { get; }
+        public IMobileVerifyService _mobileVerifyService { get; }
 
         public IdentityServices(IApplicationUserManager applicationUserManager, UserManager<ApplicationUser<string>> userManager
 			, SignInManager<ApplicationUser<string>> signInManager, ISessionServices sessionServices, IRedisCaching cacheManager
 		    , AppSettingsConfiguration _settings, GlobalInfo globalInfo, Utilities utilities
-            , IUsersCachedManager usersCachedManager, ICaptchService captchService,AppSettingsConfiguration appSettingsConfiguration)
+            , IUsersCachedManager usersCachedManager, ICaptchService captchService,AppSettingsConfiguration appSettingsConfiguration, IMobileVerifyService mobileVerifyService)
 		{
 			_applicationUserManager = applicationUserManager;
 			_userManager = userManager;
@@ -50,13 +52,14 @@ namespace IdentityApplication.Services
 			_usersCachedManager = usersCachedManager;
             _captchService = captchService;
             this.appSettingsConfiguration = appSettingsConfiguration;
+            _mobileVerifyService= mobileVerifyService;  
         }
 		public async Task<RegisterOutPut> Register(RegisterCommand model)
         {
             try
             {
                 RegisterOutPut outPut = new RegisterOutPut();
-                bool _captchValidat = _captchService.ValidateCaptchaToken(model.CaptchaToken, model.CaptchaInput, 
+                 bool _captchValidat = _captchService.ValidateCaptchaToken(model.CaptchaToken, model.CaptchaInput, 
                     appSettingsConfiguration.CaptchKey);
 
                 if (!_captchValidat)
@@ -69,15 +72,17 @@ namespace IdentityApplication.Services
                     });
                     return outPut;
                 }
-                if (model.RegisterType==(int)RegisterType.Normal)
+                if (model.RegisterType==(int)RegisterType.VerifyYakeenMobile)
                 {
-                    RegistraionNormalStrategy registraionNormalStrategy = 
-                        new RegistraionNormalStrategy(_cacheManager, _applicationUserManager,_userManager);
-
-                   return await  registraionNormalStrategy.NormalRegistration(model);
+                    RegistraionVerifyPhoneStrategy registraionPhoneStrategy = 
+                        new RegistraionVerifyPhoneStrategy(_cacheManager, _applicationUserManager, _mobileVerifyService, _userManager);
+                   return await registraionPhoneStrategy.BeginRegistration(model);
                 }
-                else if(model.RegisterType == (int)RegisterType.VerifyYakeen)
+                else
                 {
+                    RegistraionVerifyNationalIdStrategy registraionVerifyNationalIdStrategy =
+                        new RegistraionVerifyNationalIdStrategy(_cacheManager, _applicationUserManager, _userManager);
+                    return await registraionVerifyNationalIdStrategy.EndRegistration(model);
 
                 }
             }

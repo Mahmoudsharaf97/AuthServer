@@ -15,6 +15,14 @@ namespace Auth_Core
         public string RedisConnectionString { get; set; }
         public int RedisInstance { get; set; }
         public string CaptchKey { get; set; }
+        public string YakeenMobileVerifyUrl { get; set; }
+        public int YakeenMobileVerifyTimeOutInsecond { get; set; }
+        public string YakeenMobileVerifyAPPID { get; set; }
+        public string YakeenMobileVerifyAPPKEY { get; set; }
+        public string YakeenMobileVerifySERVICEKEY { get; set; }
+        public string YakeenMobileVerifyORGANIZATIONNUMBER { get; set; }
+        public string YakeenLocalURl { get; set; }
+        public string YakeenLocalsvcCredentials { get; set; }
 
     }
 

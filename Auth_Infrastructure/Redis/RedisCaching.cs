@@ -1,5 +1,6 @@
 ﻿using Auth_Core;
 using Auth_Core.UseCase.Redis;
+using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
 using StackExchange.Redis;
 namespace Auth_Infrastructure.Redis
@@ -136,7 +137,28 @@ namespace Auth_Infrastructure.Redis
 			}
             else return false;
         }
+        public async Task<bool> SetYakeenRegisterUser(ApplicationUser<string> user)
+        {
+            if (user != null)
+            {
+                await Database.StringSetAsync($"YakeenRegisterUser_{user.Email}_{user.PhoneNumber}", JsonConvert.SerializeObject(user));
+                return true;
+            }
+            else return false;
+        }
 
+        public async Task<ApplicationUser<string>> GetYakeenRegistUser(string  userEmail,string userNin)
+        {
+
+            RedisValue rv = await Database.StringGetAsync($"YakeenRegisterUser_{userEmail}_{userNin}");
+            if (!rv.HasValue)
+                return null;
+            var user = JsonConvert.DeserializeObject<ApplicationUser<string>>(rv)!;
+            if (user is null || string.IsNullOrEmpty(user.Email))// add || string.IsNullOrEmpty(user.Nin)
+                return null;
+
+            return user;
+        }
         public async Task<ApplicationUser<string>> GetUserAsync(string emailOrNinKey)
         {
             string key = $"User_{emailOrNinKey}";
