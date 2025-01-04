@@ -1,43 +1,33 @@
 ﻿using Auth_Application.Features;
-using Auth_Application.Models;
 using Auth_Core;
 using Auth_Core.Enums;
-using Auth_Core.Models;
+using Auth_Core.Models.Yakeen;
 using Auth_Core.UseCase;
 using Auth_Core.UseCase.Redis;
-using Auth_Core.UseCase.Yakeen;
 using IdentityApplication.Models;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using static Auth_Application.Models.Errors;
 namespace Auth_Application.Services.Registration
 {
     public  class RegistraionVerifyPhoneStrategy : BaseRegistrationServices
     {
         private readonly IRedisCaching _redisCaching;
-        private readonly IMobileVerifyService _mobileVerifyService;
-        private readonly UserManager<ApplicationUser<string>> _userManager;
+        private readonly IYakeenClient _yakeenClient;
 
         public RegistraionVerifyPhoneStrategy(IRedisCaching redisCaching,
-            IApplicationUserManager applicationUserManager, IMobileVerifyService mobileVerifyService,
-            UserManager<ApplicationUser<string>> userManager) :base(redisCaching, applicationUserManager)
+            IApplicationUserManager applicationUserManager, IYakeenClient yakeenClient
+          ) :base(redisCaching, applicationUserManager)
         {
             _redisCaching = redisCaching;
-            ApplicationUserManager = applicationUserManager;
-            _mobileVerifyService = mobileVerifyService;
-            _userManager = userManager;
+            _yakeenClient = yakeenClient;
         }
-
-        public IApplicationUserManager ApplicationUserManager { get; }
-
         public async Task<RegisterOutPut> BeginRegistration(RegisterCommand model)
         {
             RegisterOutPut YakeenResult = new RegisterOutPut();
-
             try
             {
                 // check If Client Try To Begin Register Before 
-                var _cahedRegisterUser =await  _redisCaching.GetYakeenRegistUser(model.Email, model.NationalId.ToString());
+                var _cahedRegisterUser =await  _redisCaching.GetRegisterUserAfterPhoneVerify(model.Email, model.NationalId.ToString(),model.Phone.ToString());
 
                 if (_cahedRegisterUser is not null)
                 {
@@ -59,8 +49,6 @@ namespace Auth_Application.Services.Registration
                 if (!outPut.Succes)
                     return outPut;
 
-  
-
                 ApplicationUser<string> user = new ApplicationUser<string>
                 {
                     Email = model.Email,
@@ -74,7 +62,7 @@ namespace Auth_Application.Services.Registration
                 };
 
                 // call Yakeen For Mobile Verifcation 
-                YakeenMobileVerificationOutput res = await _mobileVerifyService.YakeenMobileVerificationAsync(model.Phone, model.NationalId, "ar");
+                YakeenMobileVerificationOutput res = await _yakeenClient.YakeenMobileVerificationAsync(model.Phone.Value, model.NationalId.Value, model.Language);
 
                 if (res.ErrorCode != YakeenMobileVerificationOutput.ErrorCodes.Success)
                 {
@@ -94,13 +82,14 @@ namespace Auth_Application.Services.Registration
                 if (res.ErrorCode == YakeenMobileVerificationOutput.ErrorCodes.Success)
                 {
                     user.IsPhoneVerifiedByYakeen = true;
-                    await _redisCaching.SetYakeenRegisterUser(user);
+                    await _redisCaching.SetRegisterUserAfterPhoneVerify(user);
                 }
 
 
                 YakeenResult.Succes = true;
                 YakeenResult.IsValidPhone = true;
                 YakeenResult.errors = [];
+                YakeenResult.RegisterStatusCode =(int)RegisterStatusCode.PhoneVerfiedSuccssShowDateOfBirhRequired;
                 return YakeenResult;
             }
             catch (Exception ex)

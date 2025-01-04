@@ -2,14 +2,16 @@
 using Auth_Core.UseCase.Redis;
 using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
+using SME_Core;
 using StackExchange.Redis;
 namespace Auth_Infrastructure.Redis
 {
     public class RedisCaching : IRedisCaching
     {
-            private readonly ConfigurationOptions configuration = null;
-           private readonly AppSettingsConfiguration _appSettings;
-            private Lazy<IConnectionMultiplexer> _Connection = null;
+       string registerBaseKey="RegisterUser" ;
+       private readonly ConfigurationOptions configuration = null;
+       private readonly AppSettingsConfiguration _appSettings;
+       private Lazy<IConnectionMultiplexer> _Connection = null;
         private bool disposedValue;
 		JsonSerializerSettings SerializSettings = new JsonSerializerSettings { ReferenceLoopHandling = ReferenceLoopHandling.Ignore };
 		public RedisCaching(AppSettingsConfiguration appSettings)
@@ -43,6 +45,7 @@ namespace Auth_Infrastructure.Redis
 			if (!rv.HasValue)
 				return default;
 			return JsonConvert.DeserializeObject<T>(rv);
+
 		}
 		public T Get <T>(string key)
         {
@@ -137,28 +140,7 @@ namespace Auth_Infrastructure.Redis
 			}
             else return false;
         }
-        public async Task<bool> SetYakeenRegisterUser(ApplicationUser<string> user)
-        {
-            if (user != null)
-            {
-                await Database.StringSetAsync($"YakeenRegisterUser_{user.Email}_{user.PhoneNumber}", JsonConvert.SerializeObject(user));
-                return true;
-            }
-            else return false;
-        }
 
-        public async Task<ApplicationUser<string>> GetYakeenRegistUser(string  userEmail,string userNin)
-        {
-
-            RedisValue rv = await Database.StringGetAsync($"YakeenRegisterUser_{userEmail}_{userNin}");
-            if (!rv.HasValue)
-                return null;
-            var user = JsonConvert.DeserializeObject<ApplicationUser<string>>(rv)!;
-            if (user is null || string.IsNullOrEmpty(user.Email))// add || string.IsNullOrEmpty(user.Nin)
-                return null;
-
-            return user;
-        }
         public async Task<ApplicationUser<string>> GetUserAsync(string emailOrNinKey)
         {
             string key = $"User_{emailOrNinKey}";
@@ -173,22 +155,45 @@ namespace Auth_Infrastructure.Redis
             return user;
         }
 
-        public Task<bool> DeleteSessionAsync(string userId)
-        {
-            throw new NotImplementedException();
-        }
 
-		public async Task<bool> DeleteAsync(string key)
-		{
-			return await Database.KeyDeleteAsync(key);
-		}
 		public async Task<bool> SetAsync<T>(string key, T value)
 		{
 			if (!string.IsNullOrEmpty(key) && value != null)
 				return await Database.StringSetAsync(key, JsonConvert.SerializeObject(value, SerializSettings));
 			else return false;
 		}
-	}
+
+
+
+        #region registraion 
+        public async Task<bool> SetRegisterUserAfterPhoneVerify(ApplicationUser<string> user)
+        {
+           return  await SetAsync<ApplicationUser<string>>($"{registerBaseKey}_{user.Email}_{user.NationalId}_{user.PhoneNumber}", user, TimeSpan.FromMinutes(60));
+        }
+        public async Task<ApplicationUser<string>> GetRegisterUserAfterPhoneVerify(string userEmail, string userNin,string phone)
+        {
+         ApplicationUser<string> user=   await GetAsync<ApplicationUser<string>>($"{registerBaseKey}_{userEmail}_{userNin}_{phone}");
+            if (user is null || string.IsNullOrEmpty(user.Email))// add || string.IsNullOrEmpty(user.Nin)
+                return null;
+            return user;
+        }
+        public async Task<bool> SetRegisterUserAfterGenerateOTP(ApplicationUser<string> user)
+        {
+            return await SetAsync<ApplicationUser<string>>($"{user.Email}_{user.NationalId}_{user.PhoneNumber}_otp", user, TimeSpan.FromMinutes(60));
+        }
+        public async Task<ApplicationUser<string>> GetRegisterUserAfterGenerateOTP(string userEmail, string userNin,string phone)
+        {
+            ApplicationUser<string> user = await GetAsync<ApplicationUser<string>>($"{registerBaseKey}_{userEmail}_{userNin}_{phone}_otp");
+            if (user is null || string.IsNullOrEmpty(user.Email))
+                return null;
+            return user;
+        }
+        public Task<bool> DeleteAsync(string key)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
+    }
 
 
 

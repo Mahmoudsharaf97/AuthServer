@@ -1,5 +1,6 @@
 ﻿using Auth_Application.Models;
 using Auth_Core;
+using Auth_Core.Enums;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;

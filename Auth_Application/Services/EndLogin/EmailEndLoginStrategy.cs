@@ -43,7 +43,7 @@ namespace Auth_Application.Services
                 {
                     var userSession = new SessionStatus(Guid.NewGuid().ToString(), user.Id, _utilities.GetUserIP(), _utilities.GetUserAgent(), _utilities.GetMacAddress(), _utilities.GetUserIP());
                     await SetUserSessionAsync (user.Email, userSession);
-                    user.LastSuccessLogin = DateTime.Now;
+                    user.LastModifiedDate = DateTime.Now;
                     //  await _userManager.UpdateAsync(); need to add to rabbiteMQ for Update 
                     var tokenResult = await GetAccessToken(user, userSession.SessionId);
                     if (tokenResult.ErrorCode == ErrorCodes.Success)

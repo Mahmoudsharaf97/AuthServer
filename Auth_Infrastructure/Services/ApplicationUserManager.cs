@@ -69,6 +69,12 @@ namespace Auth_Infrastructure.Identity
             var context = GetContext();
             return await context.Users.FirstOrDefaultAsync(x => x.NationalId == nationalId);
         }
+
+        public async Task<ApplicationUser<string>> GetUserByPhoneFormate(string formate1, string formate2)
+        {
+            var context = GetContext();
+            return await context.Users.FirstOrDefaultAsync(x => x.PhoneNumber == formate1||x.PhoneNumber==formate2);
+        }
         public async Task<bool> CheckNationalIdBelongsForDifferentEmail(long nationalId,string email)
         {
             var context = GetContext();

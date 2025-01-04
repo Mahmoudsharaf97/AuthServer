@@ -28,7 +28,9 @@ namespace Auth_Application.Models
             CaptchaError,
             EmailAlreadyExist,
             InvalidMobileOwner,
-            YakeenVerfyPhoneError
+            YakeenVerfyPhoneError,
+            YakeenVerfiyDateOfBirthError,
+            OtpSendSuccess,
 
 
         }

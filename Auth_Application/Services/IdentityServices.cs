@@ -11,12 +11,12 @@ using Auth_Core.Enums;
 using Auth_Application.Services;
 using Auth_Application.Services.Login;
 using Auth_Application.Features;
-using Auth_Application.Services.Captch;
 using Auth_Core.UseCase.Captch;
 using Azure.Core;
 using static Auth_Application.Models.Errors;
 using Auth_Application.Services.Registration;
 using Auth_Core.UseCase.Yakeen;
+using Auth_Application.Interface;
 namespace IdentityApplication.Services
 {
     public partial class IdentityServices : IIdentityServices
@@ -24,6 +24,7 @@ namespace IdentityApplication.Services
         private readonly IApplicationUserManager _applicationUserManager;
         private readonly IUsersCachedManager _usersCachedManager;
         private readonly AppSettingsConfiguration appSettingsConfiguration;
+        private readonly IOtpService otpService;
         private readonly GlobalInfo globalInfo;
         public UserManager<ApplicationUser<string>> _userManager { get; }
         public SignInManager<ApplicationUser<string>> _signInManager { get; }
@@ -33,12 +34,13 @@ namespace IdentityApplication.Services
         public AppSettingsConfiguration settings { get; }
         public Utilities _utilities { get; }
         public ICaptchService _captchService { get; }
-        public IMobileVerifyService _mobileVerifyService { get; }
+        public IYakeenClient _yakeenClient { get; }
 
         public IdentityServices(IApplicationUserManager applicationUserManager, UserManager<ApplicationUser<string>> userManager
 			, SignInManager<ApplicationUser<string>> signInManager, ISessionServices sessionServices, IRedisCaching cacheManager
 		    , AppSettingsConfiguration _settings, GlobalInfo globalInfo, Utilities utilities
-            , IUsersCachedManager usersCachedManager, ICaptchService captchService,AppSettingsConfiguration appSettingsConfiguration, IMobileVerifyService mobileVerifyService)
+            , IUsersCachedManager usersCachedManager, ICaptchService captchService,AppSettingsConfiguration appSettingsConfiguration
+            , IYakeenClient yakeenClient,IOtpService otpService)
 		{
 			_applicationUserManager = applicationUserManager;
 			_userManager = userManager;
@@ -52,38 +54,42 @@ namespace IdentityApplication.Services
 			_usersCachedManager = usersCachedManager;
             _captchService = captchService;
             this.appSettingsConfiguration = appSettingsConfiguration;
-            _mobileVerifyService= mobileVerifyService;  
+            _yakeenClient = yakeenClient;
+            this.otpService = otpService;
         }
 		public async Task<RegisterOutPut> Register(RegisterCommand model)
         {
             try
             {
                 RegisterOutPut outPut = new RegisterOutPut();
-                 bool _captchValidat = _captchService.ValidateCaptchaToken(model.CaptchaToken, model.CaptchaInput, 
-                    appSettingsConfiguration.CaptchKey);
 
-                if (!_captchValidat)
-                {
-                    outPut.Succes =false;
-                    outPut.errors.Add(new Error
-                    {
-                        ErrorCode = (int)ErrorCode.CaptchaError,
-                        ErrorDescription = "Captch Invalid"
-                    });
-                    return outPut;
-                }
                 if (model.RegisterType==(int)RegisterType.VerifyYakeenMobile)
                 {
+                    outPut= CheckCaptch(model.CaptchaToken, model.CaptchaInput,
+                    appSettingsConfiguration.CaptchKey);
+                    if (!outPut.Succes)
+                        return outPut;
+
                     RegistraionVerifyPhoneStrategy registraionPhoneStrategy = 
-                        new RegistraionVerifyPhoneStrategy(_cacheManager, _applicationUserManager, _mobileVerifyService, _userManager);
+                        new RegistraionVerifyPhoneStrategy(_cacheManager, _applicationUserManager, _yakeenClient);
                    return await registraionPhoneStrategy.BeginRegistration(model);
+                }
+                else if(model.RegisterType == (int)RegisterType.VerifyYakeenNationalId)
+                {
+                    RegistraionVerifyNationalIdStrategy registraionVerifyNationalIdStrategy =
+                        new RegistraionVerifyNationalIdStrategy(_cacheManager, _yakeenClient,otpService, _applicationUserManager);
+                    return await registraionVerifyNationalIdStrategy.EndRegistration(model);
+
+                }
+                else if(model.RegisterType == (int)RegisterType.VerifyOTP)
+                {
+                    RegistraionVerifyOTPStrategy registraionVerifyOTPStrategy =
+                     new RegistraionVerifyOTPStrategy(_cacheManager, otpService, _applicationUserManager,_userManager);
+                    return await registraionVerifyOTPStrategy.RegistrationVerifyOTP(model);
                 }
                 else
                 {
-                    RegistraionVerifyNationalIdStrategy registraionVerifyNationalIdStrategy =
-                        new RegistraionVerifyNationalIdStrategy(_cacheManager, _applicationUserManager, _userManager);
-                    return await registraionVerifyNationalIdStrategy.EndRegistration(model);
-
+                    return null; ; //need Error Handel
                 }
             }
             catch (Exception ex)
@@ -92,6 +98,27 @@ namespace IdentityApplication.Services
                 throw;
             }
          
+        }
+
+        private RegisterOutPut CheckCaptch(string captchaToken, string captchaInput, string captchKey)
+        {
+            RegisterOutPut outPut = new RegisterOutPut();
+
+            bool _captchValidat = _captchService.ValidateCaptchaToken(captchaToken, captchaInput,
+               captchKey);
+
+            if (!_captchValidat)
+            {
+                outPut.Succes = false;
+                outPut.errors.Add(new Error
+                {
+                    ErrorCode = (int)ErrorCode.CaptchaError,
+                    ErrorDescription = "Captch Invalid"
+                });
+                return outPut;
+            }
+            outPut.Succes = true;
+            return outPut;  
         }
 
         public async Task<bool> LogOut()

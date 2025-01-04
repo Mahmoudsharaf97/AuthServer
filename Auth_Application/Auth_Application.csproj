@@ -25,4 +25,8 @@
     <ProjectReference Include="..\Auth_Core\Auth_Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\Yakeen\" />
+  </ItemGroup>
+
 </Project>
