@@ -1,5 +1,3 @@
-using Auth_Application.Interface;
-using Auth_Application.Services;
 using Auth_Core;
 using Auth_Core.Global;
 using Auth_Core.MiddleWare;
@@ -64,6 +62,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseMiddleware<RequestMiddleWare>();
+app.UseMiddleware<LogMiddleWare>();
 app.MapGeneralGroup(nameof(IdentityEndpoint), "General")
     .MapIdentityEndpoints();
 app.Run();
