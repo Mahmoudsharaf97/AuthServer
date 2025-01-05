@@ -16,10 +16,10 @@ namespace Auth_Application.Services.Login
 
 		protected override async Task ValidateUser(ApplicationUser<string> user, VerifyLoginYakeenMobile model)
 		{
+			user.IsFoundUserByEmail();
 			bool isPasswordCorrect = await _userManager.CheckPasswordAsync(user, model.PWD);
 			if (!isPasswordCorrect)
 				throw new AppException(ExceptionEnum.login_incorrect_password_message);
-			user.IsFoundUserByEmail();
 		}
 	}
 }
