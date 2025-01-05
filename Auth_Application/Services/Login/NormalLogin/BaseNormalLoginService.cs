@@ -15,11 +15,6 @@ namespace Auth_Application.Services.Login.NormalLogin
 		private readonly IUsersCachedManager _usersCachedManager;
 		private readonly IOtpService _otpService;
 		private readonly AppSettingsConfiguration _appSettings;
-
-		protected BaseNormalLoginService()
-		{
-			
-		}
 		protected BaseNormalLoginService(IUsersCachedManager usersCachedManager, IOtpService otpService, AppSettingsConfiguration appSettings)
 		{
 			_usersCachedManager = usersCachedManager;
