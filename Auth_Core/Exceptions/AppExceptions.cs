@@ -54,6 +54,7 @@ namespace Auth_Core
              {100,new string[]{ "Incorrect username or password", "اسم المستخدم أو كلمة المرور غير صحيحة" }  },
              {101,new string[]{ "Phone number is not verified for this account", "رقم الهاتف غير مفعل لهذا الحساب" }  },
              {102,new string[]{ "User NationalId is not verified ", "رقم الهويه غير مؤكد" }  },
+             {103,new string[]{ "NationalId already registed. Please contact customer service 8001180044 (NV-01) ", "رقم الهوية مُسجل مُسبقًا. من فضلك التواصل مع خدمة العملاء 8001180044 (NV-01)" }  },
         };
     }
 }

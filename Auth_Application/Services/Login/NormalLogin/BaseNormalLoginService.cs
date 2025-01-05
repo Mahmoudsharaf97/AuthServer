@@ -54,15 +54,15 @@ namespace Auth_Application.Services.Login.NormalLogin
 		}
 		protected void CheckUserConfirmedByYakeen(GenericOutput<LoginOutput> output ,ApplicationUser<string> user)
 		{
-			if (!user.IsYakeenNationalIdVerified())
-			{
-				output.ErrorDetails = new(IsSuccess: false, ErrorCode: ExceptionEnum.UserYakeenNationalIdNotVerified, ErrorDescription: "User Yakeen National Id Not Verified");
-				output.Result.LoginMethod = LoginMethod.LoginAccountConfirmation;
-			}
 			if (!user.IsPhoneVerifiedByYakeen())
 			{
 				output.ErrorDetails = new(IsSuccess: false, ErrorCode: ExceptionEnum.login_incorrect_phonenumber_not_verifed, ErrorDescription: "login incorrect phonenumber not verifed");
 				output.Result.LoginMethod = LoginMethod.VerifyYakeenMobile;
+			}
+			if (!user.IsYakeenNationalIdVerified())
+			{
+				output.ErrorDetails = new(IsSuccess: false, ErrorCode: ExceptionEnum.UserYakeenNationalIdNotVerified, ErrorDescription: "User Yakeen National Id Not Verified");
+				output.Result.LoginMethod = LoginMethod.LoginAccountConfirmation;
 			}
 			output.Result.LoginMethod = LoginMethod.VerifyLoginOTP;
 		}
