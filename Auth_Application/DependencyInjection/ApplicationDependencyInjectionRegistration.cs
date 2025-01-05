@@ -1,10 +1,8 @@
 ﻿using Auth_Application.Interface;
 using Auth_Application.Services;
 using Auth_Application.Services.Caching;
-using Auth_Application.Services.Captch;
 using Auth_Application.Services.Otp;
 using Auth_Application.Services.Token;
-using Auth_Core.UseCase;
 using Auth_Core.UseCase.Captch;
 using IdentityApplication.Interface;
 using IdentityApplication.Services;
