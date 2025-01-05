@@ -21,18 +21,11 @@ namespace Auth_Application.Services.Login.LoginNationalIdConfirmation
 	{
 		private readonly IUsersCachedManager _usersCachedManager;
 		private readonly IOtpService _otpService;
-		private UserManager<ApplicationUser<string>> _userManager { get; }
 		private readonly AppSettingsConfiguration _appSettings;
 		private readonly IApplicationUserManager _applicationUserManager;
-
-		protected BaseLoginAccountConfirmationService()
-		{
-			
-		}
-		protected BaseLoginAccountConfirmationService(IUsersCachedManager usersCachedManager, UserManager<ApplicationUser<string>> userManager, IOtpService otpService, AppSettingsConfiguration appSettings, IApplicationUserManager applicationUserManager)
+		protected BaseLoginAccountConfirmationService(IUsersCachedManager usersCachedManager, IOtpService otpService, AppSettingsConfiguration appSettings, IApplicationUserManager applicationUserManager)
 		{
 			_usersCachedManager = usersCachedManager;
-			_userManager = userManager;
 			_otpService = otpService;
 			_appSettings = appSettings;
 			_applicationUserManager = applicationUserManager;
