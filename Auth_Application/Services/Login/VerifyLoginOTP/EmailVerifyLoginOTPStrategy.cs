@@ -1,6 +1,7 @@
 ﻿using Auth_Application.Models.LoginModels.LoginInput;
 using Auth_Application.Validations;
 using Auth_Core;
+using Auth_Core.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,8 @@ namespace Auth_Application.Services.VerifyLoginOTP
 {
 	internal class EmailVerifyLoginOTPStrategy : BaseVerifyLoginOTPServices
 	{
+		public override string StrategyName => $"{LoginMethod.VerifyLoginOTP}-{LoginType.Email}";
+
 		protected override async Task ValidateUser(ApplicationUser<string> user, VerifyLoginOTPModel model)
 		{
 			user.IsFoundUserByEmail();

@@ -1,6 +1,7 @@
 ﻿using Auth_Application.Models.LoginModels.LoginInput;
 using Auth_Application.Validations;
 using Auth_Core;
+using Auth_Core.Enums;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace Auth_Application.Services.Login.LoginNationalIdConfirmation
 {
 	public class LoginNationalIdConfirmationStrategy : BaseLoginAccountConfirmationService
 	{
+		public override string StrategyName => $"{LoginMethod.Login}-{LoginType.Email}";
 		private UserManager<ApplicationUser<string>> _userManager { get; }
 
 		public LoginNationalIdConfirmationStrategy(UserManager<ApplicationUser<string>> userManager)

@@ -1,12 +1,15 @@
 ﻿using Auth_Application.Models.LoginModels.LoginInput;
 using Auth_Application.Validations;
 using Auth_Core;
+using Auth_Core.Enums;
 using Microsoft.AspNetCore.Identity;
 
 namespace Auth_Application.Services.Login
 {
 	public class VerifyLoginYakeenMobileStrategy : VerifyLoginYakeenMobileService
 	{
+		public override string StrategyName => $"{LoginMethod.VerifyYakeenMobile}-{LoginType.Email}";
+
 		private UserManager<ApplicationUser<string>> _userManager { get; }
 
 		public VerifyLoginYakeenMobileStrategy(UserManager<ApplicationUser<string>> userManager)

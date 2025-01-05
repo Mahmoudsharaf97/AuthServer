@@ -13,6 +13,8 @@ namespace Auth_Application.Services.VerifyLoginOTP
 {
 	public class NationalVerifyLoginOTPStrategy : BaseVerifyLoginOTPServices
 	{
+		public override string StrategyName => $"{LoginMethod.VerifyLoginOTP}-{LoginType.NationalId}";
+
 		protected override async Task ValidateUser(ApplicationUser<string> user, VerifyLoginOTPModel model)
 		{
 			user.IsFoundUserByNationalId();

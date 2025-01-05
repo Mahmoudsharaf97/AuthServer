@@ -17,7 +17,7 @@ using System.Threading.Tasks;
 
 namespace Auth_Application.Services.Login.LoginNationalIdConfirmation
 {
-	public abstract class BaseLoginAccountConfirmationService : ILoginStrategy
+	public abstract class BaseLoginAccountConfirmationService : LoginStrategy
 	{
 		private readonly IUsersCachedManager _usersCachedManager;
 		private readonly IOtpService _otpService;
@@ -29,7 +29,10 @@ namespace Auth_Application.Services.Login.LoginNationalIdConfirmation
 		{
 			
 		}
-
+		public override Task<GenericOutput<BaseLoginOutput>> Execute(LoginInputModel loginInput)
+		{
+			throw new NotImplementedException();
+		}
 		protected BaseLoginAccountConfirmationService(IUsersCachedManager usersCachedManager, UserManager<ApplicationUser<string>> userManager, IOtpService otpService, AppSettingsConfiguration appSettings, IApplicationUserManager applicationUserManager)
 		{
 			_usersCachedManager = usersCachedManager;
@@ -39,10 +42,6 @@ namespace Auth_Application.Services.Login.LoginNationalIdConfirmation
 			_applicationUserManager = applicationUserManager;
 		}
 
-		public Task<GenericOutput<T>> Execute<T>(LoginInputModel loginInput) where T : class
-		{
-			throw new NotImplementedException();
-		}
 		protected abstract Task ValidateUser(ApplicationUser<string> user, LoginConfirmationModel model);
 		public async Task<GenericOutput<LoginConfirmationOutput>> AccountConfirmation(LoginConfirmationModel model)
 		{

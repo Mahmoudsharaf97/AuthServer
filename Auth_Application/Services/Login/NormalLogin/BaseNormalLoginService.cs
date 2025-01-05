@@ -10,7 +10,7 @@ using Auth_Core.Enums;
 using Auth_Core.UseCase.Redis;
 namespace Auth_Application.Services.Login.NormalLogin
 {
-	public abstract class BaseNormalLoginService : ILoginStrategy
+	public abstract class BaseNormalLoginService : LoginStrategy
 	{
 		private readonly IUsersCachedManager _usersCachedManager;
 		private readonly IOtpService _otpService;
@@ -27,7 +27,7 @@ namespace Auth_Application.Services.Login.NormalLogin
 			_appSettings = appSettings;
 		}
 
-		public Task<GenericOutput<T>> Execute<T>(LoginInputModel loginInput) where T : class
+		public override Task<GenericOutput<BaseLoginOutput>> Execute(LoginInputModel loginInput)
 		{
 			throw new NotImplementedException();
 		}

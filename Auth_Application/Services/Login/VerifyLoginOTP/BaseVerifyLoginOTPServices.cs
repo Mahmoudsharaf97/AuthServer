@@ -3,6 +3,7 @@ using Auth_Application.Interface.Login;
 using Auth_Application.Models;
 using Auth_Application.Models.LoginModels.LoginInput;
 using Auth_Application.Models.LoginModels.LoginOutput;
+using Auth_Application.Services.Login;
 using Auth_Application.Validations;
 using Auth_Core;
 using Auth_Core.Enums;
@@ -13,7 +14,7 @@ using System.Security.AccessControl;
 
 namespace Auth_Application.Services.VerifyLoginOTP
 {
-	public abstract class BaseVerifyLoginOTPServices : ILoginStrategy
+	public abstract class BaseVerifyLoginOTPServices : LoginStrategy
 	{
 		private readonly IUsersCachedManager _usersCachedManager;
 		private readonly IOtpService _otpService;
@@ -40,7 +41,7 @@ namespace Auth_Application.Services.VerifyLoginOTP
 			
 		}
 
-		public Task<GenericOutput<T>> Execute<T>(LoginInputModel loginInput) where T : class
+		public override Task<GenericOutput<BaseLoginOutput>> Execute(LoginInputModel loginInput)
 		{
 			throw new NotImplementedException();
 		}

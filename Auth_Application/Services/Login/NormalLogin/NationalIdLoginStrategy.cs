@@ -1,6 +1,7 @@
 ﻿using Auth_Application.Models.LoginModels.LoginInput;
 using Auth_Application.Validations;
 using Auth_Core;
+using Auth_Core.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,8 @@ namespace Auth_Application.Services.Login.NormalLogin
 {
 	public class NationalIdLoginStrategy : BaseNormalLoginService
 	{
+		public override string StrategyName => $"{LoginMethod.Login}-{LoginType.NationalId}";
+
 		protected override async Task ValidateUser(ApplicationUser<string> user, NormalLoginModel model)
 		{
 			user.IsFoundUserByNationalId();

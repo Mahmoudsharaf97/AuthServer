@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Auth_Application.Services.Login
 {
-	public abstract class VerifyLoginYakeenMobileService : ILoginStrategy
+	public abstract class VerifyLoginYakeenMobileService : LoginStrategy
 	{
 		private readonly IUsersCachedManager _usersCachedManager;
 		private readonly IApplicationUserManager _applicationUserManager;
@@ -29,7 +29,7 @@ namespace Auth_Application.Services.Login
 			_otpService = otpService;
 			_appSettings = appSettings;
 		}
-		public Task<GenericOutput<T>> Execute<T>(LoginInputModel loginInput) where T : class
+		public override Task<GenericOutput<BaseLoginOutput>> Execute(LoginInputModel loginInput)
 		{
 			throw new NotImplementedException();
 		}

@@ -9,6 +9,6 @@ namespace Auth_Application.Interface.Login
 {
 	public interface ILoginStrategyManager
 	{
-		ILoginStrategy SetStrategy(LoginMethod loginMethod);
+		ILoginStrategy GetStrategy(LoginMethod loginMethod,LoginType loginType);
 	}
 }
