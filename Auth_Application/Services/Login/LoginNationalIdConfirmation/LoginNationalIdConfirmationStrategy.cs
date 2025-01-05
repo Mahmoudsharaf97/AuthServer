@@ -19,7 +19,7 @@ namespace Auth_Application.Services.Login.LoginNationalIdConfirmation
 			_userManager = userManager;
 		}
 
-		protected override async Task ValidateUser(ApplicationUser<string> user, LoginNationalIdConfirmationModel model)
+		protected override async Task ValidateUser(ApplicationUser<string> user, LoginConfirmationModel model)
 		{
 			user.IsFoundUserByEmail();
 			bool isPasswordCorrect = await _userManager.CheckPasswordAsync(user, model.PWD);

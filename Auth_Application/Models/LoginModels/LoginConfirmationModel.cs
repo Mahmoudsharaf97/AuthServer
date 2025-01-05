@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using Auth_Core.Enums;
 namespace Auth_Application.Models.LoginModels
 {
-	public class LoginNationalIdConfirmationModel : BaseLoginModel
+	public class LoginConfirmationModel : BaseLoginModel
 	{
 		public override void ValidateModel()
 		{

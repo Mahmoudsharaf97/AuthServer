@@ -39,8 +39,8 @@ namespace Auth_Application.Services.Login.LoginNationalIdConfirmation
 			_applicationUserManager = applicationUserManager;
 		}
 
-		protected abstract Task ValidateUser(ApplicationUser<string> user, LoginNationalIdConfirmationModel model);
-		public async Task<GenericOutput<LoginConfirmationOutput>> AccountConfirmation(LoginNationalIdConfirmationModel model)
+		protected abstract Task ValidateUser(ApplicationUser<string> user, LoginConfirmationModel model);
+		public async Task<GenericOutput<LoginConfirmationOutput>> AccountConfirmation(LoginConfirmationModel model)
 		{
 			// check if user num of tries locked and count new 
 
