@@ -29,10 +29,6 @@ namespace Auth_Application.Services.Login.LoginNationalIdConfirmation
 		{
 			
 		}
-		public override Task<GenericOutput<BaseLoginOutput>> Execute(LoginInputModel loginInput)
-		{
-			throw new NotImplementedException();
-		}
 		protected BaseLoginAccountConfirmationService(IUsersCachedManager usersCachedManager, UserManager<ApplicationUser<string>> userManager, IOtpService otpService, AppSettingsConfiguration appSettings, IApplicationUserManager applicationUserManager)
 		{
 			_usersCachedManager = usersCachedManager;
@@ -43,6 +39,15 @@ namespace Auth_Application.Services.Login.LoginNationalIdConfirmation
 		}
 
 		protected abstract Task ValidateUser(ApplicationUser<string> user, LoginConfirmationModel model);
+		public override async Task<GenericOutput<BaseLoginOutput>> Execute(LoginInputModel loginInput)
+		{
+			GenericOutput<LoginConfirmationOutput> loginConfirmation = await AccountConfirmation(loginInput.LoginConfirmationModel);
+			return new GenericOutput<BaseLoginOutput>()
+			{
+				ErrorDetails = loginConfirmation.ErrorDetails,
+				Result = loginConfirmation.Result
+			};
+		}
 		public async Task<GenericOutput<LoginConfirmationOutput>> AccountConfirmation(LoginConfirmationModel model)
 		{
 			// check if user num of tries locked and count new 

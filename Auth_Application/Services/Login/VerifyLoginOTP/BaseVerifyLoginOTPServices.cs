@@ -40,12 +40,16 @@ namespace Auth_Application.Services.VerifyLoginOTP
 		{
 			
 		}
-
-		public override Task<GenericOutput<BaseLoginOutput>> Execute(LoginInputModel loginInput)
-		{
-			throw new NotImplementedException();
-		}
 		protected abstract Task ValidateUser(ApplicationUser<string> user, VerifyLoginOTPModel model);
+		public override async Task<GenericOutput<BaseLoginOutput>> Execute(LoginInputModel loginInput)
+		{
+			GenericOutput<VerifyLoginOTPOutput> genericOutput = await VerifyLoginOtp(loginInput.VerifyLoginOTPModel);
+			return new GenericOutput<BaseLoginOutput>()
+			{
+				ErrorDetails = genericOutput.ErrorDetails,
+				Result = genericOutput.Result,
+			};
+		}
 		public async Task<GenericOutput<VerifyLoginOTPOutput>> VerifyLoginOtp(VerifyLoginOTPModel model)
 		{
 			// count num of tries and check if blocked 
