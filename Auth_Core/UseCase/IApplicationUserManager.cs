@@ -13,6 +13,6 @@
         Task<bool> CheckNationalIdBelongsForDifferentEmail(long nationalId, string email);
         Task<ApplicationUser<string>> GetUserByPhoneFormate(string formate1, string formate2);
 
-
+        Task<bool> CheckNationalIdExistAsync(long nin);
     }
 }

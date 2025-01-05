@@ -37,9 +37,9 @@ namespace Auth_Core.MiddleWare
                 // get request body 
                 string bodyStr;
 
-              //req.EnableBuffering();
-                req.Body.Seek(0, SeekOrigin.Begin);
-                req.Body.Position = 0;
+             // req.EnableBuffering();
+                //req.Body.Seek(0, SeekOrigin.Begin);
+               // req.Body.Position = 0;
                 using (StreamReader reader
                           = new StreamReader(req.Body, Encoding.UTF8, true, 1024, true))
                 {
@@ -58,10 +58,7 @@ namespace Auth_Core.MiddleWare
                     ,error is AppException ?  ((int)((AppException)error)?.ErrorNumber).ToString() : error.Message
                     ,error is AppException ?  ((AppException)error)?.ErrorMessageEn : error.Message
                     ,error?.ToString()  // inner exception 
-                    ,""
                 };
-
-
                 dynamic logEnitity = Activator.CreateInstance(typeof(IndentityLog), args);
                  //   await MessageBroker.PublishMessageAsync(logEnitity, EntityName);
                 switch (error)

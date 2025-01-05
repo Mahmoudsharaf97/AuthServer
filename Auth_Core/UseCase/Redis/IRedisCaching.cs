@@ -11,7 +11,7 @@ namespace Auth_Core.UseCase.Redis
         Task<bool> SetSessionAsync(string userId, SessionStatus session);
         Task<SessionStatus> GetSessionAsync(string email);
         Task<bool> DeleteSessionAsync(string userId);
-        bool SetUser(string email, string ninKey, ApplicationUser<string> user);
+       Task< bool> SetUser(string email, string ninKey, ApplicationUser<string> user);
         //bool SetUserAsync(string email,ApplicationUser<string> user);
         Task<ApplicationUser<string>> GetUserAsync(string email);
         Task<bool> SetAsync<T>(string key, T value);
@@ -19,6 +19,7 @@ namespace Auth_Core.UseCase.Redis
         Task<ApplicationUser<string>> GetRegisterUserAfterPhoneVerify(string userEmail, string userNin, string phone);
         Task<bool> SetRegisterUserAfterGenerateOTP(ApplicationUser<string> user);
         Task<ApplicationUser<string>> GetRegisterUserAfterGenerateOTP(string userEmail, string userNin, string phone);
+        Task<bool> DeletUserRegisterTries(string userEmail, string userNin, string phone);
     }
      
 }
