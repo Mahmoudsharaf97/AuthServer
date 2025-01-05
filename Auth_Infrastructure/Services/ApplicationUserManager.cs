@@ -37,6 +37,12 @@ namespace Auth_Infrastructure.Identity
             var context = GetContext();
             return await context.Users.AnyAsync(x => x.Email == email.ToLower());
         }
+
+        public async Task<bool> CheckNationalIdExistAsync(long nin)
+        {
+            var context = GetContext();
+            return await context.Users.AnyAsync(x => x.NationalId == nin);
+        }
         public async Task<bool> UserIsExistAsync(string Id)
         {
             var context = GetContext();

@@ -38,6 +38,7 @@ namespace Auth_Application.Services.Registration
                     }
                     else
                     {
+
                         YakeenResult.Succes = true;
                         YakeenResult.IsValidPhone = true;
                         YakeenResult.errors = [];
@@ -45,9 +46,13 @@ namespace Auth_Application.Services.Registration
                    return YakeenResult;
                 }
 
-                RegisterOutPut outPut = await ValidateEmailExist(model.Email);
-                if (!outPut.Succes)
-                    return outPut;
+                RegisterOutPut emailValidationOutPut = await ValidateEmailExist(model.Email);
+                if (!emailValidationOutPut.Succes)
+                    return emailValidationOutPut;
+
+                RegisterOutPut nationalIdValidationOutPut = await ValidateNationalIdExist(model.NationalId.Value);
+                if (!nationalIdValidationOutPut.Succes)
+                    return nationalIdValidationOutPut;
 
                 ApplicationUser<string> user = new ApplicationUser<string>
                 {
@@ -60,7 +65,6 @@ namespace Auth_Application.Services.Registration
                     PhoneNumber=model.Phone.ToString(),
                     IsPhoneVerifiedByYakeen=false
                 };
-
                 // call Yakeen For Mobile Verifcation 
                 YakeenMobileVerificationOutput res = await _yakeenClient.YakeenMobileVerificationAsync(model.Phone.Value, model.NationalId.Value, model.Language);
 
@@ -78,14 +82,11 @@ namespace Auth_Application.Services.Registration
                     }
                     return YakeenResult;
                 }
-
                 if (res.ErrorCode == YakeenMobileVerificationOutput.ErrorCodes.Success)
                 {
                     user.IsPhoneVerifiedByYakeen = true;
                     await _redisCaching.SetRegisterUserAfterPhoneVerify(user);
                 }
-
-
                 YakeenResult.Succes = true;
                 YakeenResult.IsValidPhone = true;
                 YakeenResult.errors = [];

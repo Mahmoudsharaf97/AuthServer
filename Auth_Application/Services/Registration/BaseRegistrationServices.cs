@@ -28,11 +28,15 @@ namespace Auth_Application.Services.Registration
         {
           return   await  _redisCaching.GetUserAsync(Email);
         }
+        public async  Task<ApplicationUser<string>> NationalIdCachExist(string nationalId)
+        {
+          return   await  _redisCaching.GetUserAsync(nationalId);
+        }
 
         protected async  Task<RegisterOutPut> ValidateEmailExist(string email)
         {
             RegisterOutPut result = new RegisterOutPut();
-            var cahedUser = EmailCachExist(email);
+            var cahedUser =await EmailCachExist(email);
             if (cahedUser is not null)
             {
                 result.Succes = false;
@@ -44,6 +48,42 @@ namespace Auth_Application.Services.Registration
                 return result;
             }
             bool emailExist = await _applicationUserManager.CheckEmailExistAsync(email);
+            if (emailExist)
+            {
+                result.Succes = false;
+                result.errors.Add(new Error
+                {
+                    ErrorCode = (int)ErrorCode.EmailAlreadyExist,
+                    ErrorDescription = "Email Already Exist"
+                });
+                return result;
+            }
+
+
+            result.Succes = true;
+            result.errors.Add(new Error
+            {
+                ErrorCode = (int)ErrorCode.success,
+                ErrorDescription = "Success"
+            });
+            return result;
+
+        }
+        protected async Task<RegisterOutPut> ValidateNationalIdExist(long nationalId)
+        {
+            RegisterOutPut result = new RegisterOutPut();
+            var cahedUser = await NationalIdCachExist(nationalId.ToString());
+            if (cahedUser is not null)
+            {
+                result.Succes = false;
+                result.errors.Add(new Error
+                {
+                    ErrorCode = (int)ErrorCode.EmailAlreadyExist,
+                    ErrorDescription = "NationalId Already Exist"
+                });
+                return result;
+            }
+            bool emailExist = await _applicationUserManager.CheckNationalIdExistAsync(nationalId);
             if (emailExist)
             {
                 result.Succes = false;

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Auth_Application.Models.LoginModels
+﻿namespace Auth_Application.Models.LoginModels.LoginOutput
 {
-	public class VerifyLoginOTPOutPut : LogInOutput
+	public class VerifyLoginOTPOutput : BaseLoginOutput
 	{
 		public string UserId { get; set; }
 		public string Email { get; set; }

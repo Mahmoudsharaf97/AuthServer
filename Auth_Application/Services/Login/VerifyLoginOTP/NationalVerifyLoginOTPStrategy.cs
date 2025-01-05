@@ -1,4 +1,4 @@
-﻿using Auth_Application.Models.LoginModels;
+﻿using Auth_Application.Models.LoginModels.LoginInput;
 using Auth_Application.Validations;
 using Auth_Core;
 using Auth_Core.Enums;
@@ -13,7 +13,7 @@ namespace Auth_Application.Services.VerifyLoginOTP
 {
 	public class NationalVerifyLoginOTPStrategy : BaseVerifyLoginOTPServices
 	{
-		protected override void ValidateUser(ApplicationUser<string> user)
+		protected override async Task ValidateUser(ApplicationUser<string> user, VerifyLoginOTPModel model)
 		{
 			user.IsFoundUserByNationalId();
 		}

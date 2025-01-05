@@ -2,7 +2,7 @@
 using Auth_Application.Interface.Login;
 using Auth_Application.Models;
 using Auth_Application.Models.Base;
-using Auth_Application.Models.LoginModels;
+using Auth_Application.Models.LoginModels.LoginInput;
 using Auth_Application.Models.LoginModels.LoginOutput;
 using Auth_Application.Validations;
 using Auth_Core;
@@ -26,8 +26,8 @@ namespace Auth_Application.Services.Login.NormalLogin
 			_otpService = otpService;
 			_appSettings = appSettings;
 		}
-		protected abstract Task ValidateUser(ApplicationUser<string> user, LoginModel model);
-		public async Task<GenericOutput<LoginOutput>> Login(LoginModel model)
+		protected abstract Task ValidateUser(ApplicationUser<string> user, NormalLoginModel model);
+		public async Task<GenericOutput<LoginOutput>> Login(NormalLoginModel model)
 		{
 			GenericOutput<LoginOutput> output = new();
 			output.Result = new();
