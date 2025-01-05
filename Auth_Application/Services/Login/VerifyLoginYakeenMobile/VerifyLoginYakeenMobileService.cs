@@ -18,10 +18,6 @@ namespace Auth_Application.Services.Login
 		private readonly IApplicationUserManager _applicationUserManager;
 		private readonly IOtpService _otpService;
 		private readonly AppSettingsConfiguration _appSettings;
-		public VerifyLoginYakeenMobileService()
-		{
-			
-		}
 		public VerifyLoginYakeenMobileService(IUsersCachedManager usersCachedManager, IApplicationUserManager applicationUserManager, IOtpService otpService, AppSettingsConfiguration appSettings)
 		{
 			_usersCachedManager = usersCachedManager;

@@ -1,7 +1,10 @@
-﻿using Auth_Application.Models.LoginModels.LoginInput;
+﻿using Auth_Application.Interface;
+using Auth_Application.Models.LoginModels.LoginInput;
 using Auth_Application.Validations;
 using Auth_Core;
 using Auth_Core.Enums;
+using Auth_Core.UseCase.Redis;
+using Auth_Core.UseCase;
 using Microsoft.AspNetCore.Identity;
 
 namespace Auth_Application.Services.Login
@@ -12,7 +15,7 @@ namespace Auth_Application.Services.Login
 
 		private UserManager<ApplicationUser<string>> _userManager { get; }
 
-		public VerifyLoginYakeenMobileStrategy(UserManager<ApplicationUser<string>> userManager)
+		public VerifyLoginYakeenMobileStrategy(UserManager<ApplicationUser<string>> userManager, IUsersCachedManager usersCachedManager, IApplicationUserManager applicationUserManager, IOtpService otpService, AppSettingsConfiguration appSettings) :base(usersCachedManager,applicationUserManager,otpService,appSettings)
 		{
 			_userManager = userManager;
 		}
