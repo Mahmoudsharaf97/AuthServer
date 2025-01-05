@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Auth_Core.Entities
+﻿namespace Auth_Core.Entities
 {
 
-        public class BaseLog : Entity
+        public class BaseLog 
         {
             public BaseLog()
             {
 
             }
             public BaseLog(
-                     string QuiryParams
+                      string QuiryParams
                     , string Request
                     , DateTime CreateDate
                     , string CreateUser
@@ -50,7 +44,5 @@ namespace Auth_Core.Entities
             public string? ErrorCode { get; set; }
             public string? ErrorDescription { get; set; }
             public string? InnerException { get; set; }
-
-        }
     }
-
+}

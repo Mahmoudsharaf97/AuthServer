@@ -127,7 +127,7 @@ namespace Auth_Infrastructure.Redis
             return await Database.KeyDeleteAsync(email);
         }
 
-        public bool SetUser(string email,string ninKey, ApplicationUser<string> user)
+        public async Task<bool> SetUser(string email,string ninKey, ApplicationUser<string> user)
         {
             if ( user != null)
             {
@@ -135,7 +135,7 @@ namespace Auth_Infrastructure.Redis
                     Database.StringSetAsync( $"User_{email}", JsonConvert.SerializeObject(user)),
                     Database.StringSetAsync($"User_{ninKey}", JsonConvert.SerializeObject(user))
                 };
-                Task.WaitAll(tasks);
+                Task.WhenAll(tasks);
                 return true;
 			}
             else return false;
@@ -179,7 +179,7 @@ namespace Auth_Infrastructure.Redis
         }
         public async Task<bool> SetRegisterUserAfterGenerateOTP(ApplicationUser<string> user)
         {
-            return await SetAsync<ApplicationUser<string>>($"{user.Email}_{user.NationalId}_{user.PhoneNumber}_otp", user, TimeSpan.FromMinutes(60));
+            return await SetAsync<ApplicationUser<string>>($"{registerBaseKey}_{user.Email}_{user.NationalId}_{user.PhoneNumber}_otp", user, TimeSpan.FromMinutes(160));
         }
         public async Task<ApplicationUser<string>> GetRegisterUserAfterGenerateOTP(string userEmail, string userNin,string phone)
         {
@@ -188,9 +188,23 @@ namespace Auth_Infrastructure.Redis
                 return null;
             return user;
         }
-        public Task<bool> DeleteAsync(string key)
+        public async  Task<bool> DeleteAsync(string key)
         {
-            throw new NotImplementedException();
+            return await Database.KeyDeleteAsync(key);
+        }
+
+        public async Task<bool> DeletUserRegisterTries(string userEmail, string userNin, string phone)
+        {
+
+
+              var tasks = new List<Task> {
+                    Database.KeyDeleteAsync( $"{registerBaseKey}_{userEmail}_{userNin}_{phone}"),
+                    Database.KeyDeleteAsync($"{registerBaseKey}_{userEmail}_{userNin}_{phone}_otp")
+                };
+             Task.WhenAll(tasks); 
+
+                return true;
+   
         }
         #endregion
     }

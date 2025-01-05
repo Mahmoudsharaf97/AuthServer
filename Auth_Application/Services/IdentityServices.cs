@@ -65,10 +65,10 @@ namespace IdentityApplication.Services
 
                 if (model.RegisterType==(int)RegisterType.VerifyYakeenMobile)
                 {
-                    outPut= CheckCaptch(model.CaptchaToken, model.CaptchaInput,
-                    appSettingsConfiguration.CaptchKey);
-                    if (!outPut.Succes)
-                        return outPut;
+                    //outPut= CheckCaptch(model.CaptchaToken, model.CaptchaInput,
+                    //appSettingsConfiguration.CaptchKey);
+                    //if (!outPut.Succes)
+                    //    return outPut;
 
                     RegistraionVerifyPhoneStrategy registraionPhoneStrategy = 
                         new RegistraionVerifyPhoneStrategy(_cacheManager, _applicationUserManager, _yakeenClient);

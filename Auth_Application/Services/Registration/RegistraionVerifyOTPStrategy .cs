@@ -60,11 +60,12 @@ namespace Auth_Application.Services.Registration
 
                 var createdUser = await userManager.CreateAsync(HandleUserBeforInsert(applicationUser,model.Channel), model.Password);
                 ValidateCreateUser(createdUser);
-               _redisCaching.SetUser(user.Email, user.NationalId.ToString(), user);
+               await _redisCaching.SetUser(user.Email, user.NationalId.ToString(), user);
+                await   _redisCaching.DeletUserRegisterTries(user.Email, user.NationalId.ToString(), user.PhoneNumber);
                 result.OtpSend = true;
                 result.Succes = true;
                 result.errors = [];
-                result.RegisterStatusCode = (int)RegisterStatusCode.DateOfBirthSuccessShowOTPRequired;
+                result.RegisterStatusCode = (int)RegisterStatusCode.Success;
                 return result;
             }
             catch (Exception ex)
