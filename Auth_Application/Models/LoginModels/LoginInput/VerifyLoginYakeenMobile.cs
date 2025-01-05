@@ -3,7 +3,7 @@ using Auth_Core;
 using Auth_Core.Enums;
 using SME_Core;
 
-namespace Auth_Application.Models.LoginModels
+namespace Auth_Application.Models.LoginModels.LoginInput
 {
 	public class VerifyLoginYakeenMobile : BaseLoginModel
 	{
@@ -16,9 +16,9 @@ namespace Auth_Application.Models.LoginModels
 		{
 			base.ValidateModel();
 
-			if(LoginMethod.VerifyYakeenMobile != this.LoginMethod)
+			if (LoginMethod.VerifyYakeenMobile != LoginMethod)
 				throw new AppException(ExceptionEnum.WrongLoginMethod);
-			if (string.IsNullOrEmpty(this.NationalId))
+			if (string.IsNullOrEmpty(NationalId))
 				throw new AppException(ExceptionEnum.NationalIdEmpty);
 			if (string.IsNullOrEmpty(Phone))
 				throw new AppException(ExceptionEnum.MobileEmpty);

@@ -2,7 +2,7 @@
 using Auth_Application.Interface.Login;
 using Auth_Application.Models;
 using Auth_Application.Models.Base;
-using Auth_Application.Models.LoginModels;
+using Auth_Application.Models.LoginModels.LoginInput;
 using Auth_Application.Models.LoginModels.LoginOutput;
 using Auth_Application.Validations;
 using Auth_Core;

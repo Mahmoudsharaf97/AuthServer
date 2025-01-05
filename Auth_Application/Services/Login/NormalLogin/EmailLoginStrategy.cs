@@ -1,4 +1,4 @@
-﻿using Auth_Application.Models.LoginModels;
+﻿using Auth_Application.Models.LoginModels.LoginInput;
 using Auth_Application.Validations;
 using Auth_Core;
 using Microsoft.AspNetCore.Identity;
