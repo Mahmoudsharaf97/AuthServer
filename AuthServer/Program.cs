@@ -11,6 +11,8 @@ using Auth_Infrastructure.DependencyInjection;
 using Auth_Application.DependencyInjection;
 using System.Reflection;
 using MediatR;
+using MassTransit;
+using Auth_Core.Consumers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,6 +46,29 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.JwtSecretKey))
 		};
 	});
+
+#region Mass Transit Configurations
+
+builder.Services.AddMassTransit(configure => 
+{
+	configure.SetKebabCaseEndpointNameFormatter();
+
+	configure.AddConsumer<IndentityLogConsumer>();
+
+	configure.UsingRabbitMq((busContext, rabbitMqConfigurator) =>
+	{
+        rabbitMqConfigurator.Host(new Uri(config.MessageBrokerSetting.Host), host =>
+		{
+			host.Username(config.MessageBrokerSetting.UserName);
+			host.Password(config.MessageBrokerSetting.Password);
+		});
+
+		rabbitMqConfigurator.ConfigureEndpoints(busContext);
+	});
+});
+
+#endregion
+
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

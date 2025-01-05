@@ -11,15 +11,19 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Abstractions;
 using Auth_Core.Entity;
+using MassTransit;
+using Auth_Core.EventBus;
+using Microsoft.Extensions.DependencyInjection;
 namespace Auth_Core.MiddleWare
 {
     public class LogMiddleWare 
     {
         private readonly RequestDelegate _next;
-
-        public LogMiddleWare(RequestDelegate next)
+        private readonly IServiceScopeFactory _serviceScopeFactory;
+        public LogMiddleWare(RequestDelegate next, IServiceScopeFactory serviceScopeFactory)
         {
             _next = next;
+            _serviceScopeFactory = serviceScopeFactory;
         }
         public async Task InvokeAsync(HttpContext context, GlobalInfo  globalInfo)
         {
@@ -38,8 +42,8 @@ namespace Auth_Core.MiddleWare
                 string bodyStr;
 
               //req.EnableBuffering();
-                req.Body.Seek(0, SeekOrigin.Begin);
-                req.Body.Position = 0;
+                //req.Body.Seek(0, SeekOrigin.Begin);
+                //req.Body.Position = 0;
                 using (StreamReader reader
                           = new StreamReader(req.Body, Encoding.UTF8, true, 1024, true))
                 {
@@ -63,7 +67,14 @@ namespace Auth_Core.MiddleWare
 
 
                 dynamic logEnitity = Activator.CreateInstance(typeof(IndentityLog), args);
-                 //   await MessageBroker.PublishMessageAsync(logEnitity, EntityName);
+                //   await MessageBroker.PublishMessageAsync(logEnitity, EntityName);
+                 
+                using (var scope = _serviceScopeFactory.CreateScope())
+                {
+                    var eventBus = scope.ServiceProvider.GetRequiredService<IEventBus>();
+                    await eventBus.PublishAsync(logEnitity);
+                }
+
                 switch (error)
                 {
                     case YakeenException ex:

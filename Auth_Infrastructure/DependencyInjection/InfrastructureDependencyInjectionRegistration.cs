@@ -1,4 +1,5 @@
-﻿using Auth_Core.UseCase;
+﻿using Auth_Core.EventBus;
+using Auth_Core.UseCase;
 using Auth_Core.UseCase.Redis;
 using Auth_Infrastructure.Identity;
 using Auth_Infrastructure.Redis;
@@ -15,7 +16,8 @@ namespace Auth_Infrastructure.DependencyInjection
 			services.AddScoped<IApplicationUserManager, ApplicationUserManager>();
 			services.AddScoped<IUsersCachedManager, UsersCachedManager>();
 			services.AddScoped<IYakeenClient, YakeenClient>();
-			return services;
+            services.AddScoped<IEventBus, EventBus>();
+            return services;
 		}
 
 	}

@@ -1,5 +1,7 @@
 ﻿
 
+using Auth_Core.Global;
+
 namespace Auth_Core
 {
     public class AppSettingsConfiguration 
@@ -25,6 +27,7 @@ namespace Auth_Core
         public string YakeenLocalURl { get; set; }
         public string YakeenLocalsvcCredentials { get; set; }
 
+        public MessageBrokerSettings MessageBrokerSetting { get; set; }
     }
 
 }
