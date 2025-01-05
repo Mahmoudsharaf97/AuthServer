@@ -11,7 +11,7 @@ namespace Auth_Application.Services.Login.NormalLogin
 {
 	public class NationalIdLoginStrategy : BaseNormalLoginService
 	{
-		protected override async Task ValidateUser(ApplicationUser<string> user, LoginModel model)
+		protected override async Task ValidateUser(ApplicationUser<string> user, NormalLoginModel model)
 		{
 			user.IsFoundUserByNationalId();
 			if (model.NationalId[0]=='1')

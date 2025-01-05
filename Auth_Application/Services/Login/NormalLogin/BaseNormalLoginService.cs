@@ -26,8 +26,8 @@ namespace Auth_Application.Services.Login.NormalLogin
 			_otpService = otpService;
 			_appSettings = appSettings;
 		}
-		protected abstract Task ValidateUser(ApplicationUser<string> user, LoginModel model);
-		public async Task<GenericOutput<LoginOutput>> Login(LoginModel model)
+		protected abstract Task ValidateUser(ApplicationUser<string> user, NormalLoginModel model);
+		public async Task<GenericOutput<LoginOutput>> Login(NormalLoginModel model)
 		{
 			GenericOutput<LoginOutput> output = new();
 			output.Result = new();

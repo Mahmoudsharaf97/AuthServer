@@ -4,7 +4,7 @@ using Auth_Core.Enums;
 
 namespace Auth_Application.Models.LoginModels
 {
-	public class LoginModel : BaseLoginModel
+	public class NormalLoginModel : BaseLoginModel
 	{
 
 
