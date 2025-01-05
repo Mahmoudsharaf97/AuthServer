@@ -35,11 +35,6 @@ namespace Auth_Application.Services.VerifyLoginOTP
 			_userManager = userManager;
 			_appSettings = appSettings;
 		}
-
-		protected BaseVerifyLoginOTPServices()
-		{
-			
-		}
 		protected abstract Task ValidateUser(ApplicationUser<string> user, VerifyLoginOTPModel model);
 		public override async Task<GenericOutput<BaseLoginOutput>> Execute(LoginInputModel loginInput)
 		{
