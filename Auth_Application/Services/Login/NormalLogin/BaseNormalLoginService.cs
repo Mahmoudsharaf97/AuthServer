@@ -26,6 +26,11 @@ namespace Auth_Application.Services.Login.NormalLogin
 			_otpService = otpService;
 			_appSettings = appSettings;
 		}
+
+		public Task<GenericOutput<T>> Execute<T>(LoginInputModel loginInput) where T : class
+		{
+			throw new NotImplementedException();
+		}
 		protected abstract Task ValidateUser(ApplicationUser<string> user, NormalLoginModel model);
 		public async Task<GenericOutput<LoginOutput>> Login(NormalLoginModel model)
 		{

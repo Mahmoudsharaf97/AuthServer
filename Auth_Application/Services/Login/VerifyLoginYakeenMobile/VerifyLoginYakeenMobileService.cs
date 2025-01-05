@@ -29,7 +29,10 @@ namespace Auth_Application.Services.Login
 			_otpService = otpService;
 			_appSettings = appSettings;
 		}
-		//move to base login
+		public Task<GenericOutput<T>> Execute<T>(LoginInputModel loginInput) where T : class
+		{
+			throw new NotImplementedException();
+		}
 		protected abstract Task ValidateUser(ApplicationUser<string> user, VerifyLoginYakeenMobile model);
 
 		public async Task<GenericOutput<LoginYakeenMobileOutput>> VerifyLoginYakeenMobile(VerifyLoginYakeenMobile model)// return base generic output

@@ -39,6 +39,10 @@ namespace Auth_Application.Services.Login.LoginNationalIdConfirmation
 			_applicationUserManager = applicationUserManager;
 		}
 
+		public Task<GenericOutput<T>> Execute<T>(LoginInputModel loginInput) where T : class
+		{
+			throw new NotImplementedException();
+		}
 		protected abstract Task ValidateUser(ApplicationUser<string> user, LoginConfirmationModel model);
 		public async Task<GenericOutput<LoginConfirmationOutput>> AccountConfirmation(LoginConfirmationModel model)
 		{

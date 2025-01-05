@@ -40,6 +40,10 @@ namespace Auth_Application.Services.VerifyLoginOTP
 			
 		}
 
+		public Task<GenericOutput<T>> Execute<T>(LoginInputModel loginInput) where T : class
+		{
+			throw new NotImplementedException();
+		}
 		protected abstract Task ValidateUser(ApplicationUser<string> user, VerifyLoginOTPModel model);
 		public async Task<GenericOutput<VerifyLoginOTPOutput>> VerifyLoginOtp(VerifyLoginOTPModel model)
 		{
@@ -137,5 +141,6 @@ namespace Auth_Application.Services.VerifyLoginOTP
 			loginOutput.IsYakeenChecked = true;
 			loginOutput.NationalID = user.NationalId.ToString();
 		}
+
 	}
 }
