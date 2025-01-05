@@ -6,23 +6,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Auth_Core.Enums;
-namespace Auth_Application.Models.LoginModels
+namespace Auth_Application.Models.LoginModels.LoginInput
 {
-	public class LoginNationalIdConfirmationModel : BaseLoginModel
+	public class LoginConfirmationModel : BaseLoginModel
 	{
 		public override void ValidateModel()
 		{
 			base.ValidateModel();
 
-			if(LoginMethod.LoginAccountConfirmation != this.LoginMethod)
+			if (LoginMethod.LoginAccountConfirmation != LoginMethod)
 				throw new AppException(ExceptionEnum.WrongLoginMethod);
-			if(LoginType.Email == this.LoginType)
+			if (LoginType.Email == LoginType)
 			{
-				if (string.IsNullOrEmpty(this.NationalId))
+				if (string.IsNullOrEmpty(NationalId))
 					throw new AppException(ExceptionEnum.NationalIdEmpty);
-				if (!this.BirthYear.HasValue || this.BirthYear <= 0)
+				if (!BirthYear.HasValue || BirthYear <= 0)
 					throw new AppException(ExceptionEnum.ErrorBirthYear);
-				if (!this.BirthMonth.HasValue || this.BirthMonth > 12)
+				if (!BirthMonth.HasValue || BirthMonth > 12)
 					throw new AppException(ExceptionEnum.ErrorBirthYear);
 			}
 		}

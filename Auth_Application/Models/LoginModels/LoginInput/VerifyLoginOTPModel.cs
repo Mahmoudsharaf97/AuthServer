@@ -10,7 +10,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Auth_Application.Models.LoginModels
+namespace Auth_Application.Models.LoginModels.LoginInput
 {
 	public class VerifyLoginOTPModel : BaseLoginModel
 	{

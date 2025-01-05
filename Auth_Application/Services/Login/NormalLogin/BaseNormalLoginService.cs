@@ -2,7 +2,7 @@
 using Auth_Application.Interface.Login;
 using Auth_Application.Models;
 using Auth_Application.Models.Base;
-using Auth_Application.Models.LoginModels;
+using Auth_Application.Models.LoginModels.LoginInput;
 using Auth_Application.Models.LoginModels.LoginOutput;
 using Auth_Application.Validations;
 using Auth_Core;
@@ -26,8 +26,8 @@ namespace Auth_Application.Services.Login.NormalLogin
 			_otpService = otpService;
 			_appSettings = appSettings;
 		}
-		protected abstract Task ValidateUser(ApplicationUser<string> user, LoginModel model);
-		public async Task<GenericOutput<LoginOutput>> Login(LoginModel model)
+		protected abstract Task ValidateUser(ApplicationUser<string> user, NormalLoginModel model);
+		public async Task<GenericOutput<LoginOutput>> Login(NormalLoginModel model)
 		{
 			GenericOutput<LoginOutput> output = new();
 			output.Result = new();
@@ -47,15 +47,15 @@ namespace Auth_Application.Services.Login.NormalLogin
 		}
 		protected void CheckUserConfirmedByYakeen(GenericOutput<LoginOutput> output ,ApplicationUser<string> user)
 		{
-			if (!user.IsYakeenNationalIdVerified())
-			{
-				output.ErrorDetails = new(IsSuccess: false, ErrorCode: ExceptionEnum.UserYakeenNationalIdNotVerified, ErrorDescription: "User Yakeen National Id Not Verified");
-				output.Result.LoginMethod = LoginMethod.LoginAccountConfirmation;
-			}
 			if (!user.IsPhoneVerifiedByYakeen())
 			{
 				output.ErrorDetails = new(IsSuccess: false, ErrorCode: ExceptionEnum.login_incorrect_phonenumber_not_verifed, ErrorDescription: "login incorrect phonenumber not verifed");
 				output.Result.LoginMethod = LoginMethod.VerifyYakeenMobile;
+			}
+			if (!user.IsYakeenNationalIdVerified())
+			{
+				output.ErrorDetails = new(IsSuccess: false, ErrorCode: ExceptionEnum.UserYakeenNationalIdNotVerified, ErrorDescription: "User Yakeen National Id Not Verified");
+				output.Result.LoginMethod = LoginMethod.LoginAccountConfirmation;
 			}
 			output.Result.LoginMethod = LoginMethod.VerifyLoginOTP;
 		}

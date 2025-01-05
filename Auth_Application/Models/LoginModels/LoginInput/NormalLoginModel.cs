@@ -2,9 +2,9 @@
 using Auth_Core;
 using Auth_Core.Enums;
 
-namespace Auth_Application.Models.LoginModels
+namespace Auth_Application.Models.LoginModels.LoginInput
 {
-	public class LoginModel : BaseLoginModel
+	public class NormalLoginModel : BaseLoginModel
 	{
 
 
@@ -12,7 +12,7 @@ namespace Auth_Application.Models.LoginModels
 		{
 			base.ValidateModel();
 			// validate captcha
-			if (LoginMethod.Login != this.LoginMethod)
+			if (LoginMethod.Login != LoginMethod)
 				throw new AppException(ExceptionEnum.WrongLoginMethod);
 		}
 	}
