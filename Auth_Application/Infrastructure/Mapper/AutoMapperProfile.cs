@@ -9,7 +9,7 @@ namespace IdentityApplication.Infrastructure.Mapper
         public AutoMapperProfile()
         {
             CreateMap<RegisterCommand, RegisterInput>().ReverseMap();
-            CreateMap<BeginEndLoginQuery, LogInInput>().ReverseMap();
+          //  CreateMap<BeginEndLoginQuery, LogInInput>().ReverseMap();
             CreateMap<ApplicationUser<string>, RegisterInput>();
         }
     }

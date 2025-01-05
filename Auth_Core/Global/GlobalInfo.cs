@@ -10,8 +10,8 @@
         public string Token         { get; set; }
         public string SessionID        { get; set; }
         public string ClientDateOfBirth { set; get; }
-        public static string lang { get; set; }
-        public static string Channel { get; set; }
+        public  string lang { get; set; }
+        public  string Channel { get; set; }
 
         public void SetValues(string UserName, string UserId, string lang, string channel ,
              string EmailAddress,
@@ -29,8 +29,8 @@
             this.Token = Token;
             this.SessionID = SessionID;
             this.ClientDateOfBirth = birthdate;
-            GlobalInfo.lang = lang;
-            GlobalInfo.Channel = channel;
+            this.lang = lang;
+            this.Channel = channel;
 
         }
     }

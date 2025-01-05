@@ -502,7 +502,26 @@ namespace SME_Core
             }
             return finalURL;
         }
-        public static string ValidatePhoneNumber(string phoneNumber)        {            if (phoneNumber.StartsWith(InternationalPhoneCode))                phoneNumber = phoneNumber.Substring(InternationalPhoneCode.Length);            else if (phoneNumber.StartsWith(InternationalPhoneSymbol))                phoneNumber = phoneNumber.Substring(InternationalPhoneSymbol.Length);            if (!phoneNumber.StartsWith(SaudiInternationalPhoneCode))            {                if (phoneNumber.StartsWith(Zero))                    phoneNumber = phoneNumber.Substring(Zero.Length);                phoneNumber = SaudiInternationalPhoneCode + phoneNumber;            }            return phoneNumber;        }
+        public static string ValidateInternalPhoneNumber(string phoneNumber)        {            phoneNumber = FormatePhoneBeforeValidateInternalPhoneNumber(phoneNumber);
+            while (!phoneNumber.StartsWith("5"))
+                phoneNumber = FormatePhoneBeforeValidateInternalPhoneNumber(phoneNumber);
+
+            return $"{Zero}{phoneNumber}";        }
+
+
+        public static string FormatePhoneBeforeValidateInternalPhoneNumber(string phoneNumber)
+        {
+            if (phoneNumber.StartsWith(InternationalPhoneSymbol))
+                phoneNumber = phoneNumber.Substring(InternationalPhoneSymbol.Length);
+            if (phoneNumber.StartsWith(InternationalPhoneCode))
+                phoneNumber = phoneNumber.Substring(InternationalPhoneCode.Length);
+            if (phoneNumber.StartsWith(SaudiInternationalPhoneCode))
+                phoneNumber = phoneNumber.Substring(SaudiInternationalPhoneCode.Length);
+            if (phoneNumber.StartsWith(Zero))
+                phoneNumber = phoneNumber.Substring(Zero.Length);
+
+            return phoneNumber;
+        }        public static string ValidatePhoneNumber(string phoneNumber)        {            if (phoneNumber.StartsWith(InternationalPhoneCode))                phoneNumber = phoneNumber.Substring(InternationalPhoneCode.Length);            else if (phoneNumber.StartsWith(InternationalPhoneSymbol))                phoneNumber = phoneNumber.Substring(InternationalPhoneSymbol.Length);            if (!phoneNumber.StartsWith(SaudiInternationalPhoneCode))            {                if (phoneNumber.StartsWith(Zero))                    phoneNumber = phoneNumber.Substring(Zero.Length);                phoneNumber = SaudiInternationalPhoneCode + phoneNumber;            }            return phoneNumber;        }
         public static bool IsValidIBAN(string iban)        {            try            {                iban = iban.ToLower().Replace("sa", "");                if (iban.Length < 22)                {                    return false;                }                return true;            }            catch (Exception exp)            {
                 //  ErrorLogger.LogError(exp.Message, exp, false);
                 return false;            }        }

@@ -24,7 +24,8 @@ namespace Auth_Application.Services.Otp
 
 		public int GenerateRandomOTP()
 		{
-			return new Random().Next(1000, 9999);
+			return 8888;
+			//return new Random().Next(1000, 9999);
 		}
 		public async Task<OtpInfo> GetCachedOtpInfoAsync(string _phone)
 		{

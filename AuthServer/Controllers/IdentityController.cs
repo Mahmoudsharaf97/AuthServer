@@ -1,9 +1,9 @@
 ﻿using Auth_Application.Attributes;
 using Auth_Application.Features;
+using Auth_Application.Features.Token.AccessToken.Queries;
 using Auth_Application.Models;
 using CommonServices.Attributes;
 using IdentityApplication;
-using IdentityApplication.Features;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -44,8 +44,8 @@ namespace AuthServer.Controllers
         [AppAuthorize_Any]
         public async Task<ActionResult> LogIn([FromBody] LogInInput input)
         {
-           var request = MapperObject.Mapper.Map<BeginEndLoginQuery>(input); 
-            return Ok(await _mediator.Send(request));
+         //  var request = MapperObject.Mapper.Map<BeginEndLoginQuery>(input); 
+            return Ok(await _mediator.Send(input));
         }
 
         [HttpPost]

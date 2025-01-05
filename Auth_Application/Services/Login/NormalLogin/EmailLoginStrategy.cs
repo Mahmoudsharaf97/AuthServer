@@ -2,12 +2,6 @@
 using Auth_Application.Validations;
 using Auth_Core;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Auth_Application.Services.Login.NormalLogin
 {
 	public class EmailLoginStrategy : BaseNormalLoginService

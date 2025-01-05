@@ -13,7 +13,8 @@ namespace Auth_Core.Enums
     }   
     public enum RegisterType : byte
     {
-        Normal = 1,
-        VerifyYakeen = 2
+        VerifyYakeenMobile = 1,
+        VerifyYakeenNationalId = 2,
+        VerifyOTP=3
     }
 }

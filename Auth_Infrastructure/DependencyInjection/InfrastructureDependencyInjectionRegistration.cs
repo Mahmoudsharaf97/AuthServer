@@ -2,6 +2,7 @@
 using Auth_Core.UseCase.Redis;
 using Auth_Infrastructure.Identity;
 using Auth_Infrastructure.Redis;
+using Auth_Infrastructure.Yakeen;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Auth_Infrastructure.DependencyInjection
@@ -13,6 +14,7 @@ namespace Auth_Infrastructure.DependencyInjection
 			services.AddSingleton<IRedisCaching, RedisCaching>();
 			services.AddScoped<IApplicationUserManager, ApplicationUserManager>();
 			services.AddScoped<IUsersCachedManager, UsersCachedManager>();
+			services.AddScoped<IYakeenClient, YakeenClient>();
 			return services;
 		}
 

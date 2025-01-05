@@ -11,7 +11,8 @@
         Task<bool> IsBloked(string userId);
         Task<ApplicationUser<string>> GetUserByNationalId(long nationalId);
         Task<bool> CheckNationalIdBelongsForDifferentEmail(long nationalId, string email);
+        Task<ApplicationUser<string>> GetUserByPhoneFormate(string formate1, string formate2);
 
 
-	}
+    }
 }

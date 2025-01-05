@@ -14,7 +14,7 @@ namespace Auth_Application.Services.Login.NormalLogin
 		protected override async Task ValidateUser(ApplicationUser<string> user, LoginModel model)
 		{
 			user.IsFoundUserByNationalId();
-			if (model.NationalId.StartsWith("1"))
+			if (model.NationalId[0]=='1')
 			{
 				string[] arrDateOfBirthH = user.DateOfBirthH.Split('-');
 				string userBirthYear = arrDateOfBirthH[2],userBirthMonth = arrDateOfBirthH[1];           
@@ -23,7 +23,7 @@ namespace Auth_Application.Services.Login.NormalLogin
 				if (!model.BirthMonth.Value.ToString("D2").Equals(userBirthMonth))
 					throw new AppException(ExceptionEnum.ErrorBirthMonth);
 			}
-			else if (model.NationalId.StartsWith("2"))
+			else if (model.NationalId[0]=='2')
 			{
 				int userBirthYear = user.DateOfBirthG.Year, userBirthMonth = user.DateOfBirthG.Month;
 				if(userBirthYear != model.BirthYear)

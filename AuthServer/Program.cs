@@ -1,5 +1,3 @@
-using Auth_Application.Interface;
-using Auth_Application.Services;
 using Auth_Core;
 using Auth_Core.Global;
 using Auth_Core.MiddleWare;
@@ -18,9 +16,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 
  //config appsettings
-    var config = new AppSettingsConfiguration();
-      builder.Configuration.Bind(config);
-      builder.Services.AddSingleton(config);
+ var config = new AppSettingsConfiguration();
+  builder.Configuration.Bind(config);
+  builder.Services.AddSingleton(config);
 builder.Services.AddScoped<SME_Core.Utilities>();
 builder.Services.AddSingleton<GlobalInfo>();
  builder.Services.AddInfrastructureServicesInjection();
@@ -43,7 +41,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 			ValidateIssuer = false,
 			ValidateAudience = false,
 			ValidateLifetime = true,
-			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("your_secret_key_here"))
+			IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config.JwtSecretKey))
 		};
 	});
 var app = builder.Build();
@@ -64,6 +62,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseMiddleware<RequestMiddleWare>();
+app.UseMiddleware<LogMiddleWare>();
 app.MapGeneralGroup(nameof(IdentityEndpoint), "General")
     .MapIdentityEndpoints();
 app.Run();
