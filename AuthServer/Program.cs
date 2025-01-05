@@ -16,9 +16,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 
  //config appsettings
-    var config = new AppSettingsConfiguration();
-      builder.Configuration.Bind(config);
-      builder.Services.AddSingleton(config);
+ var config = new AppSettingsConfiguration();
+  builder.Configuration.Bind(config);
+  builder.Services.AddSingleton(config);
 builder.Services.AddScoped<SME_Core.Utilities>();
 builder.Services.AddSingleton<GlobalInfo>();
  builder.Services.AddInfrastructureServicesInjection();
