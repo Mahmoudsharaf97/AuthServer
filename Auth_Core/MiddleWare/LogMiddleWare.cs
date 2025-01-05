@@ -65,7 +65,11 @@ namespace Auth_Core.MiddleWare
                 };
                 dynamic logEnitity = Activator.CreateInstance(typeof(IndentityLog), args);
                 //   await MessageBroker.PublishMessageAsync(logEnitity, EntityName);
-                 
+
+                ////
+                /// the blew scope created as we cannot inject Scopped service inside any Middlewarw as middleware is injected as Singletone
+                /// so we use IServiceScopeFactory to access the IEventBus inside the middleware
+                /// 
                 using (var scope = _serviceScopeFactory.CreateScope())
                 {
                     var eventBus = scope.ServiceProvider.GetRequiredService<IEventBus>();

@@ -13,12 +13,18 @@ using System.Reflection;
 using MediatR;
 using MassTransit;
 using Auth_Core.Consumers;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+#region Logging
+builder.Host.UseSerilog((ctx, lc) => lc
+.WriteTo.Console()
+.ReadFrom.Configuration(ctx.Configuration));
+#endregion
 
- //config appsettings
- var config = new AppSettingsConfiguration();
+//config appsettings
+var config = new AppSettingsConfiguration();
   builder.Configuration.Bind(config);
   builder.Services.AddSingleton(config);
 builder.Services.AddScoped<SME_Core.Utilities>();

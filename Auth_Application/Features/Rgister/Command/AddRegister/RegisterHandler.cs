@@ -15,6 +15,8 @@ namespace Auth_Application.Features
         }
         public async Task<RegisterOutPut> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
+            //throw new Exception("test adding logging consumer");
+
             //var input = MapperObject.Mapper.Map<RegisterInput>(request);
             var result= await _identityServices.Register(request);
             return result;
