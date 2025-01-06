@@ -107,6 +107,7 @@
 		login_incorrect_phonenumber_not_verifed = 101,
 		UserYakeenNationalIdNotVerified = 102,
 		exist_nationalId_signup_error = 103,
+		InvalidRegisterType = 104,
 
 	}
 

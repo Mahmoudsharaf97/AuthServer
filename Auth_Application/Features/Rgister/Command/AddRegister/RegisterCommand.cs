@@ -1,37 +1,36 @@
-﻿using IdentityApplication.Models;
+﻿using Auth_Core;
+using IdentityApplication.Models;
 using MediatR;
-using Newtonsoft.Json;
-using System.Text.Json.Serialization;
 namespace Auth_Application.Features
 {
-    public class RegisterCommand : IRequest<RegisterOutPut>
+    public class RegisterCommand : RegisterBaseModel, IRequest<RegisterOutPut>
     {
-        [JsonPropertyName("email")]
-        public string? Email { get; set; }
-        [JsonPropertyName("password")]
-        public string? Password { get; set; }
-        [JsonPropertyName("confirmPassword")]
-        public string? ConfirmPassword { get; set; }
-        [JsonPropertyName("birthDateMonth")]
-        public int? BirthDateMonth { get; set; }
-        [JsonPropertyName("birthDateYear")]
-        public int? BirthDateYear { get; set; }
-        [JsonPropertyName("registerType")]
-        public byte? RegisterType { get; set; }
-        [JsonProperty("captchaInput")]
-        public string? CaptchaInput { get; set; }
-        [JsonProperty("captchaToken")]
-        public string? CaptchaToken { get; set; }
-        [JsonProperty("nationalId")]
-        public long? NationalId { get; set; }
-        [JsonProperty("phone")]
-        public long? Phone { get; set; }
-        [JsonProperty("language")]
-        public string? Language { get; set; }
-        [JsonProperty("channel")]
-        public string? Channel { get; set; }
 
-        [JsonProperty("otp")]
-        public int? OTP { get; set; }
+        public override void ValidateRegisterModel()
+        {
+            base.ValidateRegisterModel();
+
+            if (this.RegisterType == (int)Auth_Core.Enums.RegisterType.VerifyYakeenMobile)
+            {
+                if (string.IsNullOrEmpty(this.Password))
+                    throw new AppException(ExceptionEnum.PasswordIsEmpty);
+            }
+            else if (this.RegisterType == (int)Auth_Core.Enums.RegisterType.VerifyYakeenNationalId)
+            {
+                if (this.BirthDateMonth < 1)
+                    throw new AppException(ExceptionEnum.ErrorBirthMonth);
+                if (this.BirthDateYear < 1)
+                    throw new AppException(ExceptionEnum.ErrorBirthYear);
+            }
+            else if(this.RegisterType == (int)Auth_Core.Enums.RegisterType.VerifyOTP)
+            {
+                if (this.OTP<1)
+                    throw new AppException(ExceptionEnum.NationalIdEmpty);
+            }
+            else
+            {
+                throw new AppException(ExceptionEnum.EmptyInputParameter);
+            }
+        }
     }
 }

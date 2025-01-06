@@ -120,13 +120,11 @@ namespace Auth_Infrastructure.Redis
 
             return session;
         }
-
         public async Task<bool> DeleteSessionAsync(string email)
         {
             string key = $"Session_{email}";
             return await Database.KeyDeleteAsync(email);
         }
-
         public async Task<bool> SetUser(string email,string ninKey, ApplicationUser<string> user)
         {
             if ( user != null)
@@ -140,7 +138,6 @@ namespace Auth_Infrastructure.Redis
 			}
             else return false;
         }
-
         public async Task<ApplicationUser<string>> GetUserAsync(string Key,bool IsEmail=false,bool isNin=false)
         {
             string _emailKey = $"UserEmail:{Key.ToLower()}";
@@ -164,17 +161,12 @@ namespace Auth_Infrastructure.Redis
 				return null;
             return user;
         }
-
-
 		public async Task<bool> SetAsync<T>(string key, T value)
 		{
 			if (!string.IsNullOrEmpty(key) && value != null)
 				return await Database.StringSetAsync(key, JsonConvert.SerializeObject(value, SerializSettings));
 			else return false;
 		}
-
-
-
         #region registraion 
         public async Task<bool> SetRegisterUserAfterPhoneVerify(ApplicationUser<string> user)
         {
@@ -202,7 +194,6 @@ namespace Auth_Infrastructure.Redis
         {
             return await Database.KeyDeleteAsync(key);
         }
-
         public async Task<bool> DeletUserRegisterTries(string userEmail, string userNin, string phone)
         {
 
