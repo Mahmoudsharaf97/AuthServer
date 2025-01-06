@@ -7,8 +7,6 @@ namespace IdentityApplication.Interface
     public interface IIdentityServices
     {
           Task<RegisterOutPut> Register(RegisterCommand model);
-          Task<LogInOutput> EndLogin(LogInInput model);
-          Task<LogInOutput> BeginLogin(LogInInput model);
           Task<IdentityOutput> GetToken(string userId, string SessionId);
           Task<bool> LogOut();
           string GenerateTokenJWT(string ID, string Email, string userName, string sessionId);
