@@ -35,7 +35,7 @@ namespace Auth_Application.Services
                 var customerYakeenRequest = new CustomerYakeenRequestDto()
                 {
                     Nin = _nationalId,
-                    IsCitizen = nationalId.StartsWith("1"),
+                    IsCitizen = nationalId[0]=='1',
                     DateOfBirth = string.Format("{0}-{1}", birthMonth.ToString("00"), birthYear)
                 };
                 ServiceRequestLog predefinedlog = new ServiceRequestLog() { DriverNin = nationalId };
