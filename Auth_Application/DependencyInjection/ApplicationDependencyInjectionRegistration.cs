@@ -23,6 +23,8 @@ namespace Auth_Application.DependencyInjection
 			services.AddScoped<ICaptchService, CaptchService>();
 			services.AddScoped<ICaptchService, CaptchService>();
 			services.AddScoped<IOtpService, OtpService>();
+			services.AddLoginStrategiesServicesInjection();
+
 			return services;
 		}
 
