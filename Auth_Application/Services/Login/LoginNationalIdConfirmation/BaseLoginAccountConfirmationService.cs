@@ -59,7 +59,7 @@ namespace Auth_Application.Services.Login.LoginNationalIdConfirmation
 			bool IsEmailBelongsToOtherUser = await _applicationUserManager.CheckNationalIdBelongsForDifferentEmail(long.Parse(model.NationalId), user.Email);
 			if (IsEmailBelongsToOtherUser)
 				throw new AppException(ExceptionEnum.exist_nationalId_signup_error);
-
+			// just this line not generic we should move it to the sub classes 
 			await ConfirmAccountByYakeen(output, user,model.NationalId,model.BirthYear.Value,model.BirthMonth.Value,"protal","ar");
 			CheckUserConfirmedByYakeen(output, user);
 			if (output.Result.LoginMethod == LoginMethod.VerifyLoginOTP)
@@ -109,7 +109,7 @@ namespace Auth_Application.Services.Login.LoginNationalIdConfirmation
 			}
 			user.FullNameAr = model.FullNameAr;
 			user.FullNameEn = model.FullNameEn;
-			// add flag yakeen confirmed 
+			user.IsYakeenNationalIdVerified = true;
 			output.Result.LoginMethod = LoginMethod.Login;
 		}
 	}

@@ -81,8 +81,8 @@ namespace Auth_Application.Validations
 		}
 		public static bool IsYakeenNationalIdVerified(this ApplicationUser<string> user)
 		{
-			//if (!user.IsYakeenNationalIdVerified || string.IsNullOrEmpty(user.NationalId.ToString()))
-			//	return false;
+			if (!user.IsYakeenNationalIdVerified || string.IsNullOrEmpty(user.NationalId.ToString()))
+				return false;
 			return true;
 		}
 	}
