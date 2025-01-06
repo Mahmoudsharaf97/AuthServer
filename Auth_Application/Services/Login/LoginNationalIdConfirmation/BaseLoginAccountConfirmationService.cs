@@ -60,7 +60,6 @@ namespace Auth_Application.Services.Login.LoginNationalIdConfirmation
 			if (IsEmailBelongsToOtherUser)
 				throw new AppException(ExceptionEnum.exist_nationalId_signup_error);
 
-			// get user info form yakeen and edit user 
 			await ConfirmAccountByYakeen(output, user,model.NationalId,model.BirthYear.Value,model.BirthMonth.Value,"protal","ar");
 			CheckUserConfirmedByYakeen(output, user);
 			if (output.Result.LoginMethod == LoginMethod.VerifyLoginOTP)
