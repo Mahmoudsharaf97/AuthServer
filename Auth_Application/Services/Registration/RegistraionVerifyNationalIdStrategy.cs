@@ -70,10 +70,6 @@ namespace Auth_Application.Services.Registration
                 if (otpInfo is null )
                     return null;// need Handle
                 await _redisCaching.SetRegisterUserAfterGenerateOTP(_cahedRegisterUser);
-                // integrate with smsPrxy
-                //var createdUser = await userManager.CreateAsync(user, model.Password);
-                //ValidateCreateUser(createdUser);
-                //_redisCaching.SetUser(user.Email, user.NationalId.ToString(), user);
                 result.OtpSend = true;
                 result.Succes = true;
                 result.errors = [];

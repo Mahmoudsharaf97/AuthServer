@@ -132,8 +132,8 @@ namespace Auth_Infrastructure.Redis
             if ( user != null)
             {
                 var tasks = new List<Task> {
-                    Database.StringSetAsync( $"User_{email}", JsonConvert.SerializeObject(user)),
-                    Database.StringSetAsync($"User_{ninKey}", JsonConvert.SerializeObject(user))
+                    Database.StringSetAsync( $"UserEmail:{email.ToLower()}", JsonConvert.SerializeObject(user)),
+                    Database.StringSetAsync($"UserNationalId:{ninKey}", user.Email!.ToLower())
                 };
                 Task.WhenAll(tasks);
                 return true;
@@ -141,17 +141,27 @@ namespace Auth_Infrastructure.Redis
             else return false;
         }
 
-        public async Task<ApplicationUser<string>> GetUserAsync(string emailOrNinKey)
+        public async Task<ApplicationUser<string>> GetUserAsync(string Key,bool IsEmail=false,bool isNin=false)
         {
-            string key = $"User_{emailOrNinKey}";
-            string rv = await Database.StringGetAsync(key);
+            string _emailKey = $"UserEmail:{Key.ToLower()}";
+            string _ninKey = $"UserNationalId:{Key}";
+            string rv = string.Empty;
+            if (IsEmail)
+                rv = await Database.StringGetAsync(_emailKey);
+            else
+            {
+                string emailValue= await Database.StringGetAsync(_ninKey);
+                if (!string.IsNullOrEmpty(emailValue))
+                {
+                    rv = await Database.StringGetAsync($"UserEmail:{emailValue.ToLower()}");
+                }
+            }
             if (rv is null)
                 return null;
 
             var user = JsonConvert.DeserializeObject<ApplicationUser<string>>(rv)!;
             if (user is null || string.IsNullOrEmpty(user.Email))// add || string.IsNullOrEmpty(user.Nin)
 				return null;
-
             return user;
         }
 
@@ -206,6 +216,8 @@ namespace Auth_Infrastructure.Redis
                 return true;
    
         }
+
+  
         #endregion
     }
 

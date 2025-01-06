@@ -13,7 +13,7 @@ namespace Auth_Core.UseCase.Redis
         Task<bool> DeleteSessionAsync(string userId);
        Task< bool> SetUser(string email, string ninKey, ApplicationUser<string> user);
         //bool SetUserAsync(string email,ApplicationUser<string> user);
-        Task<ApplicationUser<string>> GetUserAsync(string email);
+        Task<ApplicationUser<string>> GetUserAsync(string email, bool IsEmail = false, bool isNin = false);
         Task<bool> SetAsync<T>(string key, T value);
         Task<bool> SetRegisterUserAfterPhoneVerify(ApplicationUser<string> user);
         Task<ApplicationUser<string>> GetRegisterUserAfterPhoneVerify(string userEmail, string userNin, string phone);
