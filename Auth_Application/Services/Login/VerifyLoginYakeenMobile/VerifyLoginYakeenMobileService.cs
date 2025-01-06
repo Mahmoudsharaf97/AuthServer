@@ -6,9 +6,12 @@ using Auth_Application.Models.LoginModels.LoginOutput;
 using Auth_Application.Validations;
 using Auth_Core;
 using Auth_Core.Enums;
+using Auth_Core.Models.Yakeen;
 using Auth_Core.UseCase;
 using Auth_Core.UseCase.Redis;
 using Microsoft.AspNetCore.Identity;
+using System.Reflection;
+using System.Security.Cryptography.Xml;
 
 namespace Auth_Application.Services.Login
 {
@@ -17,13 +20,15 @@ namespace Auth_Application.Services.Login
 		private readonly IUsersCachedManager _usersCachedManager;
 		private readonly IApplicationUserManager _applicationUserManager;
 		private readonly IOtpService _otpService;
+		private readonly IYakeenClient _yakeenClient;
 		private readonly AppSettingsConfiguration _appSettings;
-		public VerifyLoginYakeenMobileService(IUsersCachedManager usersCachedManager, IApplicationUserManager applicationUserManager, IOtpService otpService, AppSettingsConfiguration appSettings)
+		public VerifyLoginYakeenMobileService(IUsersCachedManager usersCachedManager, IApplicationUserManager applicationUserManager, IOtpService otpService, AppSettingsConfiguration appSettings, IYakeenClient yakeenClient)
 		{
 			_usersCachedManager = usersCachedManager;
 			_applicationUserManager = applicationUserManager;
 			_otpService = otpService;
 			_appSettings = appSettings;
+			_yakeenClient = yakeenClient;
 		}
 		protected abstract Task ValidateUser(ApplicationUser<string> user, VerifyLoginYakeenMobile model);
 		public override async Task<GenericOutput<BaseLoginOutput>> Execute(LoginInputModel loginInput)
@@ -44,14 +49,13 @@ namespace Auth_Application.Services.Login
 			GenericOutput<LoginYakeenMobileOutput> output = new();
 			output.Result = new();
 
-			// 1- check if user is locked 
 			ApplicationUser<string> user = await _usersCachedManager.GetUserByEmailOrNationalIdAsync(model.LoginType, model.UserName);
 			await ValidateUser(user, model); // null, email confirmd, userLocked,
-
 			bool IsEmailBelongsToOtherUser = await _applicationUserManager.CheckNationalIdBelongsForDifferentEmail(long.Parse( model.NationalId),user.Email);
 			if (IsEmailBelongsToOtherUser)
 				throw new AppException(ExceptionEnum.exist_nationalId_signup_error);
-			// 2- VerifyMobileFromYakeen and edit user 
+
+			await VerifyMobileByYakeen(output,user,long.Parse( model?.Phone) ,long.Parse( model?.NationalId) , "ar");
 
 			CheckUserConfirmedByYakeen(output, user);
 			if (output.Result.LoginMethod == LoginMethod.VerifyLoginOTP)
@@ -74,6 +78,7 @@ namespace Auth_Application.Services.Login
 				output.ErrorDetails = new(IsSuccess: false, ErrorCode: ExceptionEnum.UserYakeenNationalIdNotVerified, ErrorDescription: "User Yakeen National Id Not Verified");
 				output.Result.LoginMethod = LoginMethod.LoginAccountConfirmation;
 			}
+			output.ErrorDetails = new(IsSuccess: false, ErrorCode: ExceptionEnum.success, ErrorDescription: "Login OTP is sended");
 			output.Result.LoginMethod = LoginMethod.VerifyLoginOTP;
 		}
 		private void mapOutputModel(LoginYakeenMobileOutput loginOutput, ApplicationUser<string> user, OtpInfo otpInfo)
@@ -89,6 +94,25 @@ namespace Auth_Application.Services.Login
 			loginOutput.IsYakeenChecked = true;
 			loginOutput.NationalID = user.NationalId.ToString();
 		}
+		private async Task VerifyMobileByYakeen(GenericOutput<LoginYakeenMobileOutput> output, ApplicationUser<string> user, long phone, long nationalId, string language)
+		{
+			YakeenMobileVerificationOutput yakeenMobileOutput = await _yakeenClient.YakeenMobileVerificationAsync(phone, nationalId,language);
 
+			if (yakeenMobileOutput.ErrorCode == YakeenMobileVerificationOutput.ErrorCodes.InvalidMobileOwner)
+			{
+				output.ErrorDetails = new(IsSuccess: false, ErrorCode: ExceptionEnum.login_incorrect_phonenumber_not_verifed, ErrorDescription: "login incorrect phonenumber not verifed");
+				output.Result.LoginMethod = LoginMethod.VerifyYakeenMobile;
+			}
+			else if (yakeenMobileOutput.ErrorCode != YakeenMobileVerificationOutput.ErrorCodes.Success)
+			{
+				output.ErrorDetails = new(IsSuccess: false, ErrorCode: ExceptionEnum.login_incorrect_phonenumber_not_verifed, ErrorDescription: "login incorrect phonenumber not verifed");
+				output.Result.LoginMethod = LoginMethod.VerifyYakeenMobile;
+			}
+
+			user.IsPhoneVerifiedByYakeen = true;
+			user.PhoneNumberConfirmed = true;
+			user.PhoneNumber = phone.ToString();
+			output.Result.LoginMethod = LoginMethod.Login;
+		}
 	}
 }

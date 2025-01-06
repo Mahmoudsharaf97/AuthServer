@@ -19,7 +19,8 @@ namespace Auth_Application.Services.Login.LoginNationalIdConfirmation
 		public override string StrategyName => $"{LoginMethod.Login}-{LoginType.Email}";
 		private UserManager<ApplicationUser<string>> _userManager { get; }
 
-		public LoginNationalIdConfirmationStrategy(UserManager<ApplicationUser<string>> userManager, IUsersCachedManager usersCachedManager, IOtpService otpService, AppSettingsConfiguration appSettings, IApplicationUserManager applicationUserManager) : base(usersCachedManager,otpService,appSettings,applicationUserManager)
+		public LoginNationalIdConfirmationStrategy(UserManager<ApplicationUser<string>> userManager, IUsersCachedManager usersCachedManager, IOtpService otpService, AppSettingsConfiguration appSettings, IApplicationUserManager applicationUserManager, IYakeenNationalIdServices yakeenNationalIdServices) 
+			: base(usersCachedManager,otpService,appSettings,applicationUserManager, yakeenNationalIdServices)
 		{
 			_userManager = userManager;
 		}

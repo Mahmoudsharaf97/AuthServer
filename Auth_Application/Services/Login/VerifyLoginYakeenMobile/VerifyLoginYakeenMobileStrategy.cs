@@ -15,7 +15,8 @@ namespace Auth_Application.Services.Login
 
 		private UserManager<ApplicationUser<string>> _userManager { get; }
 
-		public VerifyLoginYakeenMobileStrategy(UserManager<ApplicationUser<string>> userManager, IUsersCachedManager usersCachedManager, IApplicationUserManager applicationUserManager, IOtpService otpService, AppSettingsConfiguration appSettings) :base(usersCachedManager,applicationUserManager,otpService,appSettings)
+		public VerifyLoginYakeenMobileStrategy(UserManager<ApplicationUser<string>> userManager, IUsersCachedManager usersCachedManager, IApplicationUserManager applicationUserManager, IOtpService otpService, AppSettingsConfiguration appSettings, IYakeenClient yakeenClient) 
+			:base(usersCachedManager,applicationUserManager,otpService,appSettings, yakeenClient)
 		{
 			_userManager = userManager;
 		}
