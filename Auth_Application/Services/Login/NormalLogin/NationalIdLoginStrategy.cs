@@ -1,6 +1,9 @@
-﻿using Auth_Application.Models.LoginModels.LoginInput;
+﻿using Auth_Application.Interface;
+using Auth_Application.Models.LoginModels.LoginInput;
 using Auth_Application.Validations;
 using Auth_Core;
+using Auth_Core.Enums;
+using Auth_Core.UseCase.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +14,12 @@ namespace Auth_Application.Services.Login.NormalLogin
 {
 	public class NationalIdLoginStrategy : BaseNormalLoginService
 	{
+		public NationalIdLoginStrategy(IUsersCachedManager usersCachedManager, IOtpService otpService, AppSettingsConfiguration appSettings) : base(usersCachedManager, otpService, appSettings)
+		{
+			
+		}
+		public override string StrategyName => $"{LoginMethod.Login}-{LoginType.NationalId}";
+
 		protected override async Task ValidateUser(ApplicationUser<string> user, NormalLoginModel model)
 		{
 			user.IsFoundUserByNationalId();

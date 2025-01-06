@@ -20,15 +20,9 @@ namespace Auth_Application.Services.Login
 			_strategies = strategies;
 		}
 
-		public ILoginStrategy SetStrategy(LoginMethod loginMethod)
+		public ILoginStrategy GetStrategy(LoginMethod loginMethod, LoginType loginType)
 		{
-			return loginMethod switch
-			{
-				LoginMethod.Login => _strategies.OfType<BaseNormalLoginService>().FirstOrDefault(),
-				LoginMethod.VerifyYakeenMobile => _strategies.OfType<VerifyLoginYakeenMobileService>().FirstOrDefault(),
-				LoginMethod.LoginAccountConfirmation => _strategies.OfType<BaseLoginAccountConfirmationService>().FirstOrDefault(),
-				LoginMethod.VerifyLoginOTP => _strategies.OfType<BaseVerifyLoginOTPServices>().FirstOrDefault()
-			};
+			return _strategies.FirstOrDefault(s => s.StrategyName == $"{loginMethod}-{loginType}");
 		}
 	}
 }

@@ -12,16 +12,12 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Auth_Application.Services.Login
 {
-	public abstract class VerifyLoginYakeenMobileService : ILoginStrategy
+	public abstract class VerifyLoginYakeenMobileService : LoginStrategy
 	{
 		private readonly IUsersCachedManager _usersCachedManager;
 		private readonly IApplicationUserManager _applicationUserManager;
 		private readonly IOtpService _otpService;
 		private readonly AppSettingsConfiguration _appSettings;
-		public VerifyLoginYakeenMobileService()
-		{
-			
-		}
 		public VerifyLoginYakeenMobileService(IUsersCachedManager usersCachedManager, IApplicationUserManager applicationUserManager, IOtpService otpService, AppSettingsConfiguration appSettings)
 		{
 			_usersCachedManager = usersCachedManager;
@@ -29,12 +25,16 @@ namespace Auth_Application.Services.Login
 			_otpService = otpService;
 			_appSettings = appSettings;
 		}
-		public Task<GenericOutput<T>> Execute<T>(LoginInputModel loginInput) where T : class
-		{
-			throw new NotImplementedException();
-		}
 		protected abstract Task ValidateUser(ApplicationUser<string> user, VerifyLoginYakeenMobile model);
-
+		public override async Task<GenericOutput<BaseLoginOutput>> Execute(LoginInputModel loginInput)
+		{
+			GenericOutput<LoginYakeenMobileOutput> genericOutput = await VerifyLoginYakeenMobile(loginInput.VerifyLoginYakeenMobile);
+			return new GenericOutput<BaseLoginOutput>()
+			{
+				ErrorDetails = genericOutput.ErrorDetails,
+				Result = genericOutput.Result,
+			};
+		}
 		public async Task<GenericOutput<LoginYakeenMobileOutput>> VerifyLoginYakeenMobile(VerifyLoginYakeenMobile model)// return base generic output
 		{
 			if (model is null)

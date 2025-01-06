@@ -12,6 +12,8 @@ namespace Auth_Application.Models.LoginModels.LoginInput
 	{
 		[Required]
 		public LoginMethod LoginMethod { get; set; }
+		[Required]
+		public LoginType LoginType { get; set; }
 		public NormalLoginModel? NormalLoginModel { get; set; }
 		public VerifyLoginYakeenMobile? VerifyLoginYakeenMobile { get; set; }
 		public LoginConfirmationModel? LoginConfirmationModel { get; set; }

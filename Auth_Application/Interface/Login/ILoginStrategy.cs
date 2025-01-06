@@ -11,7 +11,8 @@ namespace Auth_Application.Interface.Login
 {
     public interface ILoginStrategy
     {
-		Task<GenericOutput<T>> Execute<T>(LoginInputModel loginInput) where T : class;
+		string StrategyName { get; }
+		Task<GenericOutput<BaseLoginOutput>> Execute(LoginInputModel loginInput);
 
 	}
 }

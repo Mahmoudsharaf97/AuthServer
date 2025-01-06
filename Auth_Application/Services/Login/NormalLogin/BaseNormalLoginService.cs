@@ -10,28 +10,27 @@ using Auth_Core.Enums;
 using Auth_Core.UseCase.Redis;
 namespace Auth_Application.Services.Login.NormalLogin
 {
-	public abstract class BaseNormalLoginService : ILoginStrategy
+	public abstract class BaseNormalLoginService : LoginStrategy
 	{
 		private readonly IUsersCachedManager _usersCachedManager;
 		private readonly IOtpService _otpService;
 		private readonly AppSettingsConfiguration _appSettings;
-
-		protected BaseNormalLoginService()
-		{
-			
-		}
 		protected BaseNormalLoginService(IUsersCachedManager usersCachedManager, IOtpService otpService, AppSettingsConfiguration appSettings)
 		{
 			_usersCachedManager = usersCachedManager;
 			_otpService = otpService;
 			_appSettings = appSettings;
 		}
-
-		public Task<GenericOutput<T>> Execute<T>(LoginInputModel loginInput) where T : class
-		{
-			throw new NotImplementedException();
-		}
 		protected abstract Task ValidateUser(ApplicationUser<string> user, NormalLoginModel model);
+		public override async Task<GenericOutput<BaseLoginOutput>> Execute(LoginInputModel loginInput)
+		{
+			GenericOutput<LoginOutput> genericOutput = await Login(loginInput.NormalLoginModel);
+			return new GenericOutput<BaseLoginOutput>()
+			{
+				ErrorDetails = genericOutput.ErrorDetails,
+				Result = genericOutput.Result,
+			};
+		}
 		public async Task<GenericOutput<LoginOutput>> Login(NormalLoginModel model)
 		{
 			GenericOutput<LoginOutput> output = new();

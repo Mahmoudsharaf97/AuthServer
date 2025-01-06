@@ -17,33 +17,30 @@ using System.Threading.Tasks;
 
 namespace Auth_Application.Services.Login.LoginNationalIdConfirmation
 {
-	public abstract class BaseLoginAccountConfirmationService : ILoginStrategy
+	public abstract class BaseLoginAccountConfirmationService : LoginStrategy
 	{
 		private readonly IUsersCachedManager _usersCachedManager;
 		private readonly IOtpService _otpService;
-		private UserManager<ApplicationUser<string>> _userManager { get; }
 		private readonly AppSettingsConfiguration _appSettings;
 		private readonly IApplicationUserManager _applicationUserManager;
-
-		protected BaseLoginAccountConfirmationService()
-		{
-			
-		}
-
-		protected BaseLoginAccountConfirmationService(IUsersCachedManager usersCachedManager, UserManager<ApplicationUser<string>> userManager, IOtpService otpService, AppSettingsConfiguration appSettings, IApplicationUserManager applicationUserManager)
+		protected BaseLoginAccountConfirmationService(IUsersCachedManager usersCachedManager, IOtpService otpService, AppSettingsConfiguration appSettings, IApplicationUserManager applicationUserManager)
 		{
 			_usersCachedManager = usersCachedManager;
-			_userManager = userManager;
 			_otpService = otpService;
 			_appSettings = appSettings;
 			_applicationUserManager = applicationUserManager;
 		}
 
-		public Task<GenericOutput<T>> Execute<T>(LoginInputModel loginInput) where T : class
-		{
-			throw new NotImplementedException();
-		}
 		protected abstract Task ValidateUser(ApplicationUser<string> user, LoginConfirmationModel model);
+		public override async Task<GenericOutput<BaseLoginOutput>> Execute(LoginInputModel loginInput)
+		{
+			GenericOutput<LoginConfirmationOutput> loginConfirmation = await AccountConfirmation(loginInput.LoginConfirmationModel);
+			return new GenericOutput<BaseLoginOutput>()
+			{
+				ErrorDetails = loginConfirmation.ErrorDetails,
+				Result = loginConfirmation.Result
+			};
+		}
 		public async Task<GenericOutput<LoginConfirmationOutput>> AccountConfirmation(LoginConfirmationModel model)
 		{
 			// check if user num of tries locked and count new 
