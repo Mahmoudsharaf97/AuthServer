@@ -26,6 +26,7 @@ namespace Auth_Core
         public string YakeenMobileVerifyORGANIZATIONNUMBER { get; set; }
         public string YakeenLocalURl { get; set; }
         public string YakeenLocalsvcCredentials { get; set; }
+        public bool EnableCaptchaValidate { get; set; }
 
         public MessageBrokerSettings MessageBrokerSetting { get; set; }
     }

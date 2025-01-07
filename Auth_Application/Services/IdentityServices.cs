@@ -17,13 +17,18 @@ using static Auth_Application.Models.Errors;
 using Auth_Application.Services.Registration;
 using Auth_Core.UseCase.Yakeen;
 using Auth_Application.Interface;
+using Auth_Application.Models.LoginModels.LoginOutput;
+using Auth_Application.Models.LoginModels.LoginInput;
+using Auth_Application.Interface.Login;
+using MediatR;
 namespace IdentityApplication.Services
 {
     public partial class IdentityServices : IIdentityServices
     {
         private readonly IApplicationUserManager _applicationUserManager;
         private readonly IUsersCachedManager _usersCachedManager;
-        private readonly AppSettingsConfiguration appSettingsConfiguration;
+		private readonly ILoginStrategyManager _loginStrategyManager;
+		private readonly AppSettingsConfiguration appSettingsConfiguration;
         private readonly IOtpService otpService;
         private readonly GlobalInfo globalInfo;
         public UserManager<ApplicationUser<string>> _userManager { get; }
@@ -36,11 +41,11 @@ namespace IdentityApplication.Services
         public ICaptchService _captchService { get; }
         public IYakeenClient _yakeenClient { get; }
 
-        public IdentityServices(IApplicationUserManager applicationUserManager, UserManager<ApplicationUser<string>> userManager
+		public IdentityServices(IApplicationUserManager applicationUserManager, UserManager<ApplicationUser<string>> userManager
 			, SignInManager<ApplicationUser<string>> signInManager, ISessionServices sessionServices, IRedisCaching cacheManager
-		    , AppSettingsConfiguration _settings, GlobalInfo globalInfo, Utilities utilities
-            , IUsersCachedManager usersCachedManager, ICaptchService captchService,AppSettingsConfiguration appSettingsConfiguration
-            , IYakeenClient yakeenClient,IOtpService otpService)
+			, AppSettingsConfiguration _settings, GlobalInfo globalInfo, Utilities utilities
+			, IUsersCachedManager usersCachedManager, ICaptchService captchService, AppSettingsConfiguration appSettingsConfiguration
+			, IYakeenClient yakeenClient, IOtpService otpService, ILoginStrategyManager loginStrategyManager)
 		{
 			_applicationUserManager = applicationUserManager;
 			_userManager = userManager;
@@ -52,11 +57,12 @@ namespace IdentityApplication.Services
 			this.globalInfo = globalInfo;
 			_utilities = utilities;
 			_usersCachedManager = usersCachedManager;
-            _captchService = captchService;
-            this.appSettingsConfiguration = appSettingsConfiguration;
-            _yakeenClient = yakeenClient;
-            this.otpService = otpService;
-        }
+			_captchService = captchService;
+			this.appSettingsConfiguration = appSettingsConfiguration;
+			_yakeenClient = yakeenClient;
+			this.otpService = otpService;
+			_loginStrategyManager = loginStrategyManager;
+		}
 		public async Task<RegisterOutPut> Register(RegisterCommand model)
         {
             try
@@ -65,10 +71,14 @@ namespace IdentityApplication.Services
 
                 if (model.RegisterType==(int)RegisterType.VerifyYakeenMobile)
                 {
-                    //outPut= CheckCaptch(model.CaptchaToken, model.CaptchaInput,
-                    //appSettingsConfiguration.CaptchKey);
-                    //if (!outPut.Succes)
-                    //    return outPut;
+                    if (appSettingsConfiguration.EnableCaptchaValidate)
+                    {
+                        outPut = CheckCaptch(model.CaptchaToken, model.CaptchaInput,
+                        appSettingsConfiguration.CaptchKey);
+                        if (!outPut.Succes)
+                            return outPut;
+                    }
+
 
                     RegistraionVerifyPhoneStrategy registraionPhoneStrategy = 
                         new RegistraionVerifyPhoneStrategy(_cacheManager, _applicationUserManager, _yakeenClient);
@@ -204,63 +214,66 @@ namespace IdentityApplication.Services
             throw new NotImplementedException();
         }
 
+		public async Task<GenericOutput<BaseLoginOutput>> Login(LoginInputModel model)
+		{
+			return await (_loginStrategyManager.GetStrategy(model.LoginMethod, model.LoginType)).Execute(model);
+		}
 
 
-        #region Login Begin & End 
-        public async Task<LogInOutput> EndLogin(LogInInput model)
-        {
-            try
-            {
-                if (model.LoginType == (byte)LoginType.Email)
-                {
-                    EmailEndLoginStrategy emailLoginStrategy =
-                        new EmailEndLoginStrategy(_signInManager, _cacheManager, _userManager, settings, _utilities, _usersCachedManager);
-                    return await emailLoginStrategy.LoginByEmail(model.Email!, model.Password);
-                }
-                else if (model.LoginType == (byte)LoginType.NationalId)
-                {
-                    NationalIdEndLoginStrategy nationalIdLoginStrategy =
-                        new NationalIdEndLoginStrategy(_signInManager, _cacheManager, _userManager, settings, _utilities, _usersCachedManager);
-                    return await nationalIdLoginStrategy.LoginByNAtionalId(model.NationalId!.Value, model.Password);
-                }
-                return null;
-            }
-            catch (Exception ex)
-            {
-                var x = ex;
-                throw new AppException(ExceptionEnum.UserLoginDataNotCorrect);
-            }
 
-        }
-        public async Task<LogInOutput> BeginLogin(LogInInput model)
-        {
-            try
-            {
-                if (model.LoginType == (byte)LoginType.Email)
-                {
-                    EmailBeginLoginStrategy emailLoginStrategy =
-                        new EmailBeginLoginStrategy(_signInManager, _cacheManager, _userManager, settings, _utilities,_usersCachedManager);
-                    return await emailLoginStrategy.LoginByEmail(model.Email!, model.Password);
-                }
-                else if (model.LoginType == (byte)LoginType.NationalId)
-                {
-                    NationalIdBeginLoginStrategy nationalIdLoginStrategy =
-                        new NationalIdBeginLoginStrategy(_signInManager, _cacheManager, _userManager, settings, _utilities, _usersCachedManager);
-                    return await nationalIdLoginStrategy.LoginByNAtionalId(model.NationalId!.Value, model.Password);
-                }
-                return null;
-            }
-            catch (Exception ex)
-            {
-                var x = ex;
-                throw new AppException(ExceptionEnum.UserLoginDataNotCorrect);
-            }
+		#region Login Begin & End 
+		//public async Task<LogInOutput> EndLogin(LogInInput model)
+		//{
+		//    try
+		//    {
+		//        if (model.LoginType == (byte)LoginType.Email)
+		//        {
+		//            EmailEndLoginStrategy emailLoginStrategy =
+		//                new EmailEndLoginStrategy(_signInManager, _cacheManager, _userManager, settings, _utilities, _usersCachedManager);
+		//            return await emailLoginStrategy.LoginByEmail(model.Email!, model.Password);
+		//        }
+		//        else if (model.LoginType == (byte)LoginType.NationalId)
+		//        {
+		//            NationalIdEndLoginStrategy nationalIdLoginStrategy =
+		//                new NationalIdEndLoginStrategy(_signInManager, _cacheManager, _userManager, settings, _utilities, _usersCachedManager);
+		//            return await nationalIdLoginStrategy.LoginByNAtionalId(model.NationalId!.Value, model.Password);
+		//        }
+		//        return null;
+		//    }
+		//    catch (Exception ex)
+		//    {
+		//        var x = ex;
+		//        throw new AppException(ExceptionEnum.UserLoginDataNotCorrect);
+		//    }
 
-        }
+		//}
+		//public async Task<LogInOutput> BeginLogin(LogInInput model)
+		//{
+		//    try
+		//    {
+		//        if (model.LoginType == (byte)LoginType.Email)
+		//        {
+		//            EmailBeginLoginStrategy emailLoginStrategy =
+		//                new EmailBeginLoginStrategy(_signInManager, _cacheManager, _userManager, settings, _utilities, _usersCachedManager);
+		//            return await emailLoginStrategy.LoginByEmail(model.Email!, model.Password);
+		//        }
+		//        else if (model.LoginType == (byte)LoginType.NationalId)
+		//        {
+		//            NationalIdBeginLoginStrategy nationalIdLoginStrategy =
+		//                new NationalIdBeginLoginStrategy(_signInManager, _cacheManager, _userManager, settings, _utilities, _usersCachedManager);
+		//            return await nationalIdLoginStrategy.LoginByNAtionalId(model.NationalId!.Value, model.Password);
+		//        }
+		//        return null;
+		//    }
+		//    catch (Exception ex)
+		//    {
+		//        var x = ex;
+		//        throw new AppException(ExceptionEnum.UserLoginDataNotCorrect);
+		//    }
 
-    
-        #endregion
-    }
+		//}
+		#endregion
+	}
 }
 
 

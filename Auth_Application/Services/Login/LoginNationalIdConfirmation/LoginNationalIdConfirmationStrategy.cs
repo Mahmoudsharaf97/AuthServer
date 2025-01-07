@@ -1,6 +1,10 @@
-﻿using Auth_Application.Models.LoginModels.LoginInput;
+﻿using Auth_Application.Interface;
+using Auth_Application.Models.LoginModels.LoginInput;
 using Auth_Application.Validations;
 using Auth_Core;
+using Auth_Core.Enums;
+using Auth_Core.UseCase.Redis;
+using Auth_Core.UseCase;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -12,9 +16,11 @@ namespace Auth_Application.Services.Login.LoginNationalIdConfirmation
 {
 	public class LoginNationalIdConfirmationStrategy : BaseLoginAccountConfirmationService
 	{
+		public override string StrategyName => $"{LoginMethod.Login}-{LoginType.Email}";
 		private UserManager<ApplicationUser<string>> _userManager { get; }
 
-		public LoginNationalIdConfirmationStrategy(UserManager<ApplicationUser<string>> userManager)
+		public LoginNationalIdConfirmationStrategy(UserManager<ApplicationUser<string>> userManager, IUsersCachedManager usersCachedManager, IOtpService otpService, AppSettingsConfiguration appSettings, IApplicationUserManager applicationUserManager, IYakeenNationalIdServices yakeenNationalIdServices) 
+			: base(usersCachedManager,otpService,appSettings,applicationUserManager, yakeenNationalIdServices)
 		{
 			_userManager = userManager;
 		}

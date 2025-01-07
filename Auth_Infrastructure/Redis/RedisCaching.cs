@@ -120,51 +120,53 @@ namespace Auth_Infrastructure.Redis
 
             return session;
         }
-
         public async Task<bool> DeleteSessionAsync(string email)
         {
             string key = $"Session_{email}";
             return await Database.KeyDeleteAsync(email);
         }
-
         public async Task<bool> SetUser(string email,string ninKey, ApplicationUser<string> user)
         {
             if ( user != null)
             {
                 var tasks = new List<Task> {
-                    Database.StringSetAsync( $"User_{email}", JsonConvert.SerializeObject(user)),
-                    Database.StringSetAsync($"User_{ninKey}", JsonConvert.SerializeObject(user))
+                    Database.StringSetAsync( $"UserEmail:{email.ToLower()}", JsonConvert.SerializeObject(user)),
+                    Database.StringSetAsync($"UserNationalId:{ninKey}", user.Email!.ToLower())
                 };
                 Task.WhenAll(tasks);
                 return true;
 			}
             else return false;
         }
-
-        public async Task<ApplicationUser<string>> GetUserAsync(string emailOrNinKey)
+        public async Task<ApplicationUser<string>> GetUserAsync(string Key,bool IsEmail=false,bool isNin=false)
         {
-            string key = $"User_{emailOrNinKey}";
-            string rv = await Database.StringGetAsync(key);
+            string _emailKey = $"UserEmail:{Key.ToLower()}";
+            string _ninKey = $"UserNationalId:{Key}";
+            string rv = string.Empty;
+            if (IsEmail)
+                rv = await Database.StringGetAsync(_emailKey);
+            else
+            {
+                string emailValue= await Database.StringGetAsync(_ninKey);
+                if (!string.IsNullOrEmpty(emailValue))
+                {
+                    rv = await Database.StringGetAsync($"UserEmail:{emailValue.ToLower()}");
+                }
+            }
             if (rv is null)
                 return null;
 
             var user = JsonConvert.DeserializeObject<ApplicationUser<string>>(rv)!;
             if (user is null || string.IsNullOrEmpty(user.Email))// add || string.IsNullOrEmpty(user.Nin)
 				return null;
-
             return user;
         }
-
-
 		public async Task<bool> SetAsync<T>(string key, T value)
 		{
 			if (!string.IsNullOrEmpty(key) && value != null)
 				return await Database.StringSetAsync(key, JsonConvert.SerializeObject(value, SerializSettings));
 			else return false;
 		}
-
-
-
         #region registraion 
         public async Task<bool> SetRegisterUserAfterPhoneVerify(ApplicationUser<string> user)
         {
@@ -192,7 +194,6 @@ namespace Auth_Infrastructure.Redis
         {
             return await Database.KeyDeleteAsync(key);
         }
-
         public async Task<bool> DeletUserRegisterTries(string userEmail, string userNin, string phone)
         {
 
@@ -206,6 +207,8 @@ namespace Auth_Infrastructure.Redis
                 return true;
    
         }
+
+  
         #endregion
     }
 

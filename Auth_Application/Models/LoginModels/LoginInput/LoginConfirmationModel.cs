@@ -1,10 +1,5 @@
 ﻿using Auth_Application.Models.Base;
 using Auth_Core;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Auth_Core.Enums;
 namespace Auth_Application.Models.LoginModels.LoginInput
 {
