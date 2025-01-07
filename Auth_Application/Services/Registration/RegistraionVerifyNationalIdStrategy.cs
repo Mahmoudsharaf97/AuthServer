@@ -7,7 +7,6 @@ using Auth_Core.Enums;
 using Auth_Core.UseCase;
 using Auth_Core.UseCase.Redis;
 using IdentityApplication.Models;
-using Microsoft.AspNetCore.Identity;
 using static Auth_Application.Models.Errors;
 
 namespace Auth_Application.Services.Registration
