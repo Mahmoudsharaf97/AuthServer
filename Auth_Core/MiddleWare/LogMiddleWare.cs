@@ -20,6 +20,8 @@ namespace Auth_Core.MiddleWare
     {
         private readonly RequestDelegate _next;
         private readonly IServiceScopeFactory _serviceScopeFactory;
+        public IEventBus _eventBus { get; set; }
+
         public LogMiddleWare(RequestDelegate next, IServiceScopeFactory serviceScopeFactory)
         {
             _next = next;
@@ -41,9 +43,9 @@ namespace Auth_Core.MiddleWare
                 // get request body 
                 string bodyStr;
 
-             // req.EnableBuffering();
+                //req.EnableBuffering();
                 //req.Body.Seek(0, SeekOrigin.Begin);
-               // req.Body.Position = 0;
+                //req.Body.Position = 0;
                 using (StreamReader reader
                           = new StreamReader(req.Body, Encoding.UTF8, true, 1024, true))
                 {
@@ -75,7 +77,6 @@ namespace Auth_Core.MiddleWare
                     var eventBus = scope.ServiceProvider.GetRequiredService<IEventBus>();
                     await eventBus.PublishAsync(logEnitity);
                 }
-
                 switch (error)
                 {
                     case YakeenException ex:

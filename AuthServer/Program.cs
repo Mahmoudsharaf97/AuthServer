@@ -14,6 +14,7 @@ using MediatR;
 using MassTransit;
 using Auth_Core.Consumers;
 using Serilog;
+using Auth_Core.EventBus;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,6 +32,8 @@ builder.Services.AddScoped<SME_Core.Utilities>();
 builder.Services.AddSingleton<GlobalInfo>();
  builder.Services.AddInfrastructureServicesInjection();
  builder.Services.AddApplicationServicesInjection();
+//builder.Services.AddSingleton<IEventBus, EventBus>();
+
 ContextInjection.AddAuthContextInjection(builder.Services, config);
 
 builder.Services.AddMediatR(Assembly.GetExecutingAssembly());
@@ -39,7 +42,6 @@ builder.Services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 // Configure JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 	.AddJwtBearer(options =>
@@ -76,6 +78,8 @@ builder.Services.AddMassTransit(configure =>
 #endregion
 
 var app = builder.Build();
+//LogMiddleWare._eventBus = app.Services.GetRequiredService<IEventBus>();
+//var _eventBus = app.Services.GetRequiredService<IEventBus>();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

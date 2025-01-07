@@ -1,0 +1,71 @@
+2025-01-07 11:13:42.688 +03:00 [INF] Configured endpoint indentity-log, Consumer: Auth_Core.Consumers.IndentityLogConsumer
+2025-01-07 11:13:43.134 +03:00 [DBG] Starting bus instances: IBus
+2025-01-07 11:13:43.143 +03:00 [DBG] Starting bus: "rabbitmq://localhost/"
+2025-01-07 11:13:43.261 +03:00 [DBG] Connect: guest@localhost:5672/
+2025-01-07 11:13:43.461 +03:00 [DBG] Connected: guest@localhost:5672/ (address: amqp://localhost:5672, local: 51058)
+2025-01-07 11:13:43.572 +03:00 [DBG] Endpoint Ready: "rabbitmq://localhost/DESKTOPL23BE2G_iisexpress_bus_ctoyyynr9xinwxyrbdq17h3uy4?temporary=true"
+2025-01-07 11:13:43.647 +03:00 [INF] Application started. Press Ctrl+C to shut down.
+2025-01-07 11:13:43.647 +03:00 [INF] Hosting environment: Development
+2025-01-07 11:13:43.648 +03:00 [INF] Content root path: F:\IdentityServer\AuthServer
+2025-01-07 11:13:43.648 +03:00 [DBG] Declare queue: name: indentity-log, durable, consumer-count: 0 message-count: 0
+2025-01-07 11:13:43.664 +03:00 [DBG] Declare exchange: name: indentity-log, type: fanout, durable
+2025-01-07 11:13:43.668 +03:00 [DBG] Declare exchange: name: Auth_Core.Entity:IndentityLog, type: fanout, durable
+2025-01-07 11:13:43.673 +03:00 [DBG] Bind queue: source: indentity-log, destination: indentity-log
+2025-01-07 11:13:43.693 +03:00 [DBG] Bind exchange: source: Auth_Core.Entity:IndentityLog, destination: indentity-log
+2025-01-07 11:13:43.743 +03:00 [DBG] Consumer Ok: "rabbitmq://localhost/indentity-log" - amq.ctag-a1bJm0x-9nflsl1kAJ7qMQ
+2025-01-07 11:13:43.744 +03:00 [DBG] Endpoint Ready: "rabbitmq://localhost/indentity-log"
+2025-01-07 11:13:43.748 +03:00 [INF] Bus started: "rabbitmq://localhost/"
+2025-01-07 11:29:50.375 +03:00 [INF] Configured endpoint indentity-log, Consumer: Auth_Core.Consumers.IndentityLogConsumer
+2025-01-07 11:29:50.542 +03:00 [DBG] Starting bus instances: IBus
+2025-01-07 11:29:50.545 +03:00 [DBG] Starting bus: "rabbitmq://localhost/"
+2025-01-07 11:29:50.585 +03:00 [DBG] Connect: guest@localhost:5672/
+2025-01-07 11:29:50.600 +03:00 [FTL] Application startup exception
+System.InvalidOperationException: Unable to resolve service for type 'Auth_Core.EventBus.IEventBus' while attempting to activate 'Auth_Core.MiddleWare.LogMiddleWare'.
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.ConstructorMatcher.CreateInstance(IServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.CreateInstance(IServiceProvider provider, Type instanceType, Object[] parameters)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.ReflectionMiddlewareBinder.CreateMiddleware(RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+2025-01-07 11:29:50.620 +03:00 [ERR] Hosting failed to start
+System.InvalidOperationException: Unable to resolve service for type 'Auth_Core.EventBus.IEventBus' while attempting to activate 'Auth_Core.MiddleWare.LogMiddleWare'.
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.ConstructorMatcher.CreateInstance(IServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.CreateInstance(IServiceProvider provider, Type instanceType, Object[] parameters)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.ReflectionMiddlewareBinder.CreateMiddleware(RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.Internal.Host.<StartAsync>b__14_1(IHostedService service, CancellationToken token)
+   at Microsoft.Extensions.Hosting.Internal.Host.ForeachService[T](IEnumerable`1 services, CancellationToken token, Boolean concurrent, Boolean abortOnFirstException, List`1 exceptions, Func`3 operation)
+2025-01-07 11:29:50.628 +03:00 [DBG] Stopping bus instances: IBus
+2025-01-07 11:29:50.630 +03:00 [WRN] Failed to stop bus: "rabbitmq://localhost/DESKTOPL23BE2G_iisexpress_bus_jy5oyynr9xini6h4bdq177mu8g?temporary=true" (Not Started)
+2025-01-07 11:30:56.888 +03:00 [INF] Configured endpoint indentity-log, Consumer: Auth_Core.Consumers.IndentityLogConsumer
+2025-01-07 11:30:57.040 +03:00 [DBG] Starting bus instances: IBus
+2025-01-07 11:30:57.044 +03:00 [DBG] Starting bus: "rabbitmq://localhost/"
+2025-01-07 11:30:57.095 +03:00 [DBG] Connect: guest@localhost:5672/
+2025-01-07 11:30:57.109 +03:00 [FTL] Application startup exception
+System.InvalidOperationException: Cannot resolve scoped service 'Auth_Core.EventBus.IEventBus' from root provider.
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteValidator.ValidateResolution(ServiceCallSite callSite, IServiceScope scope, IServiceScope rootScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.ConstructorMatcher.CreateInstance(IServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.CreateInstance(IServiceProvider provider, Type instanceType, Object[] parameters)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.ReflectionMiddlewareBinder.CreateMiddleware(RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+2025-01-07 11:30:57.132 +03:00 [ERR] Hosting failed to start
+System.InvalidOperationException: Cannot resolve scoped service 'Auth_Core.EventBus.IEventBus' from root provider.
+   at Microsoft.Extensions.DependencyInjection.ServiceLookup.CallSiteValidator.ValidateResolution(ServiceCallSite callSite, IServiceScope scope, IServiceScope rootScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(ServiceIdentifier serviceIdentifier, ServiceProviderEngineScope serviceProviderEngineScope)
+   at Microsoft.Extensions.DependencyInjection.ServiceProvider.GetService(Type serviceType)
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.ConstructorMatcher.CreateInstance(IServiceProvider provider)
+   at Microsoft.Extensions.DependencyInjection.ActivatorUtilities.CreateInstance(IServiceProvider provider, Type instanceType, Object[] parameters)
+   at Microsoft.AspNetCore.Builder.UseMiddlewareExtensions.ReflectionMiddlewareBinder.CreateMiddleware(RequestDelegate next)
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Builder.ApplicationBuilder.Build()
+   at Microsoft.AspNetCore.Hosting.GenericWebHostService.StartAsync(CancellationToken cancellationToken)
+   at Microsoft.Extensions.Hosting.Internal.Host.<StartAsync>b__14_1(IHostedService service, CancellationToken token)
+   at Microsoft.Extensions.Hosting.Internal.Host.ForeachService[T](IEnumerable`1 services, CancellationToken token, Boolean concurrent, Boolean abortOnFirstException, List`1 exceptions, Func`3 operation)
+2025-01-07 11:30:57.141 +03:00 [DBG] Stopping bus instances: IBus
+2025-01-07 11:30:57.142 +03:00 [WRN] Failed to stop bus: "rabbitmq://localhost/DESKTOPL23BE2G_iisexpress_bus_8y4yyynr9xinim38bdq177c5rq?temporary=true" (Not Started)
