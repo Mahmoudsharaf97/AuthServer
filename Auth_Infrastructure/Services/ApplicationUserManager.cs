@@ -34,8 +34,17 @@ namespace Auth_Infrastructure.Identity
 
         public async Task<bool> CheckEmailExistAsync(string email)
         {
-            var context = GetContext();
-            return await context.Users.AnyAsync(x => x.Email == email.ToLower());
+            try
+            {
+                var context = GetContext();
+                return await context.Users.AnyAsync(x => x.Email == email.ToLower());
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+       
         }
 
         public async Task<bool> CheckNationalIdExistAsync(long nin)

@@ -7,10 +7,12 @@ namespace IdentityApplication.Models
         public RegisterOutPut()
         {
             errors = new List<Error>();
+            LogInOutput = new();
         }
         public bool IsValidPhone { get; set; } = false;
         public bool IsValidDateOfBirth { get; set; } = false;
         public bool OtpSend { get; set; } = false;
         public int RegisterStatusCode { get; set; }
+        public LogInOutput LogInOutput { get; set; }
     }
 }

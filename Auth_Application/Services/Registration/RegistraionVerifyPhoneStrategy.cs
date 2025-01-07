@@ -24,8 +24,7 @@ namespace Auth_Application.Services.Registration
         public async Task<RegisterOutPut> BeginRegistration(RegisterCommand model)
         {
             RegisterOutPut YakeenResult = new RegisterOutPut();
-            try
-            {
+    
                 // check If Client Try To Begin Register Before 
                 var _cahedRegisterUser =await  _redisCaching.GetRegisterUserAfterPhoneVerify(model.Email, model.NationalId.ToString(),model.Phone.ToString());
 
@@ -93,13 +92,8 @@ namespace Auth_Application.Services.Registration
                 YakeenResult.RegisterStatusCode =(int)RegisterStatusCode.PhoneVerfiedSuccssShowDateOfBirhRequired;
                 return YakeenResult;
             }
-            catch (Exception ex)
-            {
-                YakeenResult.Succes = false;
-                YakeenResult.errors = [];
-                return YakeenResult;
-            }
-        }
+     
+        
 
     }
 }

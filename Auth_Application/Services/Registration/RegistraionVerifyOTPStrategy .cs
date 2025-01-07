@@ -2,6 +2,7 @@
 using Auth_Application.Features;
 using Auth_Application.Interface;
 using Auth_Application.Models;
+using Auth_Application.Services.Token;
 using Auth_Core;
 using Auth_Core.Enums;
 using Auth_Core.UseCase;
@@ -18,16 +19,21 @@ namespace Auth_Application.Services.Registration
         private readonly IRedisCaching _redisCaching;
         private readonly IOtpService otpService;
         private readonly IApplicationUserManager applicationUserManager;
-        private readonly UserManager<ApplicationUser<string>> userManager;
+        private readonly UserManager<ApplicationUser<string>> _userManager;
         public IYakeenClient _yakeenClient { get; }
         public IYakeenNationalIdServices _yakeenNationalIdServices { get; }
+        public IUserSignInService _userSignInService { get; }
+
         public RegistraionVerifyOTPStrategy(IRedisCaching redisCaching, IOtpService otpService,
-            IApplicationUserManager applicationUserManager, UserManager<ApplicationUser<string>> userManager) : base(redisCaching, applicationUserManager)
+            IApplicationUserManager applicationUserManager, 
+            UserManager<ApplicationUser<string>> userManager, IUserSignInService userSignInService) 
+            : base(redisCaching, applicationUserManager)
         {
             _redisCaching = redisCaching;
             this.otpService = otpService;
             this.applicationUserManager = applicationUserManager;
-            this.userManager = userManager;
+            this._userManager = userManager;
+            _userSignInService = userSignInService;
         }
 
         public async Task<RegisterOutPut> RegistrationVerifyOTP(RegisterCommand model)
@@ -38,33 +44,28 @@ namespace Auth_Application.Services.Registration
                 OtpInfo otpInfo = await otpService.GetCachedOtpInfoAsync(model.Phone.ToString());
                 if (otpInfo is null || otpInfo.VerificationCode!=model.OTP)
                     return null;// need To handle Error 
-
                 await otpService.DeleteCachedOtpInfoAsync(model.Phone.ToString());
-
                result= await ValidateAndDeleteIfPhoneWithOterUser(model.Phone.ToString());
                 if (!result.Succes)
                     return result;
-
                 //get Register User From Redis 
                 ApplicationUser<string> applicationUser = await _redisCaching.
                     GetRegisterUserAfterGenerateOTP(model.Email, model.NationalId.ToString(), model.Phone.ToString());
-
                 if (applicationUser is null )
                 {
                     result.Succes = false;
                     result.errors.Add(new Error { ErrorCode = 222, ErrorDescription = "faile Get user From Redis " });
                     return result;
                 }
-
                 ApplicationUser<string> user = HandleUserBeforInsert(applicationUser,model.Channel);
-
-                var createdUser = await userManager.CreateAsync(HandleUserBeforInsert(applicationUser,model.Channel), model.Password);
+                var createdUser = await _userManager.CreateAsync(HandleUserBeforInsert(applicationUser,model.Channel), applicationUser.PasswordHash);
                 ValidateCreateUser(createdUser);
-               await _redisCaching.SetUser(user.Email, user.NationalId.ToString(), user);
-                await   _redisCaching.DeletUserRegisterTries(user.Email, user.NationalId.ToString(), user.PhoneNumber);
+                await _redisCaching.SetUser(user.Email, user.NationalId.ToString(), user);
+                await _redisCaching.DeletUserRegisterTries(user.Email, user.NationalId.ToString(), user.PhoneNumber);
                 result.OtpSend = true;
                 result.Succes = true;
                 result.errors = [];
+                result.LogInOutput = await _userSignInService.UserSignIn(user, user.Email, applicationUser.PasswordHash);
                 result.RegisterStatusCode = (int)RegisterStatusCode.Success;
                 return result;
             }
@@ -104,7 +105,7 @@ namespace Auth_Application.Services.Registration
                 userInfo.PhoneNumberConfirmed = false;
                 userInfo.IsPhoneVerifiedByYakeen = false;
                 //userInfo.NationalId = null;
-                var updateUserInfo =await userManager.UpdateAsync(userInfo);
+                var updateUserInfo =await _userManager.UpdateAsync(userInfo);
                 if (!updateUserInfo.Succeeded)
                 {
                     outPut.Succes=false;
@@ -116,5 +117,7 @@ namespace Auth_Application.Services.Registration
             outPut.Succes = true;
             return outPut;
         }
+
+       
     }
 }

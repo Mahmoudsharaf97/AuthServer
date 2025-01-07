@@ -105,7 +105,16 @@ namespace Auth_Core.MiddleWare
                             context.Response.Headers.Clear();
                             context.Response.ContentType = "text/plain";
                             context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                            await context.Response.WriteAsync(globalInfo.lang?.ToLower() == "en" ? "Internal Server Error" : "حدث خطأ ما");
+
+                            var obj = JsonConvert.SerializeObject(
+
+                                    new BadRequestResult()
+                                    {
+                                        ErrorMsg = "Error Happen",
+                                        ErrorNo = 400
+                                    }
+                                );
+                            await context.Response.WriteAsync(obj);
                             return;
 
                         }
