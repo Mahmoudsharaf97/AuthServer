@@ -54,7 +54,7 @@ namespace Auth_Application.Services.Login
 			bool IsEmailBelongsToOtherUser = await _applicationUserManager.CheckNationalIdBelongsForDifferentEmail(long.Parse( model.NationalId),user.Email);
 			if (IsEmailBelongsToOtherUser)
 				throw new AppException(ExceptionEnum.exist_nationalId_signup_error);
-
+			// just this line not generic we should move it to the sub classes 
 			await VerifyMobileByYakeen(output,user,long.Parse( model?.Phone) ,long.Parse( model?.NationalId) , "ar");
 
 			CheckUserConfirmedByYakeen(output, user);

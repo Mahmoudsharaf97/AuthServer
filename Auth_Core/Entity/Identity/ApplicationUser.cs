@@ -18,6 +18,7 @@ namespace Auth_Core
         public bool IsDeleted { get; set; }=false;   
         public long? NationalId { get; set; }
         public bool IsPhoneVerifiedByYakeen { get; set; } = false;
+        public bool IsYakeenNationalIdVerified { get; set; } = false;
         public  string? DateOfBirthYear { get; set; }
         public string? DateOfBirthMonth { get; set; }
         public string? Channel { get; set; }

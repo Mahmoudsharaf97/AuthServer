@@ -22,7 +22,7 @@ namespace Auth_Application.Services.Login
 
 		public ILoginStrategy GetStrategy(LoginMethod loginMethod, LoginType loginType)
 		{
-			return _strategies.FirstOrDefault(s => s.StrategyName == $"{loginMethod}-{loginType}");
+			return _strategies?.FirstOrDefault(s => s.StrategyName == $"{loginMethod}-{loginType}");
 		}
 	}
 }
