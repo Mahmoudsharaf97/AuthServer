@@ -24,7 +24,8 @@ namespace Auth_Application.DependencyInjection
 			services.AddScoped<ICaptchService, CaptchService>();
 			services.AddScoped<IOtpService, OtpService>();
 			services.AddScoped<IYakeenNationalIdServices, YakeenNationalIdServices>();
-			services.AddLoginStrategiesServicesInjection();
+			services.AddScoped<IUserSignInService, UserSignInService>();
+            services.AddLoginStrategiesServicesInjection();
 
 			return services;
 		}

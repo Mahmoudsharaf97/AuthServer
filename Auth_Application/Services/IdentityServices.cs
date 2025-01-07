@@ -40,12 +40,13 @@ namespace IdentityApplication.Services
         public Utilities _utilities { get; }
         public ICaptchService _captchService { get; }
         public IYakeenClient _yakeenClient { get; }
+        public IUserSignInService _userSignInService { get; }
 
 		public IdentityServices(IApplicationUserManager applicationUserManager, UserManager<ApplicationUser<string>> userManager
 			, SignInManager<ApplicationUser<string>> signInManager, ISessionServices sessionServices, IRedisCaching cacheManager
 			, AppSettingsConfiguration _settings, GlobalInfo globalInfo, Utilities utilities
 			, IUsersCachedManager usersCachedManager, ICaptchService captchService, AppSettingsConfiguration appSettingsConfiguration
-			, IYakeenClient yakeenClient, IOtpService otpService, ILoginStrategyManager loginStrategyManager)
+			, IYakeenClient yakeenClient, IOtpService otpService, ILoginStrategyManager loginStrategyManager, IUserSignInService userSignInService)
 		{
 			_applicationUserManager = applicationUserManager;
 			_userManager = userManager;
@@ -68,7 +69,6 @@ namespace IdentityApplication.Services
             try
             {
                 RegisterOutPut outPut = new RegisterOutPut();
-
                 if (model.RegisterType==(int)RegisterType.VerifyYakeenMobile)
                 {
                     if (appSettingsConfiguration.EnableCaptchaValidate)
@@ -78,8 +78,6 @@ namespace IdentityApplication.Services
                         if (!outPut.Succes)
                             return outPut;
                     }
-
-
                     RegistraionVerifyPhoneStrategy registraionPhoneStrategy = 
                         new RegistraionVerifyPhoneStrategy(_cacheManager, _applicationUserManager, _yakeenClient);
                    return await registraionPhoneStrategy.BeginRegistration(model);
@@ -94,7 +92,7 @@ namespace IdentityApplication.Services
                 else if(model.RegisterType == (int)RegisterType.VerifyOTP)
                 {
                     RegistraionVerifyOTPStrategy registraionVerifyOTPStrategy =
-                     new RegistraionVerifyOTPStrategy(_cacheManager, otpService, _applicationUserManager,_userManager);
+                     new RegistraionVerifyOTPStrategy(_cacheManager, otpService, _applicationUserManager,_userManager,_userSignInService);
                     return await registraionVerifyOTPStrategy.RegistrationVerifyOTP(model);
                 }
                 else
